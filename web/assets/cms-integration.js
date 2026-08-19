@@ -1,8 +1,8 @@
 (function () {
   "use strict";
 
-  const API_ROOT = (window.NG_CMS_API_BASE || "http://localhost:8081/api/public").replace(/\/$/, "");
-  const API_ORIGIN = new URL(API_ROOT).origin;
+  const API_ROOT = (window.NG_CMS_API_BASE || "/api/public").replace(/\/$/, "");
+  const API_ORIGIN = new URL(API_ROOT, location.href).origin;
   const params = new URLSearchParams(location.search);
   const language = params.get("lang") || document.documentElement.lang || "tr";
   const page = location.pathname.split("/").pop() || "index.html";
