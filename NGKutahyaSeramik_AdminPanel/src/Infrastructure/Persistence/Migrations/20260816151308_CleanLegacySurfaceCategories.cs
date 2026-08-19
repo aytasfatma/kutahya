@@ -42,7 +42,7 @@ namespace Infrastructure.Persistence.Migrations
                     WHERE UPPER(LTRIM(RTRIM(t.[Value]))) = UPPER(N'Kategorisiz')
                 );
 
-                IF @UncategorizedId IS NULL
+                IF @UncategorizedId IS NULL AND EXISTS (SELECT 1 FROM @LegacyCategoryIds)
                     THROW 51000, 'Kategorisiz kategori bulunamadığı için eski yüzey kategorileri güvenle temizlenemedi.', 1;
 
                 UPDATE [Products]
