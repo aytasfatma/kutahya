@@ -1,0 +1,36 @@
+@model Presentation.Models.ReferenceProject.ReferenceProjectFormViewModel
+
+<div class="admin-form-field reference-product-picker-field" data-reference-product-picker>
+    <div class="reference-product-picker-header">
+        <label asp-for="SelectedProductIds" class="form-label mb-0"></label>
+        <span class="document-relation-count" data-reference-product-count>0 seçili</span>
+    </div>
+    <div class="reference-product-picker-toolbar">
+        <div class="input-icon reference-product-search">
+            <span class="input-icon-addon"><i class="ti ti-search" aria-hidden="true"></i></span>
+            <input type="search" class="form-control" placeholder="Ürün ara" data-reference-product-search />
+        </div>
+        <div class="reference-product-picker-actions">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-reference-product-select-all>Tümünü Seç</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-reference-product-clear>Seçimi Temizle</button>
+        </div>
+    </div>
+    <div class="document-relation-list reference-product-picker-list" role="group" aria-label="İlişkili Ürünler">
+        @foreach (var product in Model.ProductOptions)
+        {
+            var isChecked = product.Selected || (int.TryParse(product.Value, out var productId) && Model.SelectedProductIds.Contains(productId));
+            <label class="document-relation-option reference-product-picker-option" data-reference-product-option data-reference-product-label="@product.Text">
+                <input type="checkbox"
+                       class="form-check-input"
+                       name="SelectedProductIds"
+                       value="@product.Value"
+                       checked="@isChecked"
+                       disabled="@product.Disabled" />
+                <span class="document-relation-option-text">@product.Text</span>
+                <span class="document-relation-selected-badge">Seçildi</span>
+            </label>
+        }
+    </div>
+    <div class="admin-form-help reference-product-empty d-none" data-reference-product-empty>Aramanızla eşleşen ürün bulunamadı.</div>
+    <span asp-validation-for="SelectedProductIds" class="text-danger"></span>
+</div>

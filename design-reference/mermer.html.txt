@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="tr"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260723-05-e9a76f4"}');</script><script src="/_sdk/e358eac22bd01364.telemetry_sdk.js" integrity="sha512-KPxp3rw4K8Nu9ceWJc3gyM7srgaZxiFWOVbyu260EYzzAqdz10mfo5xyXrCx+wEKtGo77JbtmwXvFLbwrGzwvw=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mermer Admin Menü</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #382c25;
+      --muted: #695b51;
+      --accent: #8a6549;
+      --sand: rgba(190, 159, 127, .56);
+      --line: rgba(88, 63, 46, .16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: "Raleway", sans-serif;
+    }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .app-shell {
+      width: 100%;
+      min-height: calc(100 * min(var(--vh, 1vh), 1vh));
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sidebar {
+      width: 246px;
+      min-width: 246px;
+      height: calc(100 * min(var(--vh, 1vh), 1vh));
+      position: relative;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid rgba(105, 72, 49, .18);
+      box-shadow: 10px 0 27px rgba(67, 48, 35, .12);
+      transition: width .32s ease, min-width .32s ease, transform .32s ease;
+    }
+
+    .marble-image {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .marble-tint {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255, 248, 237, .12), rgba(234, 215, 191, .13));
+    }
+
+    .brand {
+      min-height: 118px;
+      padding: 27px 19px 16px;
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+    }
+
+    .brand-lockup {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .brand-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-initial {
+      font-family: "Playfair Display", serif;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 19px;
+      background: #4c3b31;
+      transform: rotate(18deg);
+    }
+
+    .brand-name {
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .brand-subtitle {
+      display: block;
+      margin-top: 3px;
+      padding-left: 51px;
+      text-transform: uppercase;
+      letter-spacing: .35em;
+    }
+
+    .toggle {
+      width: 31px;
+      height: 31px;
+      flex: 0 0 31px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(92, 64, 45, .18);
+      border-radius: 7px;
+      transition: background .2s, transform .2s;
+    }
+
+    .toggle:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.52);
+    }
+
+    .desktop-toggle {
+      position: absolute;
+      top: 20px;
+      right: 13px;
+      opacity: 0;
+    }
+
+    .brand:hover .desktop-toggle,
+    .desktop-toggle:focus-visible { opacity: 1; }
+
+    .menu-scroll {
+      min-height: 0;
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 12px 25px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(91, 68, 52, .3) transparent;
+    }
+
+    .menu-scroll::-webkit-scrollbar { width: 4px; }
+    .menu-scroll::-webkit-scrollbar-thumb {
+      border-radius: 99px;
+      background: rgba(91, 68, 52, .3);
+    }
+
+    .menu-group { margin-bottom: 18px; }
+
+    .group-title {
+      display: block;
+      margin: 0 7px 8px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .menu-link {
+      width: 100%;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      color: var(--ink);
+      text-align: left;
+      text-decoration: none;
+      transition: background .18s, transform .18s, box-shadow .18s;
+    }
+
+    .menu-link + .menu-link { margin-top: 2px; }
+
+    .menu-link svg {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 15px;
+      stroke-width: 1.7;
+    }
+
+    .menu-link span {
+      min-width: 0;
+      line-height: 1.3;
+    }
+
+    .menu-link:hover {
+      transform: translateX(2px);
+      background: rgba(255, 250, 242, .32);
+    }
+
+    .menu-link.is-active {
+      background: var(--sand);
+      border-color: rgba(121, 88, 62, .09);
+      box-shadow: inset 0 1px rgba(255,255,255,.24);
+    }
+
+    .profile {
+      margin: 0 13px 13px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid rgba(95, 66, 47, .13);
+      border-radius: 8px;
+      backdrop-filter: blur(2px);
+    }
+
+    .profile-icon {
+      width: 31px;
+      height: 31px;
+      flex: 0 0 31px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fffaf3;
+      background: #6e513e;
+    }
+
+    .profile-icon svg { width: 15px; height: 15px; }
+
+    .profile-copy {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .profile-copy strong,
+    .profile-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .workspace {
+      min-width: 0;
+      flex: 1;
+      height: calc(100 * min(var(--vh, 1vh), 1vh));
+      overflow-y: auto;
+      background:
+        radial-gradient(circle at 88% 9%, rgba(205, 184, 159, .2), transparent 30%),
+        #f4f4f2;
+    }
+
+    .workspace-header {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 27px;
+      border-bottom: 1px solid rgba(70, 54, 43, .1);
+      background: rgba(255,255,255,.68);
+    }
+
+    .mobile-trigger { display: none; }
+
+    .workspace-main {
+      padding: clamp(24px, 5vw, 58px);
+    }
+
+    .content-card {
+      max-width: 770px;
+      min-height: 244px;
+      padding: clamp(25px, 4vw, 40px);
+      border: 1px solid rgba(84, 64, 50, .1);
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(65, 47, 34, .07);
+    }
+
+    .content-kicker {
+      display: inline-block;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .view-panel[hidden] { display: none; }
+
+    .rule {
+      width: 54px;
+      height: 2px;
+      margin-top: 23px;
+      background: #9a7254;
+    }
+
+    .backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      border: 0;
+      background: rgba(47, 37, 30, .4);
+      backdrop-filter: blur(2px);
+    }
+
+    .sidebar.is-collapsed {
+      width: 66px;
+      min-width: 66px;
+    }
+
+    .sidebar.is-collapsed .brand-lockup,
+    .sidebar.is-collapsed .group-title,
+    .sidebar.is-collapsed .menu-link span,
+    .sidebar.is-collapsed .profile-copy {
+      display: none;
+    }
+
+    .sidebar.is-collapsed .brand {
+      min-height: 68px;
+      justify-content: center;
+      padding: 18px 0;
+    }
+
+    .sidebar.is-collapsed .desktop-toggle {
+      position: static;
+      opacity: 1;
+    }
+
+    .sidebar.is-collapsed .menu-scroll {
+      padding-inline: 9px;
+      padding-top: 14px;
+    }
+
+    .sidebar.is-collapsed .menu-group { margin-bottom: 10px; }
+    .sidebar.is-collapsed .menu-link {
+      justify-content: center;
+      padding-inline: 0;
+    }
+
+    .sidebar.is-collapsed .profile {
+      justify-content: center;
+      padding: 7px;
+      margin-inline: 9px;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(122, 83, 56, .45);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(246px, 84vw);
+        min-width: min(246px, 84vw);
+        transform: translateX(-104%);
+      }
+
+      .sidebar.is-open { transform: translateX(0); }
+
+      .sidebar.is-collapsed {
+        width: min(246px, 84vw);
+        min-width: min(246px, 84vw);
+      }
+
+      .sidebar.is-collapsed .brand-lockup,
+      .sidebar.is-collapsed .group-title,
+      .sidebar.is-collapsed .menu-link span,
+      .sidebar.is-collapsed .profile-copy {
+        display: initial;
+      }
+
+      .sidebar.is-collapsed .brand {
+        min-height: 118px;
+        justify-content: flex-start;
+        padding: 27px 19px 16px;
+      }
+
+      .sidebar.is-collapsed .desktop-toggle {
+        position: absolute;
+        top: 20px;
+        right: 13px;
+      }
+
+      .sidebar.is-collapsed .menu-scroll { padding: 0 12px 25px; }
+      .sidebar.is-collapsed .menu-group { margin-bottom: 18px; }
+      .sidebar.is-collapsed .menu-link {
+        justify-content: flex-start;
+        padding: 8px 10px;
+      }
+
+      .sidebar.is-collapsed .profile {
+        justify-content: flex-start;
+        padding: 10px;
+        margin-inline: 13px;
+      }
+
+      .desktop-toggle { opacity: 1; }
+      .mobile-trigger { display: grid; }
+      .backdrop.is-visible { display: block; }
+      .workspace-header { padding-inline: 16px; }
+      .workspace-main { padding: 22px 15px; }
+      .content-card { border-radius: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+  <script src="/_sdk/935a53bc2e11fb8d.data_sdk.js" type="text/javascript" integrity="sha512-qr2oyPnEys1WebcOABaRh6hG77r5PWpqeWW6JTKbRJqly/INsfBi31CVNlTmHqjgeLpkVmmHZJUdxSx/32tOFQ=="></script>
+  <script src="/_sdk/6030e540d4419216.resizing_sdk.js" type="text/javascript" integrity="sha512-b5KWzyoXsbWP4smq4sftIi6Kts4YVBpBsz0BwCViwbBJkK64a3/Z6ZMdWA+qnplNcXw4mhZeqvQi3mOosiRJdA=="></script>
+ </head>
+ <body data-template-id="__page-root" style="background: rgb(244, 244, 242);">
+  <div class="app-shell">
+   <aside id="sidebar" data-template-id="sidebar-panel" class="canva-sidebar sidebar" aria-label="Yönetim menüsü" style="background: rgb(234, 215, 189);"><img data-template-id="marble-background" class="canva-image marble-image" loading="lazy" src="https://images.pexels.com/photos/11273838/pexels-photo-11273838.jpeg" alt="High-quality close-up of cream marble texture, perfect for backgrounds and design projects.">
+    <div class="marble-tint" aria-hidden="true"></div>
+    <header class="brand">
+     <div class="brand-lockup">
+      <div class="brand-line"><span class="brand-initial" aria-hidden="true">N</span> <span class="brand-divider" aria-hidden="true"></span>
+       <h1 data-template-id="brand-name" class="canva-text brand-name" style="color: rgb(50, 40, 33); font-weight: 700; font-style: normal; font-size: 16px; letter-spacing: 0.09rem;">KÜTAHYA</h1>
+      </div><span data-template-id="brand-subtitle" class="canva-text brand-subtitle" style="color: rgb(79, 65, 56); font-weight: 600; font-style: normal; font-size: 6px; letter-spacing: 0.35rem;">SERAMİK</span>
+     </div><button id="sidebar-toggle" data-template-id="sidebar-toggle" class="canva-button toggle desktop-toggle" type="button" aria-label="Menüyü daralt" aria-expanded="true" style="background: rgba(248, 238, 225, 0.5); color: rgb(89, 68, 56);"> <i data-lucide="panel-left-close" aria-hidden="true"></i> </button>
+    </header>
+    <nav class="menu-scroll" aria-label="Ana navigasyon">
+     <section class="menu-group" aria-labelledby="main-group">
+      <h2 id="main-group" data-template-id="main-menu-heading" class="canva-text group-title" style="color: rgb(68, 54, 45); font-weight: 700; font-style: normal; font-size: 9px; letter-spacing: 0.09rem;">Ana Menü</h2><a href="#dashboard" class="menu-link is-active" data-view="dashboard" aria-current="page"> <i data-lucide="layout-grid" aria-hidden="true"></i> <span data-template-id="dashboard-item" class="canva-link" style="color: rgb(52, 42, 36); font-weight: 600; font-style: normal; font-size: 12px;">Dashboard</span> </a>
+     </section>
+     <section class="menu-group" aria-labelledby="product-group">
+      <h2 id="product-group" data-template-id="product-heading" class="canva-text group-title" style="color: rgb(68, 54, 45); font-weight: 700; font-style: normal; font-size: 9px; letter-spacing: 0.09rem;">Ürün Yönetimi</h2><a href="#category" class="menu-link" data-view="category"> <i data-lucide="layout-grid" aria-hidden="true"></i> <span data-template-id="category-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Kategori Yönetimi</span> </a> <a href="#collection" class="menu-link" data-view="collection"> <i data-lucide="layers" aria-hidden="true"></i> <span data-template-id="collection-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Koleksiyon Yönetimi</span> </a> <a href="#products" class="menu-link" data-view="products"> <i data-lucide="package" aria-hidden="true"></i> <span data-template-id="products-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Ürün Yönetimi</span> </a> <a href="#excel" class="menu-link" data-view="excel"> <i data-lucide="file-spreadsheet" aria-hidden="true"></i> <span data-template-id="excel-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Excel Import</span> </a> <a href="#catalog" class="menu-link" data-view="catalog"> <i data-lucide="file-text" aria-hidden="true"></i> <span data-template-id="catalog-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Katalog / Doküman Yönetimi</span> </a> <a href="#reference" class="menu-link" data-view="reference"> <i data-lucide="briefcase" aria-hidden="true"></i> <span data-template-id="reference-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Referans Proje Yönetimi</span> </a>
+     </section>
+     <section class="menu-group" aria-labelledby="content-group">
+      <h2 id="content-group" data-template-id="content-heading" class="canva-text group-title" style="color: rgb(68, 54, 45); font-weight: 700; font-style: normal; font-size: 9px; letter-spacing: 0.09rem;">İçerik</h2><a href="#blog" class="menu-link" data-view="blog"> <i data-lucide="notebook-tabs" aria-hidden="true"></i> <span data-template-id="blog-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Blog Yönetimi</span> </a> <a href="#news" class="menu-link" data-view="news"> <i data-lucide="newspaper" aria-hidden="true"></i> <span data-template-id="news-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Haber Yönetimi</span> </a> <a href="#banner" class="menu-link" data-view="banner"> <i data-lucide="image" aria-hidden="true"></i> <span data-template-id="banner-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Banner Yönetimi</span> </a> <a href="#pages" class="menu-link" data-view="pages"> <i data-lucide="files" aria-hidden="true"></i> <span data-template-id="pages-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Sayfa Yönetimi</span> </a>
+     </section>
+     <section class="menu-group" aria-labelledby="operation-group">
+      <h2 id="operation-group" data-template-id="operation-heading" class="canva-text group-title" style="color: rgb(68, 54, 45); font-weight: 700; font-style: normal; font-size: 9px; letter-spacing: 0.09rem;">Operasyon</h2><a href="#showroom" class="menu-link" data-view="showroom"> <i data-lucide="map-pin" aria-hidden="true"></i> <span data-template-id="showroom-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Bayi / Showroom Yönetimi</span> </a> <a href="#forms" class="menu-link" data-view="forms"> <i data-lucide="messages-square" aria-hidden="true"></i> <span data-template-id="forms-item" class="canva-link" style="color: rgb(61, 49, 42); font-weight: 500; font-style: normal; font-size: 11px;">Form Yönetimi</span> </a>
+     </section>
+    </nav>
+    <footer data-template-id="profile-card" class="canva-card profile" style="background: rgba(255, 250, 242, 0.24);">
+     <div class="profile-icon" aria-hidden="true">
+      <i data-lucide="user-round"></i>
+     </div>
+     <div class="profile-copy"><strong data-template-id="profile-name" class="canva-text" style="color: rgb(60, 48, 41); font-weight: 700; font-style: normal; font-size: 11px;">Yönetici</strong> <span data-template-id="profile-role" class="canva-text" style="color: rgb(110, 93, 82); font-weight: 400; font-style: normal; font-size: 9px;">Admin paneli</span>
+     </div>
+    </footer>
+   </aside><button id="backdrop" class="backdrop" type="button" aria-label="Menüyü kapat"></button>
+   <main class="workspace">
+    <header data-template-id="workspace-header" class="canva-header workspace-header" style="background: rgba(255, 255, 255, 0.72);"><button id="mobile-trigger" data-template-id="mobile-menu-button" class="canva-button toggle mobile-trigger" type="button" aria-label="Menüyü aç" aria-expanded="false" style="background: rgb(248, 238, 225); color: rgb(89, 68, 56);"> <i data-lucide="menu" aria-hidden="true"></i> </button>
+     <h2 data-template-id="workspace-title" class="canva-text" style="color: rgb(64, 51, 43); font-weight: 700; font-style: normal; font-size: 17px;">Yönetim Paneli</h2>
+    </header>
+    <section class="workspace-main" aria-label="Seçili yönetim bölümü">
+     <article data-template-id="content-card" class="canva-card content-card" style="background: rgba(255, 255, 255, 0.94);"><span data-template-id="content-kicker" class="canva-text content-kicker" style="color: rgb(139, 103, 78); font-weight: 700; font-style: normal; font-size: 10px; letter-spacing: 0.12rem;">Mermer Yönetim Sistemi</span>
+      <div class="view-panel" data-view-panel="dashboard">
+       <h2 data-template-id="dashboard-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Dashboard</h2>
+       <p data-template-id="dashboard-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Ürün, içerik ve operasyon bölümlerine sol menü üzerinden hızlıca erişebilirsiniz.</p>
+      </div>
+      <div class="view-panel" data-view-panel="category" hidden="">
+       <h2 data-template-id="category-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Kategori Yönetimi</h2>
+       <p data-template-id="category-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Mermer ve seramik ürün kategorilerini düzenleyin ve içerik yapısını yönetin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="collection" hidden="">
+       <h2 data-template-id="collection-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Koleksiyon Yönetimi</h2>
+       <p data-template-id="collection-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Koleksiyonları, sezonları ve ürün gruplarını tek bir alandan yönetin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="products" hidden="">
+       <h2 data-template-id="products-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Ürün Yönetimi</h2>
+       <p data-template-id="products-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Ürünlerin temel bilgilerini ve katalog görünürlüğünü düzenleyin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="excel" hidden="">
+       <h2 data-template-id="excel-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Excel Import</h2>
+       <p data-template-id="excel-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Toplu ürün işlemleri için çalışma dosyalarınızı yönetin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="catalog" hidden="">
+       <h2 data-template-id="catalog-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Katalog / Doküman Yönetimi</h2>
+       <p data-template-id="catalog-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Katalog ve kurumsal dokümanların yayın düzenini yönetin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="reference" hidden="">
+       <h2 data-template-id="reference-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Referans Proje Yönetimi</h2>
+       <p data-template-id="reference-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Tamamlanan projeleri ve uygulama referanslarını sergileyin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="blog" hidden="">
+       <h2 data-template-id="blog-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Blog Yönetimi</h2>
+       <p data-template-id="blog-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Marka hikâyeleri ve uzmanlık içeriklerini düzenleyin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="news" hidden="">
+       <h2 data-template-id="news-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Haber Yönetimi</h2>
+       <p data-template-id="news-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Güncel duyuruları ve şirket haberlerini yayınlayın.</p>
+      </div>
+      <div class="view-panel" data-view-panel="banner" hidden="">
+       <h2 data-template-id="banner-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Banner Yönetimi</h2>
+       <p data-template-id="banner-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Site vitrininde kullanılan banner alanlarını yönetin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="pages" hidden="">
+       <h2 data-template-id="pages-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Sayfa Yönetimi</h2>
+       <p data-template-id="pages-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Kurumsal sayfaların içeriğini ve yayın durumunu düzenleyin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="showroom" hidden="">
+       <h2 data-template-id="showroom-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Bayi / Showroom Yönetimi</h2>
+       <p data-template-id="showroom-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">Bayi ve showroom konumlarını merkezi olarak yönetin.</p>
+      </div>
+      <div class="view-panel" data-view-panel="forms" hidden="">
+       <h2 data-template-id="forms-view-title" class="canva-text" style="color: rgb(57, 45, 38); font-weight: 700; font-style: normal; font-size: 30px;">Form Yönetimi</h2>
+       <p data-template-id="forms-view-description" class="canva-text mt-3 max-w-2xl leading-relaxed" style="color: rgb(113, 97, 87); font-weight: 400; font-style: normal; font-size: 14px; line-height: 1.7;">İletişim ve talep formlarına ait yönetim bölümünü görüntüleyin.</p>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+     </article>
+    </section>
+   </main>
+  </div>
+  <script src="/_sdk/c939c145c3c74230.editing_sdk.js" integrity="sha512-jh2pv/gl9Gzzn5dxfzwQO4wkqtnAQIim+LIUDYfVu2cdqPkQV2MqbjsDUW5IYbrSZFjRlOBrIWzlvWDXQYxOjg=="></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+
+      const sidebar = document.getElementById("sidebar");
+      const toggle = document.getElementById("sidebar-toggle");
+      const mobileTrigger = document.getElementById("mobile-trigger");
+      const backdrop = document.getElementById("backdrop");
+      const links = Array.from(document.querySelectorAll(".menu-link"));
+      const panels = Array.from(document.querySelectorAll("[data-view-panel]"));
+
+      const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
+
+      function setMobileMenu(open) {
+        sidebar.classList.toggle("is-open", open);
+        backdrop.classList.toggle("is-visible", open);
+        mobileTrigger.setAttribute("aria-expanded", String(open));
+      }
+
+      function selectView(view) {
+        links.forEach(link => {
+          const selected = link.dataset.view === view;
+          link.classList.toggle("is-active", selected);
+          if (selected) link.setAttribute("aria-current", "page");
+          else link.removeAttribute("aria-current");
+        });
+
+        panels.forEach(panel => {
+          panel.hidden = panel.dataset.viewPanel !== view;
+        });
+      }
+
+      toggle.addEventListener("click", () => {
+        if (isMobile()) {
+          setMobileMenu(false);
+          return;
+        }
+
+        const collapsed = sidebar.classList.toggle("is-collapsed");
+        toggle.setAttribute("aria-expanded", String(!collapsed));
+        toggle.setAttribute("aria-label", collapsed ? "Menüyü genişlet" : "Menüyü daralt");
+      });
+
+      mobileTrigger.addEventListener("click", () => {
+        setMobileMenu(!sidebar.classList.contains("is-open"));
+      });
+
+      backdrop.addEventListener("click", () => setMobileMenu(false));
+
+      links.forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          selectView(link.dataset.view);
+          if (isMobile()) setMobileMenu(false);
+        });
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") setMobileMenu(false);
+      });
+
+      window.addEventListener("resize", () => {
+        if (!isMobile()) setMobileMenu(false);
+      });
+    });
+  </script>
+ 
+</body></html>

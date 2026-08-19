@@ -1,0 +1,109 @@
+@model Presentation.Models.Page.PageContentBlockFormViewModel
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Temel Bilgiler</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            <div class="admin-form-field">
+                <label asp-for="BlockType" class="form-label"></label>
+                <select asp-for="BlockType" asp-items="Model.BlockTypeOptions" class="form-select"></select>
+                <span asp-validation-for="BlockType" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="VideoEmbedUrl" class="form-label"></label>
+                <input asp-for="VideoEmbedUrl" class="form-control" placeholder="Yalnızca Video Embed blok tipinde kullanılır" />
+                <span asp-validation-for="VideoEmbedUrl" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field admin-form-field-full">
+                @if (Model.ExistingImagePath is not null)
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Mevcut Görsel</label>
+                        <div>
+                            <img src="@Model.ExistingImagePath" alt="" width="150" />
+                        </div>
+                    </div>
+                    <label class="form-check">
+                        <input asp-for="RemoveImage" class="form-check-input" type="checkbox" />
+                        <span class="form-check-label">Görseli kaldır</span>
+                    </label>
+                }
+                <label for="image" class="form-label">Görsel @(Model.ExistingImagePath is not null ? "(Değiştir, opsiyonel)" : "(yalnızca Metin+Görsel / Tam Genişlik Görsel tiplerinde)")</label>
+                <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
+                <div class="admin-form-help">İzin verilen formatlar: JPG, JPEG, PNG, WEBP. Maksimum dosya boyutu: 5 MB.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card admin-form-section" x-data="{ selectedLanguage: 'TR' }">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>Çeviriler</h3>
+    </div>
+    <div class="card-body">
+        <p class="admin-form-section-intro">Kullanmak istediğiniz içerik dilini seçerek ilgili alanları doldurun.</p>
+        <div class="admin-form-language-picker">
+            <label for="page-content-block-language-select" class="form-label">İçerik Dili</label>
+            <select id="page-content-block-language-select" class="form-select" x-model="selectedLanguage" x-on:change="$nextTick(() => window.dispatchEvent(new CustomEvent('admin:autosize')))">
+                @for (var i = 0; i < Model.Translations.Count; i++)
+                {
+                    var code = Model.Translations[i].LanguageCode;
+                    var label = code switch
+                    {
+                        "TR" => "Türkçe (TR) - Zorunlu",
+                        "EN" => "English (EN)",
+                        "DE" => "Deutsch (DE)",
+                        "FR" => "Français (FR)",
+                        "ES" => "Español (ES)",
+                        "AR" => "العربية (AR)",
+                        "RU" => "Русский (RU)",
+                        _ => $"{Model.Translations[i].LanguageName} ({code})"
+                    };
+                    <option value="@code">@label</option>
+                }
+            </select>
+            <div class="admin-form-language-helper" x-text="selectedLanguage === 'TR' ? 'Türkçe içerik zorunludur.' : 'Bu dil için çeviri alanlarını doldurabilirsiniz.'"></div>
+        </div>
+
+        @for (var i = 0; i < Model.Translations.Count; i++)
+        {
+            var code = Model.Translations[i].LanguageCode;
+            var dir = code == "AR" ? "rtl" : "ltr";
+            <div class="admin-form-language-panel" x-show="selectedLanguage === '@code'" x-cloak x-bind:aria-hidden="selectedLanguage !== '@code'" dir="@dir">
+                <input type="hidden" name="Translations.Index" value="@i" />
+                <input type="hidden" asp-for="Translations[i].LanguageId" />
+                <input type="hidden" asp-for="Translations[i].LanguageCode" />
+                <input type="hidden" asp-for="Translations[i].LanguageName" />
+                <div class="admin-form-grid">
+                    <div class="admin-form-field">
+                        <label asp-for="Translations[i].Title" class="form-label">Başlık</label>
+                        <input asp-for="Translations[i].Title" class="form-control" />
+                        <span asp-validation-for="Translations[i].Title" class="text-danger"></span>
+                    </div>
+                    <div class="admin-form-field admin-form-field-full">
+                        <label asp-for="Translations[i].Content" class="form-label">İçerik</label>
+                        <textarea asp-for="Translations[i].Content" class="form-control admin-form-autosize" rows="4" data-auto-resize></textarea>
+                        <span asp-validation-for="Translations[i].Content" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<div class="admin-form-footer">
+    <div class="admin-form-actions">
+        <button type="submit" class="btn btn-primary admin-form-action-btn">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            <span>Kaydet</span>
+        </button>
+    </div>
+    <a asp-controller="Page" asp-action="Edit" asp-route-id="@Model.PageId" class="btn btn-outline-secondary admin-form-action-btn">
+        <i class="ti ti-x" aria-hidden="true"></i>
+        <span>İptal</span>
+    </a>
+</div>

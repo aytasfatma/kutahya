@@ -1,0 +1,138 @@
+@model IReadOnlyList<Application.Dealers.DealerDto>
+@using Domain.Enums
+@using Application.Products
+@{
+    var selectedCategory = ViewBag.SelectedCategory as DealerCategory?;
+    var pageTitle = selectedCategory switch
+    {
+        DealerCategory.GeneralHeadquarters => "Genel Merkez",
+        DealerCategory.Factory => "Tesis Yönetimi",
+        _ => "Bayi Yönetimi"
+    };
+    var pageDescription = selectedCategory switch
+    {
+        DealerCategory.GeneralHeadquarters => "Genel merkez adres ve iletişim bilgilerini yönetin.",
+        DealerCategory.Factory => "Üretim tesisi adres ve iletişim bilgilerini yönetin.",
+        _ => "Bayi kayıtlarını, lokasyon ve iletişim bilgilerini yönetin."
+    };
+    var createLabel = selectedCategory switch
+    {
+        DealerCategory.GeneralHeadquarters => "Genel Merkez Ekle",
+        DealerCategory.Factory => "Yeni Tesis Ekle",
+        _ => "Yeni Satış Noktası"
+    };
+    ViewData["Title"] = pageTitle;
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">@pageTitle</h1>
+                <p class="admin-list-description">@pageDescription</p>
+            </div>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-controller="Dealer" asp-action="Create" asp-route-category="@selectedCategory" class="btn btn-primary admin-list-action-btn">
+                <i class="ti ti-map-pin-plus" aria-hidden="true"></i>
+                <span>@createLabel</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Ad</th>
+                        <th>Ülke</th>
+                        <th>Şehir</th>
+                        @if (selectedCategory != DealerCategory.Factory)
+                        {
+                            <th>Telefon</th>
+                        }
+                        <th>Markalar</th>
+                        <th>Durum</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var dealer in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@dealer.Name</td>
+                            <td>@dealer.City</td>
+                            <td>@dealer.District</td>
+                            @if (selectedCategory != DealerCategory.Factory)
+                            {
+                                <td>@dealer.Phone</td>
+                            }
+                            <td>@string.Join(", ", dealer.Brands.Select(ProductEnumDisplay.GetBrandLabel))</td>
+                            <td>
+                                <span class="badge admin-status-badge @(dealer.IsActive ? "bg-success-lt" : "bg-secondary-lt")">
+                                    @(dealer.IsActive ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    <a asp-action="Edit" asp-route-id="@dealer.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@dealer.Name satış noktasını düzenle">
+                                        <i class="ti ti-pencil" aria-hidden="true"></i>
+                                        <span>Düzenle</span>
+                                    </a>
+                                    <form asp-action="ToggleActive" asp-route-id="@dealer.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-ghost-secondary" aria-label="@dealer.Name durumunu değiştir">
+                                            @(dealer.IsActive ? "Pasif Yap" : "Aktif Yap")
+                                        </button>
+                                    </form>
+                                    <form asp-action="Delete" asp-route-id="@dealer.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@dealer.Name satış noktasını sil">
+                                            <i class="ti ti-trash" aria-hidden="true"></i>
+                                            <span>Sil</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-map-pin"></i></span>
+                </div>
+                <p class="empty-title">Henüz satış veya üretim noktası eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Bayi ağını oluşturmak için ilk yerinizi ekleyin.</p>
+                <div class="empty-action">
+                    <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                        <i class="ti ti-plus" aria-hidden="true"></i>
+                        <span>İlk Satış Noktasını Ekle</span>
+                    </a>
+                </div>
+            </div>
+        }
+    </section>
+</div>

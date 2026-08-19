@@ -1,0 +1,208 @@
+@using Infrastructure.Identity
+@{
+    bool CanView(params string[] roles) => roles.Any(User.IsInRole);
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    string ActiveClass(string controller) =>
+        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    string DealerCategoryActiveClass(string category) =>
+        string.Equals(currentController, "Dealer", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(Context.Request.Query["category"], category, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    string AboutSectionActiveClass(string section) =>
+        string.Equals(currentController, "AboutManagement", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(Context.Request.Query["section"].FirstOrDefault() ?? "header", section, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+<aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"
+                aria-controls="sidebar-menu" aria-expanded="false" aria-label="Menüyü aç/kapat">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <h1 class="navbar-brand navbar-brand-autodark">
+            <a class="ng-sidebar-brand"
+               href="https://ngkutahyaseramik.com.tr"
+               aria-label="NG Kütahya Seramik">
+                <img src="~/assets/images/brand/ng-kutahya-seramik-logo.svg"
+                     alt="NG Kütahya Seramik"
+                     class="ng-sidebar-brand__logo" />
+            </a>
+        </h1>
+        <div class="navbar-collapse collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+                <li class="nav-item mt-2"><span class="sidebar-group-label">Ana Menü</span></li>
+                <li class="nav-item @ActiveClass("Home")">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <span class="nav-link-icon"><i class="ti ti-layout-dashboard"></i></span>
+                        <span class="nav-link-title">Dashboard</span>
+                    </a>
+                </li>
+
+                @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ProductManager, ApplicationRoles.ContentEditor, ApplicationRoles.SeoEditor))
+                {
+                    <li class="nav-item mt-2"><span class="sidebar-group-label">Ürünler</span></li>
+
+                    @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ProductManager, ApplicationRoles.ContentEditor, ApplicationRoles.SeoEditor))
+                    {
+                        <li class="nav-item @ActiveClass("Product")">
+                            <a class="nav-link" asp-controller="Product" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-box"></i></span>
+                                <span class="nav-link-title">Ürün Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("Category")">
+                            <a class="nav-link" asp-controller="Category" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-category"></i></span>
+                                <span class="nav-link-title">Kategori Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("Surface")">
+                            <a class="nav-link" asp-controller="Surface" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-texture"></i></span>
+                                <span class="nav-link-title">Yüzey Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("Collection")">
+                            <a class="nav-link" asp-controller="Collection" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-stack-2"></i></span>
+                                <span class="nav-link-title">Koleksiyon Yönetimi</span>
+                            </a>
+                        </li>
+                    }
+                }
+
+                @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ProductManager, ApplicationRoles.ContentEditor, ApplicationRoles.SeoEditor))
+                {
+                    <li class="nav-item mt-2"><span class="sidebar-group-label">İçerik</span></li>
+
+                    @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ContentEditor))
+                    {
+                        <li class="nav-item @ActiveClass("Banner")">
+                            <a class="nav-link" asp-controller="Banner" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-photo"></i></span>
+                                <span class="nav-link-title">Banner Yönetimi</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ContentEditor, ApplicationRoles.SeoEditor))
+                    {
+                        <li class="nav-item @ActiveClass("Blog")">
+                            <a class="nav-link" asp-controller="Blog" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-notes"></i></span>
+                                <span class="nav-link-title">Blog Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("News")">
+                            <a class="nav-link" asp-controller="News" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-mail-bolt"></i></span>
+                                <span class="nav-link-title">Bülten Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("ReferenceProject")">
+                            <a class="nav-link" asp-controller="ReferenceProject" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-building-skyscraper"></i></span>
+                                <span class="nav-link-title">Referans Projeler</span>
+                            </a>
+                        </li>
+                    }
+                    @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ProductManager, ApplicationRoles.ContentEditor))
+                    {
+                        <li class="nav-item @ActiveClass("Document")">
+                            <a class="nav-link" asp-controller="Document" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-file-text"></i></span>
+                                <span class="nav-link-title">Doküman Yönetimi</span>
+                            </a>
+                        </li>
+                        @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ContentEditor))
+                        {
+                            <li class="nav-item @ActiveClass("Recording")">
+                                <a class="nav-link" asp-controller="Recording" asp-action="Index">
+                                    <span class="nav-link-icon"><i class="ti ti-video"></i></span>
+                                    <span class="nav-link-title">Kayıt Yönetimi</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                }
+
+                @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ContentEditor))
+                {
+                    <li class="nav-item mt-2"><span class="sidebar-group-label">Hakkımızda</span></li>
+                    <li class="nav-item @AboutSectionActiveClass("header")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="header"><span class="nav-link-icon"><i class="ti ti-layout-navbar"></i></span><span class="nav-link-title">Sayfa Girişi</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("statistics")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="statistics"><span class="nav-link-icon"><i class="ti ti-chart-bar"></i></span><span class="nav-link-title">Sayılarla NG Kütahya</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("vision-mission")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="vision-mission"><span class="nav-link-icon"><i class="ti ti-eye"></i></span><span class="nav-link-title">Vizyon ve Misyon</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("history")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="history"><span class="nav-link-icon"><i class="ti ti-history"></i></span><span class="nav-link-title">Tarihçe</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("values")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="values"><span class="nav-link-icon"><i class="ti ti-heart-handshake"></i></span><span class="nav-link-title">Temel Değerler</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("production")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="production"><span class="nav-link-icon"><i class="ti ti-settings"></i></span><span class="nav-link-title">Üretim</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("awards")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="awards"><span class="nav-link-icon"><i class="ti ti-award"></i></span><span class="nav-link-title">Başarılar ve Ödüller</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("certificates")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="certificates"><span class="nav-link-icon"><i class="ti ti-certificate"></i></span><span class="nav-link-title">Sertifikalar</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("partnerships")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="partnerships"><span class="nav-link-icon"><i class="ti ti-users-group"></i></span><span class="nav-link-title">İş Birlikleri</span></a></li>
+                    <li class="nav-item @AboutSectionActiveClass("information")"><a class="nav-link" asp-controller="AboutManagement" asp-action="Index" asp-route-section="information"><span class="nav-link-icon"><i class="ti ti-info-circle"></i></span><span class="nav-link-title">Bilgi Toplumu</span></a></li>
+                }
+
+                @if (CanView(ApplicationRoles.Admin))
+                {
+                    <li class="nav-item mt-2"><span class="sidebar-group-label">Lokasyon</span></li>
+
+                    @if (CanView(ApplicationRoles.Admin))
+                    {
+                        <li class="nav-item @DealerCategoryActiveClass("GeneralHeadquarters")">
+                            <a class="nav-link" asp-controller="Dealer" asp-action="Index" asp-route-category="GeneralHeadquarters">
+                                <span class="nav-link-icon"><i class="ti ti-building-skyscraper"></i></span>
+                                <span class="nav-link-title">Genel Merkez</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @DealerCategoryActiveClass("Factory")">
+                            <a class="nav-link" asp-controller="Dealer" asp-action="Index" asp-route-category="Factory">
+                                <span class="nav-link-icon"><i class="ti ti-building-factory-2"></i></span>
+                                <span class="nav-link-title">Tesis Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @DealerCategoryActiveClass("SalesPoint")">
+                            <a class="nav-link" asp-controller="Dealer" asp-action="Index" asp-route-category="SalesPoint">
+                                <span class="nav-link-icon"><i class="ti ti-map-pin"></i></span>
+                                <span class="nav-link-title">Bayi Yönetimi</span>
+                            </a>
+                        </li>
+                    }
+                }
+
+                @if (CanView(ApplicationRoles.Admin, ApplicationRoles.ContentEditor))
+                {
+                    <li class="nav-item mt-2"><span class="sidebar-group-label">İletişim</span></li>
+                    <li class="nav-item @ActiveClass("FormSubmission")">
+                        <a class="nav-link" asp-controller="FormSubmission" asp-action="Index">
+                            <span class="nav-link-icon"><i class="ti ti-forms"></i></span>
+                            <span class="nav-link-title">Form Yönetimi</span>
+                        </a>
+                    </li>
+                }
+
+                @if (CanView(ApplicationRoles.Admin, ApplicationRoles.SeoEditor))
+                {
+                    <li class="nav-item mt-2"><span class="sidebar-group-label">Sistem</span></li>
+                    @if (CanView(ApplicationRoles.Admin))
+                    {
+                        <li class="nav-item @ActiveClass("User")">
+                            <a class="nav-link" asp-controller="User" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-users"></i></span>
+                                <span class="nav-link-title">Kullanıcı Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("Role")">
+                            <a class="nav-link" asp-controller="Role" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-shield-lock"></i></span>
+                                <span class="nav-link-title">Rol Yönetimi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @ActiveClass("Language")">
+                            <a class="nav-link" asp-controller="Language" asp-action="Index">
+                                <span class="nav-link-icon"><i class="ti ti-language"></i></span>
+                                <span class="nav-link-title">Dil Yönetimi</span>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</aside>

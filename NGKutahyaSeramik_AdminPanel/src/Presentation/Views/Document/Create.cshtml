@@ -1,0 +1,20 @@
+@model Presentation.Models.Document.DocumentFormViewModel
+@{
+    ViewData["Title"] = "Yeni Doküman Yükle";
+    ViewData["UseDocumentRelationPicker"] = true;
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <div>
+            <p class="admin-form-description">Teknik föy veya sertifika dosyasını sisteme yükleyin.</p>
+        </div>
+        <a asp-controller="Document" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Doküman Yönetimi'ne Dön</span>
+        </a>
+    </div>
+    <form asp-controller="Document" asp-action="Create" method="post" enctype="multipart/form-data" class="admin-form-shell">
+        @await Html.PartialAsync("_DocumentForm", Model)
+    </form>
+</div>

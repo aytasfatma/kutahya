@@ -1,0 +1,306 @@
+@using Infrastructure.Identity
+@model Presentation.Models.Home.DashboardViewModel
+@{
+    var d = Model.Dashboard;
+    var canViewProducts = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ProductManager) ||
+        User.IsInRole(ApplicationRoles.ContentEditor) || User.IsInRole(ApplicationRoles.SeoEditor);
+    var canViewDealers = User.IsInRole(ApplicationRoles.Admin);
+    var canViewUsers = User.IsInRole(ApplicationRoles.Admin);
+    var canViewForms = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+    var canViewTranslationReport = User.IsInRole(ApplicationRoles.Admin);
+
+    var hasActiveProductWarning = canViewProducts && d.ActiveProducts == 0;
+    var hasPendingFormWarning = d.UnreadFormSubmissions > 0;
+    var hasMissingTranslationWarning = d.MissingTranslationCount > 0;
+    var hasWarnings = hasActiveProductWarning || hasPendingFormWarning || hasMissingTranslationWarning;
+}
+
+<section id="dashboard-statistics" class="dashboard-statistics" aria-label="Dashboard istatistikleri">
+    <div class="row row-cards dashboard-kpi-grid">
+        <div class="col-12 col-md-6 col-xl-3">
+            @if (canViewProducts)
+            {
+                <a asp-controller="Product" asp-action="Index" class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-primary-lt text-primary"><i class="ti ti-box" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalProducts</div>
+                        <div class="dashboard-kpi-title">Ürünler</div>
+                        <div class="dashboard-kpi-meta">Aktif: @d.ActiveProducts</div>
+                        <div class="dashboard-kpi-link">Ürün yönetimine git <i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-primary-lt text-primary"><i class="ti ti-box" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalProducts</div>
+                        <div class="dashboard-kpi-title">Ürünler</div>
+                        <div class="dashboard-kpi-meta">Aktif: @d.ActiveProducts</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            @if (canViewProducts)
+            {
+                <a asp-controller="Category" asp-action="Index" class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-green-lt text-green"><i class="ti ti-category-2" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalCategories</div>
+                        <div class="dashboard-kpi-title">Yüzeyler</div>
+                        <div class="dashboard-kpi-meta">Toplam yüzey</div>
+                        <div class="dashboard-kpi-link">Yüzeyleri görüntüle <i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-green-lt text-green"><i class="ti ti-category-2" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalCategories</div>
+                        <div class="dashboard-kpi-title">Yüzeyler</div>
+                        <div class="dashboard-kpi-meta">Toplam yüzey</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            @if (canViewProducts)
+            {
+                <a asp-controller="Collection" asp-action="Index" class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-yellow-lt text-yellow"><i class="ti ti-stack-2" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalCollections</div>
+                        <div class="dashboard-kpi-title">Koleksiyonlar</div>
+                        <div class="dashboard-kpi-meta">Toplam koleksiyon</div>
+                        <div class="dashboard-kpi-link">Koleksiyonlara git <i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-yellow-lt text-yellow"><i class="ti ti-stack-2" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalCollections</div>
+                        <div class="dashboard-kpi-title">Koleksiyonlar</div>
+                        <div class="dashboard-kpi-meta">Toplam koleksiyon</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            @if (canViewDealers)
+            {
+                <a asp-controller="Dealer" asp-action="Index" class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-orange-lt text-orange"><i class="ti ti-building-store" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.DealerCount</div>
+                        <div class="dashboard-kpi-title">Bayiler</div>
+                        <div class="dashboard-kpi-meta">Aktif bayi kayıtları</div>
+                        <div class="dashboard-kpi-link">Bayi yönetimine git <i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-orange-lt text-orange"><i class="ti ti-building-store" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.DealerCount</div>
+                        <div class="dashboard-kpi-title">Bayiler</div>
+                        <div class="dashboard-kpi-meta">Aktif bayi kayıtları</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            @if (canViewUsers)
+            {
+                <a asp-controller="User" asp-action="Index" class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-cyan-lt text-cyan"><i class="ti ti-users" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalUsers</div>
+                        <div class="dashboard-kpi-title">Kullanıcılar</div>
+                        <div class="dashboard-kpi-meta">Aktif: @d.ActiveUsers</div>
+                        <div class="dashboard-kpi-link">Kullanıcıları yönet <i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-cyan-lt text-cyan"><i class="ti ti-users" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.TotalUsers</div>
+                        <div class="dashboard-kpi-title">Kullanıcılar</div>
+                        <div class="dashboard-kpi-meta">Aktif: @d.ActiveUsers</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            @if (canViewForms)
+            {
+                <a asp-controller="FormSubmission" asp-action="Index" class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-red-lt text-red"><i class="ti ti-clock" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.UnreadFormSubmissions</div>
+                        <div class="dashboard-kpi-title">Bekleyen Formlar</div>
+                        <div class="dashboard-kpi-meta">İşlenmemiş: @d.UnprocessedFormSubmissions</div>
+                        <div class="dashboard-kpi-link">Bekleyenleri incele <i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="card dashboard-kpi-card h-100">
+                    <div class="card-body">
+                        <div class="dashboard-kpi-icon bg-red-lt text-red"><i class="ti ti-clock" aria-hidden="true"></i></div>
+                        <div class="dashboard-kpi-value">@d.UnreadFormSubmissions</div>
+                        <div class="dashboard-kpi-title">Bekleyen Formlar</div>
+                        <div class="dashboard-kpi-meta">İşlenmemiş: @d.UnprocessedFormSubmissions</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-6 dashboard-operations-kpi">
+            <section class="card dashboard-operations-card h-100" aria-labelledby="dashboard-operations-title">
+                <div class="card-header">
+                    <div class="dashboard-panel-heading">
+                        <span class="avatar avatar-sm bg-azure-lt text-azure" aria-hidden="true"><i class="ti ti-activity"></i></span>
+                        <div>
+                            <h2 id="dashboard-operations-title" class="card-title dashboard-panel-title">Operasyon Özeti</h2>
+                            <p class="dashboard-panel-description">Mevcut operasyon verilerinin kısa özeti.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item dashboard-operation-item">
+                        <span><i class="ti ti-users text-cyan" aria-hidden="true"></i> Aktif kullanıcılar</span>
+                        <strong>@d.ActiveUsers</strong>
+                    </div>
+                    <div class="list-group-item dashboard-operation-item">
+                        <span><i class="ti ti-mail text-indigo" aria-hidden="true"></i> Toplam form başvurusu</span>
+                        <strong>@d.TotalFormSubmissions</strong>
+                    </div>
+                    <div class="list-group-item dashboard-operation-item">
+                        <span><i class="ti ti-language text-red" aria-hidden="true"></i> Eksik çeviriler</span>
+                        <strong>@d.MissingTranslationCount</strong>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    @* Operasyon özeti ana dashboard panel sırasına taşındı; dikkat gerektirenler alanı kaldırıldı.
+    <div class="row row-cards dashboard-operations-row">
+        <div class="col-12 col-lg-6">
+            <section class="card dashboard-operations-card h-100" aria-labelledby="dashboard-operations-title">
+                <div class="card-header">
+                    <div class="dashboard-panel-heading">
+                        <span class="avatar avatar-sm bg-azure-lt text-azure" aria-hidden="true"><i class="ti ti-activity"></i></span>
+                        <div>
+                            <h3 id="dashboard-operations-title" class="card-title dashboard-panel-title">Operasyon Özeti</h3>
+                            <p class="dashboard-panel-description">Grafik yerine mevcut gerçek operasyon verileri.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item dashboard-operation-item">
+                        <span><i class="ti ti-users text-cyan" aria-hidden="true"></i> Aktif kullanıcılar</span>
+                        <strong>@d.ActiveUsers</strong>
+                    </div>
+                    <div class="list-group-item dashboard-operation-item">
+                        <span><i class="ti ti-mail text-indigo" aria-hidden="true"></i> Toplam form başvurusu</span>
+                        <strong>@d.TotalFormSubmissions</strong>
+                    </div>
+                    <div class="list-group-item dashboard-operation-item">
+                        <span><i class="ti ti-language text-red" aria-hidden="true"></i> Eksik çeviriler</span>
+                        <strong>@d.MissingTranslationCount</strong>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <section class="card dashboard-attention-card h-100" aria-labelledby="dashboard-alerts-title">
+                <div class="card-status-top @(hasWarnings ? "bg-warning" : "bg-success")"></div>
+                <div class="card-header">
+                    <div class="dashboard-panel-heading">
+                        <span class="avatar avatar-sm @(hasWarnings ? "bg-warning-lt text-warning" : "bg-success-lt text-success")" aria-hidden="true">
+                            <i class="ti @(hasWarnings ? "ti-alert-circle" : "ti-circle-check")"></i>
+                        </span>
+                        <div>
+                            <h3 id="dashboard-alerts-title" class="card-title dashboard-panel-title">Dikkat Gerektirenler</h3>
+                            <p class="dashboard-panel-description">Bekleyen işlem ve uyarıların kısa listesi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group list-group-flush">
+                    @if (hasActiveProductWarning)
+                    {
+                        <a asp-controller="Product" asp-action="Index" class="list-group-item list-group-item-action dashboard-attention-item">
+                            <span><i class="ti ti-alert-triangle text-warning" aria-hidden="true"></i> Henüz aktif ürün bulunmuyor.</span>
+                            <i class="ti ti-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    }
+                    @if (hasPendingFormWarning)
+                    {
+                        if (canViewForms)
+                        {
+                            <a asp-controller="FormSubmission" asp-action="Index" class="list-group-item list-group-item-action dashboard-attention-item">
+                                <span><i class="ti ti-mail-opened text-warning" aria-hidden="true"></i> Yeni form başvuruları sizi bekliyor.</span>
+                                <i class="ti ti-arrow-right" aria-hidden="true"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="list-group-item dashboard-attention-item">
+                                <span><i class="ti ti-mail-opened text-warning" aria-hidden="true"></i> Yeni form başvuruları bekliyor.</span>
+                                <strong>@d.UnreadFormSubmissions</strong>
+                            </div>
+                        }
+                    }
+                    @if (hasMissingTranslationWarning)
+                    {
+                        if (canViewTranslationReport)
+                        {
+                            <a asp-controller="Language" asp-action="Report" class="list-group-item list-group-item-action dashboard-attention-item">
+                                <span><i class="ti ti-language text-warning" aria-hidden="true"></i> Tamamlanması gereken çeviriler bulunuyor.</span>
+                                <i class="ti ti-arrow-right" aria-hidden="true"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="list-group-item dashboard-attention-item">
+                                <span><i class="ti ti-language text-warning" aria-hidden="true"></i> Tamamlanması gereken çeviriler bulunuyor.</span>
+                                <strong>@d.MissingTranslationCount</strong>
+                            </div>
+                        }
+                    }
+                    @if (!hasWarnings)
+                    {
+                        <div class="list-group-item dashboard-success-state">
+                            <span class="avatar bg-success-lt text-success" aria-hidden="true"><i class="ti ti-circle-check"></i></span>
+                            <div>
+                                <strong>Şu anda dikkat gerektiren bir işlem bulunmuyor.</strong>
+                                <p class="text-secondary mb-0">Operasyon özeti sakin görünüyor.</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+    *@
+</section>

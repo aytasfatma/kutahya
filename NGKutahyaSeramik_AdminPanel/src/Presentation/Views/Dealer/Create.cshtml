@@ -1,0 +1,36 @@
+@model Presentation.Models.Dealer.DealerFormViewModel
+@using Domain.Enums
+@{
+    var pageTitle = Model.Category switch
+    {
+        DealerCategory.Factory => "Yeni Tesis Ekle",
+        DealerCategory.GeneralHeadquarters => "Genel Merkez Ekle",
+        _ => "Yeni Satış Noktası"
+    };
+    var description = Model.Category switch
+    {
+        DealerCategory.Factory => "Üretim tesisi bilgilerini sisteme ekleyiniz.",
+        DealerCategory.GeneralHeadquarters => "Genel merkez bilgilerini sisteme ekleyiniz.",
+        _ => "Bayi bilgilerini sisteme ekleyiniz."
+    };
+    var returnLabel = Model.Category switch
+    {
+        DealerCategory.Factory => "Tesis Yönetimi'ne Dön",
+        DealerCategory.GeneralHeadquarters => "Genel Merkez'e Dön",
+        _ => "Bayi Yönetimi'ne Dön"
+    };
+    ViewData["Title"] = pageTitle;
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <p class="admin-form-description">@description</p>
+        <a asp-controller="Dealer" asp-action="Index" asp-route-category="@Model.Category" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>@returnLabel</span>
+        </a>
+    </div>
+    <form asp-controller="Dealer" asp-action="Create" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_DealerForm", Model)
+    </form>
+</div>

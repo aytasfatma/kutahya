@@ -1,0 +1,148 @@
+@model Presentation.Models.Seo.SeoEditViewModel
+@{
+    ViewData["Title"] = $"{Model.DisplayName} SEO Düzenle";
+
+    string TypeLabel() => Model.EntityType switch
+    {
+        Domain.Enums.EntityType.Product => "Ürün",
+        Domain.Enums.EntityType.Category => "Kategori",
+        Domain.Enums.EntityType.Collection => "Koleksiyon",
+        Domain.Enums.EntityType.Blog => "Blog",
+        Domain.Enums.EntityType.News => "Bülten",
+        Domain.Enums.EntityType.Page => "Sayfa",
+        Domain.Enums.EntityType.ReferenceProject => "Referans Proje",
+        _ => Model.EntityType.ToString()
+    };
+}
+
+<div class="admin-form-page">
+    <div class="admin-detail-toolbar">
+        <div>
+            <h1 class="admin-list-title">SEO Düzenle</h1>
+            <p class="admin-list-description">@Model.DisplayName kaydının SEO URL, meta başlık ve meta açıklama alanlarını düzenleyin.</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Index" asp-route-type="@Model.EntityType" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>SEO Yönetimi'ne Dön</span>
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["WarningMessage"] is not null)
+    {
+        <div class="alert alert-warning">@TempData["WarningMessage"]</div>
+    }
+
+    <section class="card admin-detail-summary-card">
+        <div class="card-body">
+            <div class="admin-detail-summary-grid">
+                <div class="admin-detail-summary-item">
+                    <p class="admin-detail-summary-label">İçerik Türü</p>
+                    <p class="admin-detail-summary-value">@TypeLabel()</p>
+                </div>
+                <div class="admin-detail-summary-item">
+                    <p class="admin-detail-summary-label">Kayıt</p>
+                    <p class="admin-detail-summary-value">@Model.DisplayName</p>
+                </div>
+                <div class="admin-detail-summary-item">
+                    <p class="admin-detail-summary-label">Dil Sayısı</p>
+                    <p class="admin-detail-summary-value">@Model.Languages.Count</p>
+                </div>
+                <div class="admin-detail-summary-item">
+                    <p class="admin-detail-summary-label">Meta Alan Desteği</p>
+                    <p class="admin-detail-summary-value">@(Model.SupportsMetaFields ? "Var" : "Yok")</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <form asp-controller="Seo" asp-action="Edit" asp-route-id="@Model.EntityId" asp-route-type="@Model.EntityType" method="post">
+        <section class="card admin-form-section">
+            <div class="card-header">
+                <h2 class="admin-form-section-title">
+                    <span class="avatar bg-primary-lt text-primary">1</span>
+                    SEO Alanları
+                </h2>
+            </div>
+            <div class="card-body">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                @if (!Model.SupportsMetaFields)
+                {
+                    <div class="alert alert-info">Bu içerik türü yalnızca SEO URL alanını destekler. Meta Başlık ve Meta Açıklama alanları bu türde tanımlı değildir.</div>
+                }
+
+                <ul class="nav nav-tabs admin-form-tabs" role="tablist">
+                    @for (var i = 0; i < Model.Languages.Count; i++)
+                    {
+                        var tabId = $"seo-tab-{Model.Languages[i].LanguageCode}";
+                        <li class="nav-item" role="presentation">
+                            <a href="#@tabId"
+                               class="nav-link @(i == 0 ? "active" : "")"
+                               data-bs-toggle="tab"
+                               role="tab">
+                                @Model.Languages[i].LanguageName (@Model.Languages[i].LanguageCode)
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <div class="tab-content">
+                    @for (var i = 0; i < Model.Languages.Count; i++)
+                    {
+                        var tabId = $"seo-tab-{Model.Languages[i].LanguageCode}";
+                        <div class="tab-pane @(i == 0 ? "show active" : "")" id="@tabId" role="tabpanel">
+                            <input type="hidden" asp-for="Languages[i].LanguageId" />
+                            <input type="hidden" asp-for="Languages[i].LanguageCode" />
+                            <input type="hidden" asp-for="Languages[i].LanguageName" />
+
+                            <div class="admin-form-grid">
+                                <div class="admin-form-field admin-form-field-full">
+                                    <label asp-for="Languages[i].SeoUrl" class="form-label"></label>
+                                    <div class="input-icon">
+                                        <span class="input-icon-addon"><i class="ti ti-link"></i></span>
+                                        <input asp-for="Languages[i].SeoUrl" class="form-control" placeholder="seo-url" />
+                                    </div>
+                                    <span asp-validation-for="Languages[i].SeoUrl" class="text-danger"></span>
+                                </div>
+
+                                @if (Model.SupportsMetaFields)
+                                {
+                                    <div class="admin-form-field">
+                                        <label asp-for="Languages[i].MetaTitle" class="form-label"></label>
+                                        <input asp-for="Languages[i].MetaTitle" class="form-control" placeholder="Meta başlığı" />
+                                        <span asp-validation-for="Languages[i].MetaTitle" class="text-danger"></span>
+                                    </div>
+                                    <div class="admin-form-field">
+                                        <label asp-for="Languages[i].MetaDescription" class="form-label"></label>
+                                        <textarea asp-for="Languages[i].MetaDescription" class="form-control" rows="2" placeholder="Meta açıklaması"></textarea>
+                                        <span asp-validation-for="Languages[i].MetaDescription" class="text-danger"></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <input type="hidden" asp-for="Languages[i].MetaTitle" />
+                                    <input type="hidden" asp-for="Languages[i].MetaDescription" />
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <div class="admin-form-footer">
+            <div class="admin-form-actions">
+                <button type="submit" class="btn btn-primary admin-form-action-btn">
+                    <i class="ti ti-device-floppy" aria-hidden="true"></i>
+                    <span>Kaydet</span>
+                </button>
+            </div>
+            <a asp-action="Index" asp-route-type="@Model.EntityType" class="btn btn-outline-secondary admin-form-action-btn">
+                <i class="ti ti-x" aria-hidden="true"></i>
+                <span>İptal</span>
+            </a>
+        </div>
+    </form>
+</div>

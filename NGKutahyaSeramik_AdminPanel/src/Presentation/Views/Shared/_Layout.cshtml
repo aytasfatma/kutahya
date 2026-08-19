@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] is not null ? $"{ViewData["Title"]} — NG Kütahya Seramik Yönetim Paneli" : "NG Kütahya Seramik Yönetim Paneli")</title>
+    <link rel="stylesheet" href="~/lib/tabler/css/tabler.min.css" />
+    <link rel="stylesheet" href="~/lib/tabler-icons/tabler-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="page"
+             x-data="{
+                sidebarOpen: (() => { try { return localStorage.getItem('ng-sidebar-open') !== 'false' } catch { return true } })(),
+                mobileSidebarOpen: false,
+                toggleSidebar() {
+                    if (window.matchMedia('(min-width: 992px)').matches) {
+                        this.sidebarOpen = !this.sidebarOpen;
+                        return;
+                    }
+
+                    const menu = document.getElementById('sidebar-menu');
+                    if (menu && window.bootstrap) {
+                        window.bootstrap.Collapse.getOrCreateInstance(menu).toggle();
+                    }
+                }
+             }"
+             x-init="
+                $watch('sidebarOpen', value => { try { localStorage.setItem('ng-sidebar-open', value ? 'true' : 'false') } catch {} });
+                const menu = document.getElementById('sidebar-menu');
+                if (menu) {
+                    menu.addEventListener('shown.bs.collapse', () => mobileSidebarOpen = true);
+                    menu.addEventListener('hidden.bs.collapse', () => mobileSidebarOpen = false);
+                }
+             "
+             :class="{ 'sidebar-collapsed': !sidebarOpen }">
+            @await Html.PartialAsync("_Sidebar")
+            <main class="page-wrapper">
+                @await Html.PartialAsync("_Topbar")
+                <div class="page-body">
+                    <div class="ng-page-container">
+                        @RenderBody()
+                    </div>
+                </div>
+            </main>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+    <script src="~/lib/tabler/js/tabler.min.js"></script>
+    <script src="~/lib/htmx/htmx.min.js"></script>
+    <script defer src="~/lib/alpine/alpine.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

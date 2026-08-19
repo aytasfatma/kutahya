@@ -1,0 +1,9 @@
+@model Presentation.Models.User.UserFormViewModel
+
+<h2>Kullanıcı Düzenle</h2>
+
+<form asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @await Html.PartialAsync("_UserForm", Model)
+</form>
+
+<p><a asp-action="Index">Listeye Dön</a></p>

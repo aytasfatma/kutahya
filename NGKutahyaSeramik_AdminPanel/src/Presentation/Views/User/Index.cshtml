@@ -1,0 +1,118 @@
+@model Presentation.Models.User.UserIndexViewModel
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Kullanıcı Listesi</h1>
+                <p class="admin-list-description">Yönetim paneli kullanıcılarını ve rollerini yönetin.</p>
+            </div>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-controller="User" asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                <i class="ti ti-user-plus" aria-hidden="true"></i>
+                <span>Yeni Kullanıcı</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+
+    @if (!Model.Users.Any())
+    {
+        <div class="empty">
+            <div class="empty-icon"><i class="ti ti-users"></i></div>
+            <p class="empty-title">Henüz kullanıcı eklenmedi.</p>
+            <p class="empty-action">
+                <a asp-action="Create" class="btn btn-primary"><i class="ti ti-plus me-1"></i>İlk kullanıcıyı ekle</a>
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table">
+                <thead>
+                    <tr>
+                        <th>E-posta</th>
+                        <th>Rol</th>
+                        <th>Durum</th>
+                        <th>Kilit</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.Email</td>
+                        <td><span class="badge bg-primary-lt">@user.Role</span></td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success-lt">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary-lt">Pasif</span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.IsLockedOut)
+                            {
+                                <span class="badge bg-danger-lt">Kilitli</span>
+                            }
+                            else
+                            {
+                                <span class="text-secondary">—</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-ghost-secondary">Düzenle</a>
+                            <a asp-action="ResetPassword" asp-route-id="@user.Id" class="btn btn-sm btn-ghost-secondary">Parola Sıfırla</a>
+                            @if (!user.IsSeedAdmin && user.IsActive)
+                            {
+                                <form asp-action="Deactivate" asp-route-id="@user.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-ghost-secondary">Pasifleştir</button>
+                                </form>
+                            }
+                            else if (!user.IsSeedAdmin)
+                            {
+                                <form asp-action="Activate" asp-route-id="@user.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-ghost-secondary">Aktifleştir</button>
+                                </form>
+                            }
+                            @if (!user.IsSeedAdmin)
+                            {
+                                <form asp-action="Delete" asp-route-id="@user.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-ghost-danger">Sil</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    </section>
+</div>

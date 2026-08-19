@@ -1,0 +1,17 @@
+@model Presentation.Models.Category.CategoryFormViewModel
+@{
+    ViewData["Title"] = "Yeni Kategori";
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <p class="admin-form-description">Yeni ürün kategorisi için gerekli bilgileri giriniz.</p>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Kategori Yönetimi'ne Dön</span>
+        </a>
+    </div>
+    <form asp-controller="Category" asp-action="Create" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_CategoryForm", Model)
+    </form>
+</div>

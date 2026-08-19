@@ -1,0 +1,127 @@
+@using Infrastructure.Identity
+@model IReadOnlyList<Application.Banners.BannerDto>
+@{
+    ViewData["Title"] = "Banner Yönetimi";
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Banner Listesi</h1>
+                <p class="admin-list-description">Hero, kampanya ve içerik bannerlarını yönetin.</p>
+            </div>
+        </div>
+        @if (canEdit)
+        {
+            <div class="admin-list-actions">
+                <a asp-controller="Banner" asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-photo-plus" aria-hidden="true"></i>
+                    <span>Yeni Banner</span>
+                </a>
+            </div>
+        }
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Görsel</th>
+                        <th>Başlık</th>
+                        <th>Yayın Aralığı</th>
+                        <th>Yayın Durumu</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var banner in Model)
+                    {
+                        <tr>
+                            <td class="w-1">
+                                @if (banner.ImagePath is not null)
+                                {
+                                    <img src="@banner.ImagePath" alt="" class="admin-list-thumb" />
+                                }
+                                else
+                                {
+                                    <span class="avatar avatar-sm bg-secondary-lt text-secondary" aria-hidden="true"><i class="ti ti-photo-off"></i></span>
+                                }
+                            </td>
+                            <td class="fw-semibold text-truncate-cell">@banner.DisplayName</td>
+                            <td>@(banner.PublishStartDate?.ToString("dd.MM.yyyy")) - @(banner.PublishEndDate?.ToString("dd.MM.yyyy"))</td>
+                            <td>
+                                <span class="badge admin-status-badge @(banner.IsActive ? "bg-success-lt" : "bg-secondary-lt")">
+                                    @(banner.IsActive ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                @if (canEdit)
+                                {
+                                    <div class="admin-row-actions">
+                                        <a asp-action="Edit" asp-route-id="@banner.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@banner.DisplayName bannerını düzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+                                        <form asp-action="ToggleActive" asp-route-id="@banner.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-secondary" aria-label="@banner.DisplayName durumunu değiştir">
+                                                @(banner.IsActive ? "Pasif Yap" : "Aktif Yap")
+                                            </button>
+                                        </form>
+                                        <form asp-action="Delete" asp-route-id="@banner.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@banner.DisplayName bannerını sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-photo"></i></span>
+                </div>
+                <p class="empty-title">Henüz banner eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Web sitesi görsel alanlarını yönetmek için ilk bannerı ekleyin.</p>
+                @if (canEdit)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-plus" aria-hidden="true"></i>
+                            <span>İlk Bannerı Ekle</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>

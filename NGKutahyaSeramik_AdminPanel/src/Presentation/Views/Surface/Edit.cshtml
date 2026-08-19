@@ -1,0 +1,3 @@
+@model Presentation.Models.Surface.SurfaceFormViewModel
+@{ ViewData["Title"] = "Yüzeyi Düzenle"; }
+<div class="admin-form-page"><div class="admin-form-header"><p class="admin-form-description">Yüzey bilgilerini ve sıralamasını güncelleyiniz.</p><a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn"><i class="ti ti-arrow-left"></i><span>Yüzey Yönetimi'ne Dön</span></a></div><form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form-shell">@await Html.PartialAsync("_Form", Model)</form></div>

@@ -1,0 +1,192 @@
+@using System.Linq
+@using Infrastructure.Identity
+@model Presentation.Models.Product.ProductIndexViewModel
+@{
+    ViewData["Title"] = "Urun Yonetimi";
+    var canCreate = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ProductManager);
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ProductManager) ||
+        User.IsInRole(ApplicationRoles.ContentEditor) || User.IsInRole(ApplicationRoles.SeoEditor);
+    var canDelete = User.IsInRole(ApplicationRoles.Admin);
+    var paginationModel = new Presentation.Models.Shared.PaginationViewModel
+    {
+        ActionName = "Index",
+        CurrentPage = Model.Page.PageNumber,
+        PageSize = Model.Page.PageSize,
+        TotalItems = Model.Page.TotalCount,
+        RouteValues = new Dictionary<string, string?> { ["sort"] = Model.Sort }
+    };
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri don"
+                    title="Geri don"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Urun Listesi</h1>
+                <p class="admin-list-description">Urunleri, teknik bilgileri, gorselleri ve yayin durumlarini yonetin.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-list-controlbar admin-list-controlbar--actions-only">
+        <div class="admin-list-controlbar-right">
+            <form asp-action="Index" method="get" class="admin-list-sort-form">
+                <label for="product-sort" class="form-label mb-0">Sıralama</label>
+                <select id="product-sort" name="sort" asp-items="Model.SortOptions" class="form-select" onchange="this.form.submit()"></select>
+            </form>
+            @if (canCreate)
+            {
+                <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Ürün Ekle</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Urun Kodu</th>
+                        <th>Urun Adi</th>
+                        <th>Kategori</th>
+                        <th>Koleksiyon</th>
+                        <th>Marka</th>
+                        <th>Ebat</th>
+                        <th>Durum</th>
+                        <th>Siralama</th>
+                        <th class="text-end">Islemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Page.Items.Any())
+                {
+                    <tbody>
+                    @foreach (var product in Model.Page.Items)
+                    {
+                        var title = string.IsNullOrWhiteSpace(product.DisplayName) ? product.ProductCode : product.DisplayName;
+                        var hasImage = !string.IsNullOrWhiteSpace(product.PrimaryImagePath);
+
+                        <tr>
+                            <td class="w-1">
+                                @if (hasImage)
+                                {
+                                    <button type="button"
+                                            class="product-preview-trigger"
+                                            data-preview-src="@product.PrimaryImagePath"
+                                            data-preview-title="@title"
+                                            data-preview-code="@product.ProductCode"
+                                            aria-label="@title urun gorselini buyut">
+                                        <img src="@product.PrimaryImagePath"
+                                             alt="@title"
+                                             class="product-preview-thumb" />
+                                    </button>
+                                }
+                                else
+                                {
+                                    <div class="product-gallery-placeholder" aria-hidden="true">
+                                        <i class="ti ti-photo-off"></i>
+                                        <span>Resim Yok</span>
+                                    </div>
+                                }
+                            </td>
+                            <td class="fw-semibold">@product.ProductCode</td>
+                            <td class="text-truncate-cell">@title</td>
+                            <td>@product.CategoryName</td>
+                            <td>@product.CollectionName</td>
+                            <td>@product.BrandLabel</td>
+                            <td>@product.Size</td>
+                            <td><span class="badge bg-primary-lt admin-status-badge">@product.StatusLabel</span></td>
+                            <td>@product.DisplayOrder</td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    @if (canEdit)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@product.ProductCode urununu duzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Duzenle</span>
+                                        </a>
+                                    }
+                                    @if (canDelete)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@product.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@product.ProductCode urununu sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Page.Items.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-box-off"></i></span>
+                </div>
+                <p class="empty-title">Henuz urun eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Urun katalogunu olusturmaya baslamak icin ilk urunu ekleyin.</p>
+                @if (canCreate)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-plus" aria-hidden="true"></i>
+                            <span>Ilk Urunu Ekle</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="admin-list-pagination">
+            @await Html.PartialAsync("_Pagination", paginationModel)
+        </div>
+    </section>
+
+    <div class="modal fade product-preview-modal" id="productPreviewModal" tabindex="-1" aria-labelledby="productPreviewModalTitle" aria-hidden="true" data-product-preview-modal>
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-grid">
+                        <h2 class="modal-title mb-0" id="productPreviewModalTitle" data-product-preview-title>Urun Gorseli</h2>
+                        <span class="text-secondary small" data-product-preview-code></span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="product-preview-stage">
+                        <img src="" alt="" class="product-preview-image" data-product-preview-image />
+                        <div class="product-preview-error d-none" role="status" data-product-preview-error>
+                            <i class="ti ti-photo-x" aria-hidden="true"></i>
+                            <span>Gorsel yuklenemedi.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

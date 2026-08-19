@@ -1,0 +1,3016 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amazonit - NG Kütahya Seramik</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+/*... RESET ...*/
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Noto Sans',sans-serif;background:#fff;overflow-x:hidden;color:#2D2926}
+::selection{background:#2D2926;color:#fff}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+img{display:block;max-width:100%;height:auto}
+a:focus-visible,button:focus-visible{outline:2px solid #53565A;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition-duration:0.01ms!important;animation-duration:0.01ms!important}}
+
+/*... TOKENS ...*/
+:root{
+  --black:#2D2926;
+  --gray:#53565A;
+  --white:#FFFFFF;
+  --light:#F7F7F5;
+  --lighter:#FBFBFA;
+  --border:#EAEAE7;
+  --section-pad:120px;
+}
+
+/*... LAYOUT ...*/
+.wrap{max-width:1320px;margin:0 auto;padding:0 48px}
+
+/*... TYPOGRAPHY ...*/
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);font-weight:400;margin-bottom:14px}
+.section-title{font-size:36px;font-weight:300;color:var(--black);line-height:1.2;margin:0}
+
+/*... SCROLL REVEAL ...*/
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 1s cubic-bezier(.25,.46,.45,.94),transform 1s cubic-bezier(.25,.46,.45,.94)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/*... CTA ...*/
+.cta{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--black);color:var(--black);
+  padding:14px 32px;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;transition:all .35s ease;background:none
+}
+.cta:hover{background:var(--black);color:var(--white)}
+.cta--light{border-color:rgba(255,255,255,.5);color:#fff}
+.cta--light:hover{background:#fff;color:var(--black);border-color:#fff}
+.cta svg{width:14px;height:14px}
+
+/*... HEADER ...*/
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:var(--white);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s,box-shadow .3s
+}
+.header.scrolled{border-bottom-color:var(--border);box-shadow:0 1px 20px rgba(0,0,0,.03)}
+.header__inner{
+  max-width:1440px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:72px
+}
+.logo-img{height:28px;width:auto}
+.logo-img--footer{height:22px}
+
+.nav{display:flex;gap:30px}
+.nav a{font-size:12.5px;font-weight:400;color:var(--black);letter-spacing:.02em;transition:color .25s;position:relative}
+.nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gray);transition:width .35s ease}
+.nav a:hover{color:var(--gray)}
+.nav a:hover::after{width:100%}
+
+.header__right{display:flex;align-items:center;gap:20px}
+.header__right button{padding:4px;color:var(--black);transition:color .2s}
+.header__right button:hover{color:var(--gray)}
+
+/*... LANG ...*/
+.lang{position:relative}
+.lang__btn{display:flex;align-items:center;gap:5px;font-size:12px;letter-spacing:.06em;color:var(--black);padding:4px}
+.lang__dd{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--border);min-width:100px;z-index:200;display:none;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.lang__dd.open{display:block}
+.lang__dd button{display:flex;align-items:center;gap:8px;width:100%;padding:10px 16px;font-size:12px;color:var(--black);background:transparent;transition:background .15s}
+.lang__dd button:hover,.lang__dd button.active{background:var(--light)}
+
+/*... HERO ...*/
+.hero{
+  position:relative;height:100vh;min-height:640px;margin-top:72px;overflow:hidden
+}
+.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero__overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(100deg,rgba(255,255,255,.88) 0%,rgba(255,255,255,.55) 35%,rgba(255,255,255,.15) 55%,transparent 70%);
+  z-index:1
+}
+.hero__content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:52px;font-weight:300;line-height:1.12;letter-spacing:-.02em;max-width:520px}
+.hero h1 strong{font-weight:500}
+.hero__desc{font-size:15px;font-weight:300;color:var(--gray);line-height:1.75;margin:28px 0 40px;max-width:400px}
+.hero__scroll{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.35
+}
+.hero__scroll-line{width:1px;height:48px;background:var(--black);animation:scrollPulse 2s ease infinite}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(.7)}50%{opacity:1;transform:scaleY(1)}}
+.hero__scroll-text{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--black)}
+
+/*... SECTION ...*/
+.section{padding:var(--section-pad) 0}
+
+/*... COLLECTIONS CAROUSEL ...*/
+.carousel-wrap{position:relative;overflow:hidden;margin:0 -48px;padding:0 48px}
+.carousel{
+  display:flex;gap:20px;
+  cursor:grab;user-select:none;
+  transition:transform .1s ease-out;
+  will-change:transform
+}
+.carousel:active{cursor:grabbing}
+.carousel-item{flex:0 0 calc(25% - 15px);min-width:280px}
+.carousel-item__img{
+  aspect-ratio:3/4;overflow:hidden;margin-bottom:20px;position:relative
+}
+.carousel-item__img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.25,.46,.45,.94)}
+.carousel-item:hover .carousel-item__img img{transform:scale(1.05)}
+.carousel-item h3{font-size:17px;font-weight:400;margin-bottom:5px}
+.carousel-item p{font-size:13px;font-weight:300;color:var(--gray)}
+
+/*... USAGE AREAS ...*/
+.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.usage-card{position:relative;display:block;overflow:hidden}
+.usage-card__img{width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .8s cubic-bezier(.25,.46,.45,.94)}
+.usage-card:hover .usage-card__img{transform:scale(1.04)}
+.usage-card__overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.4) 100%);z-index:1}
+.usage-card__label{position:absolute;bottom:0;left:0;padding:28px;z-index:2;font-size:20px;font-weight:300;color:#fff;letter-spacing:.02em}
+
+/*... PRODUCT GROUPS ...*/
+.product-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border)
+}
+.product-item{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:48px 14px;border-right:1px solid var(--border);transition:background .3s
+}
+.product-item:last-child{border-right:none}
+.product-item:hover{background:var(--light)}
+.product-item__icon{margin-bottom:18px}
+.product-item h3{font-size:13px;font-weight:500;letter-spacing:.02em;margin-bottom:6px}
+.product-item p{font-size:11.5px;font-weight:300;color:var(--gray)}
+
+/*... FEATURED ...*/
+.featured{position:relative;height:85vh;min-height:520px;overflow:hidden}
+.featured__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.featured__gradient{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.02) 30%,rgba(0,0,0,.45) 100%);z-index:1}
+.featured__content{position:absolute;bottom:80px;left:0;right:0;z-index:2}
+.featured__eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:400;margin-bottom:14px}
+.featured h2{font-size:48px;font-weight:300;color:#fff;margin-bottom:16px;line-height:1.08}
+.featured__desc{font-size:15px;font-weight:300;color:rgba(255,255,255,.78);max-width:440px;line-height:1.7;margin-bottom:36px}
+
+/*... PROJECTS ...*/
+.projects-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px}
+.projects-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.project-card{display:block;color:inherit}
+.project-card__img{aspect-ratio:4/5;overflow:hidden;margin-bottom:20px}
+.project-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.25,.46,.45,.94)}
+.project-card:hover .project-card__img img{transform:scale(1.04)}
+.project-card h3{font-size:16px;font-weight:400;margin-bottom:4px}
+.project-card p{font-size:13px;font-weight:300;color:var(--gray)}
+
+/*... SPLIT LAYOUT ...*/
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.split__text p{font-size:15px;font-weight:300;color:var(--gray);line-height:1.8;margin-bottom:40px}
+.split__visual{overflow:hidden}
+.split__visual img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
+.split__visual:hover img{transform:scale(1.03)}
+
+/*... SHOWROOM LIST ...*/
+.showroom-list a{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 0;border-bottom:1px solid var(--border);
+  transition:padding-left .35s ease
+}
+.showroom-list a:hover{padding-left:10px}
+.showroom-list__info{display:flex;align-items:baseline;gap:18px}
+.showroom-list__city{font-size:16px;font-weight:400}
+.showroom-list__addr{font-size:13px;font-weight:300;color:var(--gray)}
+
+/*... FOOTER ...*/
+.footer{border-top:1px solid var(--border);padding:80px 0 48px;background:var(--white)}
+.footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:76px}
+.footer__info p{font-size:13px;font-weight:300;color:var(--gray);line-height:1.85;max-width:280px;margin-top:20px}
+.footer__col h4{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.footer__col a{display:block;font-size:13px;font-weight:300;color:var(--gray);margin-bottom:12px;transition:color .2s}
+.footer__col a:hover{color:var(--black)}
+.footer__bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center}
+.footer__copy{font-size:11.5px;font-weight:300;color:var(--gray)}
+.footer__legal{display:flex;gap:24px}
+.footer__legal a{font-size:11.5px;font-weight:300;color:var(--gray);transition:color .2s}
+.footer__legal a:hover{color:var(--black)}
+
+/*... ARROW ICON REUSABLE ...*/
+.arrow-icon{width:14px;height:14px;flex-shrink:0}
+
+/* ... SIDE MENU ... */
+.menu-backdrop{
+  position:fixed;inset:0;z-index:1500;
+  background:rgba(45,41,38,.36);
+  opacity:0;visibility:hidden;
+  transition:opacity .35s ease,visibility .35s ease
+}
+.menu-backdrop.open{opacity:1;visibility:visible}
+.side-menu{
+  position:fixed;top:0;right:0;bottom:0;z-index:1600;
+  width:min(430px,92vw);background:#fff;
+  padding:28px 34px 34px;
+  transform:translateX(100%);
+  transition:transform .42s cubic-bezier(.22,.61,.36,1);
+  display:flex;flex-direction:column
+}
+.side-menu.open{transform:translateX(0)}
+.side-menu__header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:25px;border-bottom:1px solid var(--border)
+}
+.side-menu__logo{width:190px;height:auto}
+.side-menu__close{
+  width:40px;height:40px;font-size:31px;font-weight:300;
+  color:var(--black);line-height:1
+}
+.side-menu__nav{display:grid;margin-top:36px}
+.side-menu__nav a{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:17px 0;border-bottom:1px solid var(--border);
+  font-size:21px;font-weight:300;letter-spacing:-.01em;
+  transition:padding-left .3s ease,color .3s ease
+}
+.side-menu__nav a:hover{padding-left:8px;color:var(--gray)}
+.side-menu__nav span{font-size:18px;color:var(--gray)}
+.side-menu__footer{
+  margin-top:auto;padding-top:26px;border-top:1px solid var(--border);
+  display:grid;gap:8px
+}
+.side-menu__footer a{font-size:12px;color:var(--gray)}
+body.menu-open{overflow:hidden}
+@media(max-width:640px){
+  .side-menu{padding:22px 25px 28px}
+  .side-menu__logo{width:165px}
+}
+
+.logo-img{height:auto;width:205px;max-height:36px;object-fit:contain}
+.logo-img--footer{height:auto;width:205px;max-height:32px}
+@media(max-width:900px){.logo-img{width:170px}}
+
+/* ... MÜŞTERİ REVİZYONLARI ... */
+:root{--section-pad:94px}
+.section-title{font-size:30px}
+.section--sustainability{background:#F1F2F0!important}
+.split--sustainability .sustainability-visual{order:1}
+.split--sustainability .split__text{order:2}
+.sustainability-visual img{width:100%;height:100%;object-fit:cover}
+
+.usage-grid{grid-template-columns:repeat(4,1fr);gap:18px}
+.usage-card--compact{border-radius:2px;background:#fff}
+.usage-card--compact .usage-card__img{aspect-ratio:4/3}
+.usage-card--compact .usage-card__label{padding:18px;font-size:16px}
+.usage-card--compact .usage-card__overlay{background:linear-gradient(transparent 52%,rgba(45,41,38,.36))}
+
+.header{border-bottom:1px solid var(--border)}
+.header__inner{height:76px}
+.header__brand{display:flex;align-items:center}
+.header__brand .logo-img{width:220px!important;max-width:100%!important;height:auto!important;object-fit:contain!important;transform:scale(1.25);transform-origin:left center}
+@media(max-width:1199px){.header__brand .logo-img{width:205px!important}}
+@media(max-width:767px){.header__brand .logo-img{width:170px!important}}
+.nav--mega{gap:6px}
+.nav__trigger{font-size:12px;font-weight:400;color:var(--black);padding:29px 14px;position:relative}
+.nav__trigger::after{content:"";position:absolute;left:14px;right:100%;bottom:20px;height:1px;background:var(--gray);transition:right .25s}
+.nav__trigger:hover::after,.nav__trigger.active::after{right:14px}
+.dealer-btn{border:1px solid var(--black);padding:10px 15px;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase}
+
+.mega-menu{position:absolute;top:76px;left:0;right:0;background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);opacity:0;visibility:hidden;transform:translateY(-8px);transition:.25s;box-shadow:0 18px 36px rgba(0,0,0,.045)}
+.mega-menu.open{opacity:1;visibility:visible;transform:none}
+.mega-menu__inner{max-width:1320px;margin:auto;padding:38px 48px;display:grid;grid-template-columns:260px 1fr;gap:70px}
+.mega-menu__intro p{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray);margin-bottom:8px}
+.mega-menu__intro h3{font-size:25px;font-weight:300}
+.mega-menu__links{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:14px 30px}
+.mega-menu__links a,.mega-menu__columns a{font-size:13px;color:var(--gray)}
+.mega-menu__links a:hover,.mega-menu__columns a:hover{color:var(--black)}
+.mega-menu__columns{display:grid;grid-template-columns:1fr 1fr;gap:72px}
+.mega-menu__columns>div{display:grid;gap:11px}
+.mega-menu__columns h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.nav--mega .mega-menu__inner,
+header .mega-menu__inner{
+  grid-template-columns:1fr!important;
+  gap:0!important;
+}
+.nav--mega .mega-menu__intro,
+header .mega-menu__intro{
+  display:none!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.filter-rail{position:fixed;right:0;top:48%;z-index:900;display:flex;align-items:center;gap:9px;background:var(--black);color:#fff;padding:14px 10px;writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.drawer-backdrop{position:fixed;inset:0;z-index:1800;background:rgba(45,41,38,.36);opacity:0;visibility:hidden;transition:.3s}
+.drawer-backdrop.open{opacity:1;visibility:visible}
+.filter-drawer,.mobile-menu{position:fixed;top:0;right:0;bottom:0;z-index:1900;width:min(430px,92vw);background:#fff;transform:translateX(100%);transition:.4s;padding:30px 34px;overflow:auto}
+.filter-drawer.open,.mobile-menu.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:22px}
+.drawer-head h3{font-size:27px;font-weight:300}
+.drawer-head button{font-size:30px;color:var(--black)}
+.drawer-head img{width:190px}
+.filter-form{display:grid;gap:20px;margin-top:28px}
+.filter-form label{display:grid;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.filter-form input,.filter-form select{width:100%;border:1px solid var(--border);background:#fff;padding:13px;color:var(--black)}
+.filter-submit{justify-content:center;margin-top:8px}
+.mobile-menu nav{display:grid;margin-top:30px}
+.mobile-menu nav a{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:18px 0;font-size:20px;font-weight:300}
+body.drawer-open{overflow:hidden}
+
+.footer__brand{display:grid;grid-template-columns:250px 1fr;gap:30px;align-items:start;padding-bottom:50px}
+.footer__brand p{font-size:12px;line-height:1.75;color:var(--gray)}
+.footer__grid--schema{grid-template-columns:repeat(6,1fr);gap:28px;margin-bottom:60px}
+.footer__grid--schema .footer__col h4{line-height:1.45}
+.footer__grid--schema .footer__col a{font-size:12px}
+
+@media(max-width:1100px){
+  .nav--mega{display:none}
+  .dealer-btn{display:none}
+  .usage-grid{grid-template-columns:1fr 1fr}
+  .footer__grid--schema{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:700px){
+  :root{--section-pad:72px}
+  .section-title{font-size:27px}
+  .usage-grid{grid-template-columns:1fr}
+  .mega-menu{display:none}
+  .filter-rail{top:auto;bottom:18px;right:12px;writing-mode:horizontal-tb;transform:none;padding:12px 16px}
+  .footer__brand{grid-template-columns:1fr}
+  .footer__grid--schema{grid-template-columns:1fr 1fr}
+}
+
+/* Footer logo altı şirket bilgileri */
+.footer__brand{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:24px;
+  padding-bottom:50px;
+}
+.footer__company{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-width:290px;
+}
+.footer__company strong{
+  font-size:14px;
+  font-weight:500;
+  color:var(--black);
+  line-height:1.6;
+}
+.footer__company p,
+.footer__company a{
+  font-size:12px;
+  font-weight:300;
+  color:var(--gray);
+  line-height:1.75;
+}
+.footer__company a:hover{color:var(--black)}
+
+.footer__brand{grid-template-columns:none!important}
+
+/* Footer: logo ve adres solda, menüler sağda */
+.footer{padding:78px 0 34px}
+.footer__main{
+  display:grid;
+  grid-template-columns:minmax(250px,320px) 1fr;
+  gap:70px;
+  align-items:start;
+}
+.footer__identity{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.footer__identity .logo-img--footer{
+  width:210px;
+  max-height:none;
+  height:auto;
+  margin-bottom:26px;
+}
+.footer__company{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+  max-width:290px;
+}
+.footer__company strong{
+  font-size:13px;
+  line-height:1.6;
+  font-weight:500;
+  color:var(--black);
+}
+.footer__company p,
+.footer__company a{
+  font-size:12px;
+  line-height:1.75;
+  font-weight:300;
+  color:var(--gray);
+}
+.footer__company a:hover{color:var(--black)}
+
+.footer__menus{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(150px,1fr));
+  gap:42px 36px;
+  justify-content:end;
+}
+.footer__menus .footer__col h4{
+  font-size:10.5px;
+  line-height:1.45;
+  margin-bottom:17px;
+}
+.footer__menus .footer__col a{
+  font-size:12px;
+  margin-bottom:9px;
+  line-height:1.55;
+}
+.footer__bottom{
+  margin-top:58px;
+  border-top:1px solid var(--border);
+  padding-top:22px;
+}
+
+@media(max-width:1100px){
+  .footer__main{grid-template-columns:1fr;gap:52px}
+  .footer__menus{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:760px){
+  .footer__menus{grid-template-columns:1fr 1fr;gap:34px 24px}
+  .footer__bottom{align-items:flex-start;flex-direction:column;gap:14px}
+}
+
+/* ... FOOTER FINAL DÜZENİ ... */
+.footer{
+  border-top:1px solid var(--border);
+  padding:80px 0 48px;
+  background:var(--white);
+}
+
+.footer__grid--final{
+  display:grid;
+  grid-template-columns:minmax(250px,2fr) repeat(6,minmax(120px,1fr));
+  gap:34px;
+  align-items:start;
+  margin-bottom:76px;
+}
+
+.footer__info{
+  align-self:end;
+  padding-right:24px;
+}
+
+.footer__info .logo-img--footer{
+  width:205px;
+  height:auto;
+  max-height:none;
+  margin-bottom:22px;
+}
+
+.footer__info p{
+  font-size:12px;
+  font-weight:300;
+  color:var(--gray);
+  line-height:1.8;
+  max-width:280px;
+  margin:0;
+}
+
+.footer__col h4{
+  font-size:10.5px;
+  font-weight:500;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  line-height:1.45;
+  margin-bottom:18px;
+}
+
+.footer__col a{
+  display:block;
+  font-size:12px;
+  font-weight:300;
+  color:var(--gray);
+  line-height:1.55;
+  margin-bottom:9px;
+  transition:color .2s;
+}
+
+.footer__col a:hover{color:var(--black)}
+
+.footer__bottom{
+  border-top:1px solid var(--border);
+  padding-top:24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+@media(max-width:1250px){
+  .footer__grid--final{
+    grid-template-columns:minmax(240px,1.4fr) repeat(3,1fr);
+  }
+}
+
+@media(max-width:820px){
+  .footer__grid--final{
+    grid-template-columns:1fr 1fr;
+    gap:38px 24px;
+  }
+  .footer__info{
+    grid-column:1 / -1;
+    align-self:start;
+    padding-right:0;
+  }
+}
+
+@media(max-width:560px){
+  .footer__grid--final{
+    grid-template-columns:1fr;
+  }
+  .footer__bottom{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+}
+
+.footer__signature{
+  margin-top:18px;
+  text-align:center;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#9A9A9A;
+}
+.footer__signature a{
+  color:inherit;
+  text-decoration:none;
+}
+
+/* Footer 5 menü kolonlu düzen */
+.footer__grid--final{
+  display:grid;
+  grid-template-columns:minmax(270px,1.8fr) repeat(5,minmax(135px,1fr));
+  gap:40px;
+  align-items:start;
+}
+.footer__info{align-self:end}
+@media(max-width:1250px){
+  .footer__grid--final{
+    grid-template-columns:minmax(250px,1.4fr) repeat(3,1fr);
+  }
+}
+@media(max-width:820px){
+  .footer__grid--final{grid-template-columns:1fr 1fr}
+  .footer__info{
+    grid-column:1 / -1;
+    align-self:start;
+  }
+}
+@media(max-width:560px){
+  .footer__grid--final{grid-template-columns:1fr}
+}
+
+
+/* Footer hizalama düzeltmesi */
+.footer__grid--final{
+    align-items:start !important;
+}
+.footer__info{
+    align-self:start !important;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    padding-top:0 !important;
+    margin-top:0 !important;
+}
+.footer__info .logo-img--footer{
+    display:block;
+    width:220px;
+    height:auto;
+    margin:0 0 26px 0 !important;
+}
+.footer__info p{
+    margin:0;
+}
+.footer__col h4{
+    margin-top:0 !important;
+}
+
+/* Footer spacing refinement */
+.footer{
+    padding:70px 0 32px !important;
+}
+.footer__grid--final{
+    margin-bottom:34px !important;
+}
+.footer__bottom{
+    margin-top:0 !important;
+    padding-top:18px !important;
+}
+.footer__signature{
+    margin-top:12px !important;
+    padding-bottom:6px;
+}
+
+/* ......... MÜŞTERİ YORUMLARI SON REVİZYON ......... */
+.header{
+  top:12px!important;left:24px!important;right:24px!important;width:auto!important;
+  border:1px solid rgba(83,86,90,.10)!important;
+  box-shadow:0 10px 30px rgba(45,41,38,.045)!important;
+  background:rgba(255,255,255,.97)!important;
+}
+.header__inner{height:62px!important;max-width:1320px!important;padding:0 28px!important}
+.mega-menu{top:62px!important}
+.nav__trigger{padding:22px 13px!important}
+.nav__trigger::after{bottom:14px!important}
+
+.hero{margin-top:0!important;height:calc(100vh - 24px)!important;min-height:620px!important}
+.hero__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero__overlay{
+  background:linear-gradient(100deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.46) 34%,rgba(255,255,255,.10) 57%,transparent 72%)!important
+}
+
+:root{--section-pad:76px!important}
+.wrap{max-width:1240px!important}
+.section-title{font-size:28px!important}
+.split{grid-template-columns:1fr 1fr!important;gap:54px!important;max-width:1120px;margin:0 auto}
+.split__visual,.split__visual img{max-height:520px}
+.split__text p{margin-bottom:30px!important}
+
+.carousel-item{flex:0 0 calc(20% - 16px)!important;min-width:215px!important}
+.carousel-item__img{aspect-ratio:1/1!important;margin-bottom:14px!important}
+.carousel-item h3{font-size:15px!important}
+.carousel-item p{font-size:12px!important}
+
+.usage-grid{grid-template-columns:1fr 1fr!important;gap:22px!important}
+.usage-card__img{aspect-ratio:4/3!important}
+.usage-card__label{font-size:18px!important;padding:22px!important}
+.section{border-top:1px solid rgba(83,86,90,.05)}
+
+.footer--dark{background:#30302E!important;border-top-color:#444440!important}
+.footer--dark .footer__info p,
+.footer--dark .footer__col a,
+.footer--dark .footer__copy,
+.footer--dark .footer__legal a{color:rgba(255,255,255,.64)!important}
+.footer--dark .footer__col h4{color:#FFFFFF!important}
+.footer--dark .footer__bottom{border-top-color:rgba(255,255,255,.16)!important}
+.footer--dark .footer__signature{color:rgba(255,255,255,.44)!important}
+.footer--dark .logo-img--footer{filter:brightness(0) invert(1);opacity:.88}
+
+.footer{padding:64px 0 28px!important}
+.footer__grid--final{margin-bottom:30px!important}
+.footer__bottom{padding-top:17px!important}
+.footer__signature{margin-top:11px!important}
+
+@media(max-width:900px){
+  .header{left:10px!important;right:10px!important;top:8px!important}
+  .hero{height:82vh!important;min-height:560px!important}
+  .carousel-item{flex:0 0 43%!important}
+}
+@media(max-width:700px){
+  .header__inner{height:58px!important;padding:0 16px!important}
+  .hero{height:78vh!important}
+  .hero h1{font-size:39px!important}
+  .usage-grid{grid-template-columns:1fr!important}
+  .split{grid-template-columns:1fr!important;gap:30px!important}
+  .carousel-item{flex:0 0 72%!important;min-width:230px!important}
+}
+
+/* Footer sıcak koyu gri revizyonu */
+.footer--dark{
+  background:#4B4A46!important;
+  border-top-color:#5B5A55!important;
+}
+.footer--dark .footer__col h4{
+  color:#F5F2EC!important;
+}
+.footer--dark .footer__info p,
+.footer--dark .footer__col a,
+.footer--dark .footer__copy,
+.footer--dark .footer__legal a{
+  color:rgba(255,255,255,.72)!important;
+}
+.footer--dark .footer__bottom{
+  border-top-color:rgba(255,255,255,.18)!important;
+}
+.footer--dark .footer__signature{
+  color:rgba(255,255,255,.50)!important;
+}
+
+/* ... KÜÇÜK REVİZELER ... */
+
+/* Koleksiyonlar: 3 kolon x 2 sıra, kullanım alanlarından bir tık küçük */
+.collections-wrap{
+  overflow:visible;
+  margin:0;
+  padding:0;
+}
+.collections-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:26px 22px;
+}
+.collections-grid .carousel-item{
+  min-width:0!important;
+  width:auto!important;
+  flex:none!important;
+}
+.collections-grid .carousel-item__img{
+  aspect-ratio:4/3!important;
+  margin-bottom:14px!important;
+}
+.collections-grid .carousel-item h3{font-size:15px!important}
+.collections-grid .carousel-item p{font-size:12px!important}
+
+/* Kullanım Alanları: 3 kolon x 2 sıra ve koleksiyonlardan bir tık büyük */
+.usage-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:24px!important;
+}
+.usage-card__img{
+  aspect-ratio:5/4!important;
+}
+.usage-card__label{
+  font-size:18px!important;
+  padding:22px!important;
+}
+
+/* Showroom: görsel solda, içerik sağda */
+.split--showroom .split__visual{order:1}
+.split--showroom .split__text{order:2}
+.split--showroom .showroom-cta{margin-top:8px}
+
+/* Dil seçimi: emojiler yorum satırına alındı, kodlar hizalı */
+.lang__btn{min-width:44px;justify-content:center}
+.lang__dd button{justify-content:center;gap:0}
+
+/* Responsive */
+@media(max-width:980px){
+  .collections-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .usage-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:640px){
+  .collections-grid,
+  .usage-grid{grid-template-columns:1fr!important}
+}
+
+/* Emoji bayrak görünümü geri açıldı */
+.lang__btn{min-width:auto!important;justify-content:flex-start!important;gap:5px!important}
+.lang__dd button{justify-content:flex-start!important;gap:8px!important}
+
+/* Koleksiyonlar ↓ eski premium görsel oranı geri getirildi */
+.collections-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:28px 22px;
+}
+.collections-grid .carousel-item{
+  min-width:0!important;
+  width:100%!important;
+  flex:none!important;
+}
+.collections-grid .carousel-item__img{
+  aspect-ratio:3/4!important;
+  margin-bottom:20px!important;
+  overflow:hidden;
+}
+.collections-grid .carousel-item__img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.collections-grid .carousel-item h3{
+  font-size:17px!important;
+  margin-bottom:5px;
+}
+.collections-grid .carousel-item p{
+  font-size:13px!important;
+}
+@media(max-width:980px){
+  .collections-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:640px){
+  .collections-grid{grid-template-columns:1fr}
+}
+
+/* ... SON MÜŞTERİ REVİZYONLARI ... */
+
+/* Hero: video-scroll-image ve image modları */
+.hero__video,.hero__fallback{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:opacity .5s ease,visibility .5s ease;
+}
+.hero__fallback{opacity:0;visibility:hidden}
+.hero.is-image .hero__video{opacity:0;visibility:hidden}
+.hero.is-image .hero__fallback{opacity:1;visibility:visible}
+.hero[data-mode="image"] .hero__video{display:none}
+.hero[data-mode="image"] .hero__fallback{opacity:1;visibility:visible}
+
+/* Gerçek SVG bayraklar */
+.lang__flag{width:22px;height:15px;object-fit:cover;display:block;border:1px solid rgba(45,41,38,.12)}
+.lang__btn{gap:7px!important}
+.lang__dd button{gap:9px!important;justify-content:flex-start!important}
+
+/* Filtre butonu daha görünür */
+.filter-rail{
+  background:#F4EFE7!important;
+  color:#2D2926!important;
+  border:1px solid rgba(45,41,38,.24)!important;
+  box-shadow:0 6px 18px rgba(45,41,38,.10);
+}
+.filter-rail:hover{background:#E8DDCE!important}
+
+/* Mega menü ara başlıksız düzen */
+header .mega-menu__inner{width:min(1180px,calc(100% - 64px));max-width:1180px;padding:36px 0!important;grid-template-columns:1fr!important;gap:0!important}
+header .mega-menu__intro{display:none!important;margin:0!important;padding:0!important}
+header .mega-menu__links{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;column-gap:clamp(24px,4vw,64px)!important;row-gap:14px!important;align-items:start}
+header .mega-menu__links a,header .mega-menu__columns a{min-width:0;font-size:13px!important;line-height:1.45!important;color:var(--gray)}
+header .mega-menu__columns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:clamp(32px,5vw,72px)!important;row-gap:24px!important;width:min(760px,100%);margin:0 auto}
+header .mega-menu__columns>div{display:grid;gap:11px;align-content:start}
+header .mega-menu__columns h4{margin:0 0 8px;font-size:11px;line-height:1.35}
+@media(max-width:900px){
+  header .mega-menu__inner{width:min(100% - 48px,1180px);padding:34px 0!important}
+  header .mega-menu__links{grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:32px!important}
+}
+@media(max-width:640px){
+  header .mega-menu__inner{width:calc(100% - 32px);padding:32px 0!important}
+  header .mega-menu__links,header .mega-menu__columns{grid-template-columns:1fr!important;row-gap:14px!important}
+}
+
+/* Sürdürülebilirlik pastel yeşil CTA */
+.cta--sustainability{
+  background:#CBD5C4!important;
+  border-color:#CBD5C4!important;
+  color:#2D2926!important;
+}
+.cta--sustainability:hover{
+  background:#AEBDA6!important;
+  border-color:#AEBDA6!important;
+  color:#2D2926!important;
+}
+
+/* Footer kolonları eşit ve düzenli */
+.footer__grid--final{
+  grid-template-columns:minmax(205px,1.45fr) repeat(6,minmax(120px,1fr))!important;
+  gap:32px!important;
+  align-items:start!important;
+}
+.footer__info{align-self:start!important}
+.footer__info .logo-img--footer{margin-bottom:0!important}
+.footer__bottom{align-items:flex-end!important}
+.footer__bottom-right{
+  display:flex;flex-direction:column;align-items:flex-end;gap:16px;
+}
+.footer__socials{display:flex;gap:9px}
+.footer__socials a{
+  width:31px;height:31px;border:1px solid rgba(255,255,255,.30);
+  border-radius:50%;display:grid;place-items:center;
+  color:rgba(255,255,255,.78);font-size:9px;letter-spacing:.04em;
+  transition:.25s;
+}
+.footer__socials a:hover{background:rgba(255,255,255,.12);color:#fff}
+.footer__socials svg{
+  width:16px;
+  height:16px;
+  display:block;
+  fill:currentColor;
+}
+.footer__legal{justify-content:flex-end;flex-wrap:wrap}
+
+@media(max-width:1250px){
+  .footer__grid--final{
+    grid-template-columns:minmax(210px,1.25fr) repeat(3,1fr)!important;
+  }
+}
+@media(max-width:820px){
+  .footer__grid--final{grid-template-columns:1fr 1fr!important}
+  .footer__info{grid-column:1/-1}
+  .footer__bottom-right{align-items:flex-start}
+}
+@media(max-width:560px){
+  .footer__grid--final{grid-template-columns:1fr!important}
+}
+
+/* Koleksiyonlar alanı eski carousel yapısına döndürüldü */
+.collections-wrap,
+.collections-grid{all:unset}
+
+.carousel-wrap{
+  position:relative;
+  overflow:hidden;
+  margin:0 -48px;
+  padding:0 48px;
+}
+.carousel{
+  display:flex;
+  gap:20px;
+  cursor:grab;
+  user-select:none;
+  transition:transform .1s ease-out;
+  will-change:transform;
+}
+.carousel:active{cursor:grabbing}
+.carousel-item{
+  flex:0 0 calc(25% - 15px)!important;
+  min-width:280px!important;
+  width:auto!important;
+}
+.carousel-item__img{
+  aspect-ratio:3/4!important;
+  overflow:hidden;
+  margin-bottom:20px!important;
+  position:relative;
+}
+.carousel-item__img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.carousel-item h3{
+  font-size:17px!important;
+  font-weight:400;
+  margin-bottom:5px;
+}
+.carousel-item p{
+  font-size:13px!important;
+  font-weight:300;
+  color:var(--gray);
+}
+@media(max-width:900px){
+  .carousel-item{flex:0 0 43%!important}
+}
+@media(max-width:700px){
+  .carousel-item{flex:0 0 72%!important;min-width:230px!important}
+}
+
+/* Footer sosyal medya ikonları logo altına taşındı */
+.footer__info .footer__socials{
+  display:flex;
+  gap:12px;
+  margin-top:22px;
+}
+.footer__info .footer__socials a{
+  width:36px;
+  height:36px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.80);
+  font-size:9px;
+  letter-spacing:.04em;
+  transition:.25s ease;
+}
+.footer__info .footer__socials a:hover{
+  background:#FFFFFF;
+  color:#4B4A46;
+  border-color:#FFFFFF;
+}
+.footer__bottom-right--legal-only{
+  justify-content:flex-end;
+  align-items:flex-end;
+}
+.footer__bottom-right--legal-only .footer__legal{
+  justify-content:flex-end;
+}
+
+@media(max-width:820px){
+  .footer__bottom-right--legal-only{
+    align-items:flex-start;
+  }
+  .footer__bottom-right--legal-only .footer__legal{
+    justify-content:flex-start;
+  }
+}
+
+/* Hero CTA: yalnızca yatay genişlik azaltıldı.
+   Orijinal şekil, yükseklik, border-radius, font ve ikon korunur. */
+.hero .cta{
+  padding-left:13px!important;
+  padding-right:13px!important;
+}
+
+/* Koleksiyonlar: yüklenen referanstaki kompakt carousel ölçüleri */
+.carousel-wrap{
+  position:relative;
+  overflow:hidden;
+  margin:0 -48px;
+  padding:0 48px;
+}
+.carousel{
+  display:flex;
+  gap:20px;
+}
+.carousel-item{
+  flex:0 0 calc(20% - 16px)!important;
+  min-width:215px!important;
+}
+.carousel-item__img{
+  aspect-ratio:1/1!important;
+  margin-bottom:14px!important;
+}
+.carousel-item h3{
+  font-size:15px!important;
+}
+.carousel-item p{
+  font-size:12px!important;
+}
+
+@media(max-width:900px){
+  .carousel-item{
+    flex:0 0 43%!important;
+  }
+}
+@media(max-width:700px){
+  .carousel-item{
+    flex:0 0 72%!important;
+    min-width:230px!important;
+  }
+}
+
+/* =========================================================
+   ÜRÜN DETAY İÇERİĞİ
+   Header, mega menü, arama/filtre ve footer ana sayfadan aynen al?nm??t?r.
+   ========================================================= */
+.pd-main{background:#fff;color:var(--ink)}
+.pd-wrap{width:min(1240px,calc(100% - 96px));margin-inline:auto}
+.pd-breadcrumb{padding-top:118px;margin-bottom:30px;font-size:11px;color:#777;letter-spacing:.03em}
+.pd-breadcrumb a{color:inherit}
+.pd-hero{padding-bottom:76px}
+.pd-layout{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(340px,.78fr);gap:68px;align-items:start}
+.pd-gallery{display:grid;grid-template-columns:84px minmax(0,1fr);gap:16px;position:sticky;top:104px}
+.pd-thumbs{display:grid;gap:10px;align-content:start}
+.pd-thumb{border:1px solid transparent;background:none;padding:0;cursor:pointer}
+.pd-thumb.is-active{border-color:#2d2926}
+.pd-thumb img{width:100%;aspect-ratio:2/3;object-fit:cover}
+.pd-face{position:relative;background:#f5f4f1;overflow:hidden}
+.pd-face>img{width:100%;height:min(72vh,760px);object-fit:cover;transition:opacity .2s ease}
+.pd-face-actions{position:absolute;right:15px;bottom:15px;display:flex;align-items:center;gap:11px}
+.pd-face-note{padding:9px 12px;border:0;background:rgba(255,255,255,.9);color:#2d2926;font-family:inherit;font-size:9px;line-height:1;letter-spacing:.1em;text-transform:uppercase;transition:.22s}
+.pd-face-note:hover{background:#2d2926;color:#fff}
+.pd-eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#777;margin-bottom:12px}
+.pd-title{font-size:42px;line-height:1.08;font-weight:300;letter-spacing:-.025em}
+.pd-meta{margin-top:12px;font-size:13px;color:#777}
+.pd-description{margin:25px 0 28px;font-size:14px;line-height:1.85;color:#666}
+.pd-quick{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e5e4df;border-bottom:1px solid #e5e4df}
+.pd-quick-item{padding:16px 0;border-bottom:1px solid #e5e4df}
+.pd-quick-item:nth-child(odd){padding-right:18px}
+.pd-quick-item:nth-child(even){padding-left:18px;border-left:1px solid #e5e4df}
+.pd-quick-item:nth-last-child(-n+2){border-bottom:0}
+.pd-quick-item small{display:block;margin-bottom:5px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888}
+.pd-quick-item strong{font-size:13px;font-weight:400}
+.pd-cert-title{margin:27px 0 12px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#777}
+.pd-certs{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #e5e4df}
+.pd-cert{min-height:74px;display:flex;align-items:center;justify-content:center;border-right:1px solid #e5e4df;font-size:14px;font-weight:600;text-align:center}
+.pd-cert:last-child{border-right:0}.pd-cert--small{font-size:10px;line-height:1.15}.pd-cert--light{font-weight:400}
+.pd-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
+.pd-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #2d2926;background:#fff;color:#2d2926;font-size:10px;letter-spacing:.09em;text-transform:uppercase;transition:.22s}
+.pd-btn:hover,.pd-btn--dark{background:#2d2926;color:#fff}
+.pd-actions .pd-btn--dark{
+  background:#53565a;
+  border-color:#53565a;
+  color:#fff;
+}
+.pd-actions .pd-btn--dark:hover{
+  background:#46494d;
+  border-color:#46494d;
+}
+.pd-anchor{position:sticky;top:88px;z-index:50;background:rgba(255,255,255,.97);border-top:1px solid #e5e4df;border-bottom:1px solid #e5e4df}
+.pd-anchor-inner{min-height:58px;display:flex;align-items:center;justify-content:center;gap:42px}
+.pd-anchor a{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#696969}
+.pd-anchor a:hover{color:#2d2926}.pd-anchor .pd-external:after{content:"→";margin-left:6px;display:inline-flex;align-items:center;line-height:1}.pd-anchor .pd-catalog-link:after{content:none}
+.pd-section{padding:80px 0;border-bottom:1px solid #e5e4df}
+.pd-section--soft{background:#f7f6f3}
+.pd-section-head{display:grid;grid-template-columns:250px 1fr;gap:58px;margin-bottom:40px}
+.pd-section-head h2{font-size:28px;line-height:1.2;font-weight:300}
+.pd-section-head p{max-width:760px;font-size:14px;line-height:1.85;color:#666}
+.pd-overview{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e5e4df;border-left:1px solid #e5e4df}
+.pd-overview-item{padding:29px;border-right:1px solid #e5e4df;border-bottom:1px solid #e5e4df}
+.pd-overview-item small{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#888}
+.pd-overview-item p{margin-top:9px;font-size:14px}
+.pd-tech-group+.pd-tech-group{margin-top:34px}
+.pd-tech-group h3{margin-bottom:13px;font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase}
+.pd-tech-table{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #deddd8}
+.pd-tech-row{display:grid;grid-template-columns:1fr 1.1fr;align-items:center;min-height:52px;border-bottom:1px solid #deddd8}
+.pd-tech-row:nth-child(odd){padding-right:28px}
+.pd-tech-row:nth-child(even){padding-left:28px;border-left:1px solid #deddd8}
+.pd-tech-row dt{font-size:11px;color:#777}.pd-tech-row dd{font-size:12px}
+.pd-contact{background:#f1eee8}
+.pd-contact-grid{display:grid;grid-template-columns:1fr .8fr;gap:72px;align-items:center}
+.pd-contact h2{margin-bottom:15px;font-size:29px;font-weight:300}
+.pd-contact p{font-size:14px;line-height:1.8;color:#666}
+.pd-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pd-form input,.pd-form select,.pd-form textarea{width:100%;padding:13px;border:1px solid #d7d3cb;background:#fff;font:inherit;font-size:12px}
+.pd-form textarea{grid-column:1/-1;min-height:90px;resize:vertical}.pd-form .pd-btn{grid-column:1/-1}
+.pd-form .form-check{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  color:#2d2926;
+  font-size:13px;
+  line-height:1.5;
+  cursor:pointer;
+}
+.pd-form .form-check input[type="checkbox"]{
+  flex:0 0 auto;
+  width:16px;
+  height:16px;
+  margin:0;
+  padding:0;
+}
+.pd-form .form-check span{display:inline}
+@media(max-width:980px){
+ .pd-layout{grid-template-columns:1fr}.pd-gallery{position:relative;top:0}
+ .pd-contact-grid{grid-template-columns:1fr}.pd-anchor{top:80px}
+}
+@media(max-width:700px){
+ .pd-wrap{width:calc(100% - 40px)}
+ .pd-breadcrumb{padding-top:95px}
+ .pd-gallery{grid-template-columns:1fr}.pd-thumbs{grid-template-columns:repeat(4,1fr);order:2}
+ .pd-thumb img{aspect-ratio:1}.pd-face>img{height:58vh}.pd-layout{gap:34px}
+ .pd-title{font-size:35px}.pd-anchor{overflow-x:auto}.pd-anchor-inner{width:max-content;justify-content:flex-start;gap:24px;padding:0 20px}
+ .pd-section{padding:60px 0}.pd-section-head{grid-template-columns:1fr;gap:15px}
+ .pd-overview{grid-template-columns:1fr}.pd-tech-table{grid-template-columns:1fr}
+ .pd-tech-row:nth-child(n){padding:0;border-left:0}
+ .pd-form{grid-template-columns:1fr}.pd-form textarea,.pd-form .pd-btn{grid-column:auto}
+}
+</style>
+<style id="product-detail-client-revisions">
+/* ... ÜRÜN DETAY ↓ MÜŞTERİ REVİZYONLARI ... */
+.pd-layout--aligned{align-items:stretch!important}
+.pd-layout--aligned .pd-gallery{height:100%}
+.pd-layout--aligned .pd-face{min-height:100%;display:flex}
+.pd-layout--aligned .pd-face>img{height:100%!important;min-height:680px}
+
+.pd-quick--variant{
+  display:block!important;
+  border-bottom:1px solid #e5e4df;
+}
+.pd-quick--variant .pd-quick-item,
+.pd-quick--variant .pd-variant-group{
+  padding:16px 0!important;
+  border-left:0!important;
+  border-bottom:1px solid #e5e4df!important;
+}
+.pd-quick--variant > *:last-child{border-bottom:0!important}
+.pd-quick-item--wide{width:100%}
+.pd-variant-group small{
+  display:block;margin-bottom:10px;font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;color:#888;
+}
+.pd-variant-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pd-variant-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:36px;padding:0 13px;border:1px solid #d7d5cf;
+  background:#fff;font-size:11px;color:#555;transition:.2s ease;
+}
+.pd-variant-chip:hover,
+.pd-variant-chip.is-active{
+  background:#53565a;color:#fff;border-color:#53565a;
+}
+
+.pd-certs--logos{
+  display:flex!important;flex-wrap:wrap;gap:14px;
+  border:0!important;
+}
+.pd-cert-logo{
+  display:flex;align-items:center;justify-content:center;
+  width:112px;height:54px;
+}
+.pd-cert-logo svg{width:100%;height:100%}
+.pd-cert-logo rect{
+  fill:none;stroke:#c9c7c0;stroke-width:1.2;
+}
+.pd-cert-logo text{
+  fill:#2d2926;font-family:'Noto Sans',sans-serif;
+  font-size:15px;font-weight:600;letter-spacing:.05em;
+}
+.pd-cert-logo:hover rect{stroke:#2d2926}
+
+.pd-thumb[data-media-type="render"]{position:relative}
+.pd-thumb[data-media-type="render"]::after{
+  content:"Render";position:absolute;left:4px;bottom:4px;
+  padding:3px 5px;background:rgba(45,41,38,.78);color:#fff;
+  font-size:7px;letter-spacing:.08em;text-transform:uppercase;
+}
+
+@media(max-width:980px){
+  .pd-layout--aligned .pd-face>img{min-height:560px}
+}
+@media(max-width:700px){
+  .pd-layout--aligned .pd-face>img{min-height:0;height:58vh!important}
+  .pd-cert-logo{width:96px;height:48px}
+}
+
+/* Ürün sertifikaları: kutusuz gerçek logo görünümü */
+.pd-certs--official-logos{
+  display:flex!important;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:28px;
+  border:0!important;
+  padding:4px 0 2px;
+}
+.pd-cert-mark{
+  width:82px;
+  height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.82;
+  transition:opacity .25s ease,transform .25s ease;
+}
+.pd-cert-mark:nth-child(2){width:96px}
+.pd-cert-mark:nth-child(3){width:104px;height:88px}
+.pd-cert-mark:hover{opacity:1;transform:translateY(-2px)}
+.pd-cert-mark svg{width:100%;height:100%;overflow:visible}
+.pd-cert-mark .logo-stroke{
+  fill:none;
+  stroke:#4b4a46;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.pd-cert-mark .logo-stroke.thin{stroke-width:1.6}
+.pd-cert-mark .logo-fill{fill:#4b4a46}
+.pd-cert-mark .logo-word{
+  fill:#4b4a46;
+  font-family:'Noto Sans',sans-serif;
+  font-weight:700;
+  letter-spacing:.06em;
+}
+.logo-word--nsf{font-size:22px}
+.logo-word--epd{font-size:17px}
+.logo-word--gg{font-size:10px}
+.logo-word--tse{font-size:14px}
+.pd-cert-mark .logo-subword{
+  fill:#4b4a46;
+  font-family:'Noto Sans',sans-serif;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.18em;
+}
+
+/* Ürün detay son düzenlemeleri */
+.pd-layout--aligned{align-items:start!important}
+.pd-layout--aligned .pd-gallery{
+  position:relative;top:0;height:auto;min-height:0;align-self:start;align-items:start;
+}
+.pd-layout--aligned .pd-face{height:var(--pd-face-height,auto);min-height:0}
+.pd-layout--aligned .pd-face>img{height:100%!important;min-height:0;object-fit:cover}
+.pd-layout--aligned>aside{
+  display:block;min-width:0;height:auto;align-self:start;
+}
+.pd-layout--aligned .pd-actions{margin-top:25px;padding-top:0}
+.pd-cert-mark{
+  width:68px;height:68px;opacity:.86;
+  transition:opacity .2s ease;
+}
+.pd-cert-mark:nth-child(2){width:78px}
+.pd-cert-mark:nth-child(3){width:86px;height:74px}
+.pd-cert-mark:hover{opacity:1;transform:none}
+.pd-anchor{background:#e8ddd2;border-color:#d8c9bb}
+.pd-anchor-inner{font-weight:700}
+.pd-anchor a{color:#403a35;font-weight:700}
+.pd-anchor .pd-catalog-link{margin-left:8px;padding-left:28px;border-left:1px solid rgba(64,58,53,.28)}
+#teknik-ozellikler{background:#fff}
+.pd-tech-group h3,.pd-tech-row dt{font-weight:700;color:#2d2926}
+
+.footer__grid--final{
+  grid-template-columns:260px repeat(7,max-content)!important;justify-content:space-between!important;
+  column-gap:24px!important;row-gap:36px!important;align-items:start!important;
+}
+.footer__info,.footer__col{align-self:start!important;padding-top:0!important;margin-top:0!important}
+.footer__col{display:flex;flex-direction:column;min-width:0}
+.footer__col h4{min-height:44px;margin:0 0 16px!important;display:flex;align-items:flex-start}
+.footer__col a{margin-bottom:9px!important;line-height:1.55!important;overflow-wrap:anywhere}
+.footer__social-row{display:flex;justify-content:flex-end;margin:0 0 18px}
+.footer__social-row .footer__socials{margin:0!important}
+@media(max-width:1250px){
+  .footer__grid--final{grid-template-columns:minmax(210px,1.25fr) repeat(3,minmax(150px,1fr))!important}
+}
+@media(max-width:820px){
+  .footer__grid--final{grid-template-columns:1fr 1fr!important}
+  .footer__social-row{justify-content:flex-start}
+}
+@media(max-width:980px){
+  .pd-layout--aligned .pd-gallery,.pd-layout--aligned>aside{height:auto}
+  .pd-layout--aligned .pd-face{height:auto}
+  .pd-layout--aligned .pd-face>img{height:58vh!important;min-height:0}
+  .pd-layout--aligned .pd-actions{margin-top:25px;padding-top:0}
+}
+@media(max-width:560px){
+  .footer__grid--final{grid-template-columns:1fr!important}
+  .footer__col h4{min-height:0}
+}
+@media(max-width:700px){
+  .pd-certs--official-logos{gap:20px}
+  .pd-cert-mark{width:68px;height:68px}
+  .pd-cert-mark:nth-child(2){width:78px}
+  .pd-cert-mark:nth-child(3){width:86px;height:74px}
+}
+</style><style id="product-detail-compact-final">
+/* ... ÜRÜN DETAY ↓ KOMPAKT İLK EKRAN VE AÇIK ANCHOR BAR ... */
+
+/* Anchor bar daha açık, ayırıcı çizgisiz ve eşit hizalı */
+.pd-anchor{
+  background:#F4EFE9!important;
+  border-color:#E4DCD3!important;
+}
+.pd-anchor-inner{
+  min-height:50px!important;
+  gap:34px!important;
+  font-weight:500!important;
+}
+.pd-anchor a{
+  color:#514B46!important;
+  font-weight:500!important;
+  display:inline-flex;
+  align-items:center;
+  min-height:50px;
+}
+.pd-anchor .pd-catalog-link{
+  margin-left:0!important;
+  padding-left:0!important;
+  border-left:0!important;
+}
+.pd-anchor .pd-external:after{
+  content:"→"!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  margin-left:5px!important;
+  line-height:1!important;
+}
+.pd-anchor .pd-catalog-link:after{
+  content:none!important;
+}
+.pd-anchor .pd-catalog-icon{
+  width:13px;
+  height:13px;
+  margin-left:6px;
+  display:inline-block;
+  flex:0 0 auto;
+  color:currentColor;
+  vertical-align:middle;
+}
+
+/* İlk ekranı daha kompakt hale getir */
+.pd-wrap{
+  width:min(1180px,calc(100% - 80px))!important;
+}
+.pd-breadcrumb{
+  padding-top:100px!important;
+  margin-bottom:18px!important;
+}
+.pd-hero{
+  padding-bottom:46px!important;
+}
+.pd-layout{
+  grid-template-columns:minmax(0,1.16fr) minmax(330px,.84fr)!important;
+  gap:52px!important;
+}
+.pd-gallery{
+  grid-template-columns:68px minmax(0,1fr)!important;
+  gap:12px!important;
+}
+.pd-thumbs{
+  gap:8px!important;
+}
+.pd-thumb img{
+  aspect-ratio:2/3!important;
+}
+.pd-face>img{
+  height:min(61vh,620px)!important;
+}
+.pd-face-actions{
+  right:12px!important;
+  bottom:12px!important;
+  gap:11px!important;
+}
+.pd-face-note{
+  padding:7px 10px!important;
+  font-size:8px!important;
+}
+
+/* Sağ bilgi kolonu */
+.pd-eyebrow{
+  margin-bottom:8px!important;
+  font-family:'Noto Sans',sans-serif!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  line-height:1.4!important;
+}
+.pd-title{
+  font-size:36px!important;
+  line-height:1.04!important;
+}
+.pd-description{
+  margin:16px 0 18px!important;
+  font-size:12.5px!important;
+  line-height:1.65!important;
+}
+.pd-quick--variant .pd-quick-item,
+.pd-quick--variant .pd-variant-group{
+  padding:11px 0!important;
+}
+.pd-variant-group small,
+.pd-quick-item small{
+  margin-bottom:6px!important;
+}
+.pd-variant-chips{
+  gap:6px!important;
+}
+.pd-variant-chip{
+  min-height:30px!important;
+  padding:0 10px!important;
+  font-size:10px!important;
+}
+.pd-quick-item strong{
+  font-size:12px!important;
+}
+.pd-cert-title{
+  margin:16px 0 8px!important;
+}
+.pd-certs--official-logos{
+  gap:16px!important;
+  padding:0!important;
+}
+.pd-cert-mark{
+  width:54px!important;
+  height:54px!important;
+}
+.pd-cert-mark:nth-child(2){
+  width:62px!important;
+}
+.pd-cert-mark:nth-child(3){
+  width:68px!important;
+  height:58px!important;
+}
+.pd-actions{
+  margin-top:16px!important;
+  gap:8px!important;
+}
+.pd-btn{
+  min-height:40px!important;
+  padding:0 16px!important;
+  font-size:9px!important;
+}
+
+/* Render/face küçük görseller daha zarif */
+.pd-thumb[data-media-type="render"]::after{
+  left:3px!important;
+  bottom:3px!important;
+  padding:2px 4px!important;
+  font-size:6px!important;
+}
+
+/* Orta ekranlar */
+@media(max-width:1180px){
+  .pd-wrap{width:calc(100% - 56px)!important}
+  .pd-layout{gap:38px!important}
+  .pd-face>img{height:min(58vh,570px)!important}
+}
+@media(max-width:980px){
+  .pd-wrap{width:calc(100% - 44px)!important}
+  .pd-layout{grid-template-columns:1fr!important}
+  .pd-face>img{height:58vh!important}
+  .pd-anchor-inner{justify-content:flex-start!important;padding:0 22px!important}
+}
+@media(max-width:700px){
+  .pd-wrap{width:calc(100% - 32px)!important}
+  .pd-breadcrumb{padding-top:88px!important}
+  .pd-gallery{grid-template-columns:1fr!important}
+  .pd-thumbs{grid-template-columns:repeat(4,1fr)!important}
+  .pd-title{font-size:32px!important}
+  .pd-face>img{height:52vh!important}
+}
+</style><style id="product-detail-v5-final">
+/* ... ÜRÜN DETAY V5 ↓ DİNAMİK EBAT ALANI + ALT HİZA ... */
+
+/* Ebat / kalınlık / yüzey alanları içerik kadar büyür */
+.pd-variant-group{
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.pd-variant-chips{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:flex-start;
+  gap:7px!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+.pd-variant-chip{
+  flex:0 0 auto;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.pd-variant-chip[hidden]{
+  display:none!important;
+}
+
+/* Az ebatta boş alan bırakma; çok ebatta doğal olarak yeni satıra geç */
+[data-variant-group="size"]{
+  width:100%;
+  align-content:flex-start;
+}
+
+/* Sol görsel alanı ile sağ aksiyonların alt hizasını eşitle */
+.pd-layout--aligned{
+  align-items:stretch!important;
+}
+.pd-layout--aligned .pd-gallery{
+  position:relative!important;
+  top:0!important;
+  height:100%!important;
+  min-height:0!important;
+  align-self:stretch!important;
+}
+.pd-layout--aligned .pd-thumbs{
+  align-content:start!important;
+}
+.pd-layout--aligned .pd-face{
+  height:100%!important;
+  min-height:0!important;
+  display:flex!important;
+}
+.pd-layout--aligned .pd-face>img{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  object-fit:cover!important;
+}
+.pd-layout--aligned>aside{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  height:100%!important;
+  align-self:stretch!important;
+}
+.pd-layout--aligned .pd-actions{
+  margin-top:auto!important;
+  padding-top:16px!important;
+}
+
+/* Sağ kolon büyüdüğünde görsel kontrollü büyüsün */
+.pd-layout--aligned{
+  --pd-min-column-height:560px;
+}
+.pd-layout--aligned .pd-gallery,
+.pd-layout--aligned>aside{
+  min-height:var(--pd-min-column-height)!important;
+}
+
+
+/* Güncelleme geçişleri */
+.pd-tech-row dd,
+#pdProductCode{
+  transition:opacity .18s ease;
+}
+.pd-variant-updating #pdProductCode,
+.pd-variant-updating .pd-tech-row dd{
+  opacity:.38;
+}
+
+@media(max-width:1180px){
+  .pd-layout--aligned{--pd-min-column-height:520px}
+}
+@media(max-width:980px){
+  .pd-layout--aligned{
+    align-items:start!important;
+    --pd-min-column-height:0px;
+  }
+  .pd-layout--aligned .pd-gallery,
+  .pd-layout--aligned>aside{
+    min-height:0!important;
+    height:auto!important;
+  }
+  .pd-layout--aligned .pd-face{
+    height:auto!important;
+  }
+  .pd-layout--aligned .pd-face>img{
+    height:58vh!important;
+  }
+  .pd-layout--aligned .pd-actions{
+    margin-top:18px!important;
+    padding-top:0!important;
+  }
+}
+@media(max-width:700px){
+  .pd-layout--aligned .pd-face>img{
+    height:52vh!important;
+  }
+}
+</style><style id="product-detail-v6-alignment">
+/* ... ÜRÜN DETAY V6 ↓ TÜM İLK SATIR ALT HİZASI ... */
+
+/*
+  Sol küçük görseller, büyük ürün görseli ve sağ aksiyon alanı
+  aynı satır yükseklişinde ve aynı alt çizgide biter.
+*/
+.pd-layout--aligned{
+  align-items:stretch!important;
+}
+.pd-layout--aligned .pd-gallery{
+  display:grid!important;
+  grid-template-columns:58px minmax(0,1fr)!important;
+  gap:10px!important;
+  height:var(--pd-row-height,auto)!important;
+  min-height:0!important;
+  align-self:stretch!important;
+}
+.pd-layout--aligned .pd-thumbs{
+  display:grid!important;
+  grid-template-rows:repeat(var(--pd-thumb-count,6),minmax(0,1fr))!important;
+  grid-auto-rows:minmax(0,1fr)!important;
+  gap:8px!important;
+  height:100%!important;
+  min-height:0!important;
+  align-content:stretch!important;
+}
+.pd-layout--aligned .pd-thumb{
+  position:relative;
+  width:100%;
+  min-height:0;
+  overflow:hidden;
+}
+.pd-layout--aligned .pd-thumb img{
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:auto!important;
+  object-fit:cover!important;
+}
+.pd-layout--aligned .pd-face{
+  height:100%!important;
+  min-height:0!important;
+}
+.pd-layout--aligned .pd-face>img{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  object-fit:cover!important;
+}
+.pd-layout--aligned>aside{
+  display:flex!important;
+  flex-direction:column!important;
+  height:var(--pd-row-height,auto)!important;
+  min-height:0!important;
+  align-self:stretch!important;
+}
+.pd-layout--aligned .pd-actions{
+  margin-top:16px!important;
+  padding-top:0!important;
+}
+
+/* Dinamik ebat alanı: seçenek sayısına göre doğal büyür */
+[data-variant-group="size"]{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  align-content:flex-start!important;
+  gap:7px!important;
+}
+[data-variant-group="size"] .pd-variant-chip{
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+}
+
+/* Filtre panelinde Marka alanı ilk sırada */
+.filter-form label:first-child{
+  order:-1;
+}
+
+@media(max-width:980px){
+  .pd-layout--aligned .pd-gallery,
+  .pd-layout--aligned>aside{
+    height:auto!important;
+  }
+  .pd-layout--aligned .pd-thumbs{
+    height:auto!important;
+    grid-template-rows:none!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .pd-layout--aligned .pd-thumb img{
+    aspect-ratio:1!important;
+    height:auto!important;
+  }
+  .pd-layout--aligned .pd-face{
+    height:auto!important;
+  }
+  .pd-layout--aligned .pd-face>img{
+    height:58vh!important;
+  }
+  .pd-layout--aligned .pd-actions{
+    margin-top:18px!important;
+    padding-top:0!important;
+  }
+}
+
+.footer .wrap{
+  max-width:1440px!important;
+  padding:0 28px!important;
+}
+.footer__grid--final{
+  display:grid!important;
+  grid-template-columns:260px repeat(7,max-content)!important;
+  justify-content:space-between!important;
+  align-items:start!important;
+  gap:28px!important;
+  width:100%!important;
+  margin:0 0 28px!important;
+}
+.footer__info,
+.footer__col{
+  align-self:start!important;
+  margin:0!important;
+  padding:0!important;
+}
+.footer__info .logo-img--footer{
+  display:block!important;
+  width:260px!important;
+  max-width:100%!important;
+  max-height:none!important;
+  height:auto!important;
+  margin:0!important;
+}
+.footer__col{
+  display:flex!important;
+  flex-direction:column!important;
+  width:max-content!important;
+  max-width:272px!important;
+  min-width:0!important;
+}
+.footer__col h4{
+  min-height:0!important;
+  margin:0 0 16px!important;
+  padding:0!important;
+  font-size:10px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+  letter-spacing:.11em!important;
+  overflow-wrap:anywhere!important;
+}
+.footer__col a{
+  display:block!important;
+  margin:0 0 8px!important;
+  padding:0!important;
+  font-size:11.5px!important;
+  line-height:1.5!important;
+  overflow-wrap:anywhere!important;
+}
+.footer__social-row{
+  display:flex!important;
+  justify-content:flex-end!important;
+  margin:0 0 18px!important;
+}
+.footer__social-row .footer__socials{
+  display:flex!important;
+  gap:10px!important;
+  margin:0!important;
+}
+.footer__social-row .footer__socials a{
+  width:34px!important;
+  height:34px!important;
+  border:1px solid rgba(255,255,255,.30)!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:0!important;
+  color:rgba(255,255,255,.86)!important;
+}
+.footer__social-row .footer__socials svg{
+  width:16px!important;
+  height:16px!important;
+}
+.footer__bottom{
+  padding-top:17px!important;
+  align-items:flex-end!important;
+}
+.footer__bottom-right,
+.footer__bottom-right--legal-only{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  gap:0!important;
+}
+.footer__legal{
+  display:flex!important;
+  justify-content:flex-end!important;
+  flex-wrap:wrap!important;
+  gap:24px!important;
+}
+.footer__signature{
+  margin-top:11px!important;
+  text-align:center!important;
+}
+@media(max-width:1320px){
+  .footer__grid--final{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    justify-content:stretch!important;
+    gap:34px 28px!important;
+  }
+  .footer__info{
+    grid-column:1/-1!important;
+  }
+  .footer__col{
+    width:auto!important;
+    max-width:none!important;
+  }
+  .footer__social-row{
+    justify-content:flex-start!important;
+  }
+  .footer__bottom{
+    align-items:flex-start!important;
+  }
+}
+@media(max-width:640px){
+  .footer__grid--final{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .footer__social-row{
+    justify-content:flex-start!important;
+  }
+  .footer__bottom,
+  .footer__bottom-right,
+  .footer__bottom-right--legal-only{
+    align-items:flex-start!important;
+  }
+  .footer__legal{
+    justify-content:flex-start!important;
+  }
+}
+@media(max-width:460px){
+  .footer__grid--final{
+    grid-template-columns:1fr!important;
+  }
+}
+
+.footer{
+  background:#4B4A46!important;
+  padding:64px 0 28px!important;
+}
+html,
+body,
+main,
+.pd-main{
+  background:#fff!important;
+}
+.footer__main-final{
+  display:grid!important;
+  grid-template-columns:260px minmax(0,1fr)!important;
+  gap:36px!important;
+  align-items: start !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  min-height:257px!important;
+  margin:0 0 28px!important;
+}
+.footer__identity-final,
+.footer__identity-final .footer__info{
+  margin:0!important;
+  padding:0!important;
+}
+.footer__identity-final .logo-img--footer{
+  display:block!important;
+  width:260px!important;
+  max-width:100%!important;
+  max-height:none!important;
+  height:17.4531px!important;
+  object-fit:contain!important;
+  margin:0!important;
+  filter:brightness(0) invert(1)!important;
+  opacity:.88!important;
+}
+.footer__menus-final{
+  display:grid!important;
+  grid-template-columns: max-content max-content max-content max-content max-content max-content max-content !important;
+  column-gap: 44px !important;
+  row-gap:0!important;
+  align-items: start !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  min-width:0!important;
+}
+.footer__menus-final .footer__col{
+  display:flex!important;
+  flex-direction:column!important;
+  width: max-content !important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+.footer__menus-final .footer__col h4{
+  min-height:0!important;
+  height:auto!important;
+  margin:0 0 12px 0!important;
+  padding:0!important;
+  font-size:10px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+  letter-spacing:.11em!important;
+  color:#F5F2EC!important;
+  text-transform:uppercase!important;
+  white-space:nowrap!important;
+  overflow-wrap:anywhere!important;
+}
+.footer__menus-final .footer__col a{
+  display:block!important;
+  margin:0 0 7px 0!important;
+  padding:0!important;
+  font-size:11.5px!important;
+  font-weight:300!important;
+  line-height:1.5!important;
+  color:rgba(255,255,255,.72)!important;
+  overflow-wrap:anywhere!important;
+}
+@media(max-width:1320px){
+  .footer__main-final{
+    grid-template-columns:1fr!important;
+    gap:32px!important;
+    min-height:660.5px!important;
+  }
+  .footer__menus-final{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:34px 28px!important;
+  }
+  .footer__menus-final .footer__col{
+    width: max-content !important;
+    max-width:none!important;
+  }
+}
+@media(max-width:640px){
+  .footer__main-final{
+    min-height:1192.2px!important;
+  }
+  .footer__menus-final{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:460px){
+  .footer__menus-final{
+    grid-template-columns:1fr!important;
+  }
+  .footer__menus-final .footer__col h4{
+    min-height:0!important;
+    white-space:normal!important;
+  }
+}
+.footer__grid--final{
+  min-height:257px!important;
+}
+.footer__info .logo-img--footer{
+  width:260px!important;
+  height:17.4531px!important;
+  object-fit:contain!important;
+  filter:brightness(0) invert(1)!important;
+  opacity:.88!important;
+}
+.footer__col h4{
+  color:#F5F2EC!important;
+  text-transform:uppercase!important;
+}
+.footer__col a,
+.footer__copy,
+.footer__legal a{
+  color:rgba(255,255,255,.72)!important;
+  font-weight:300!important;
+}
+.footer__bottom{
+  border-top-color:rgba(255,255,255,.18)!important;
+}
+.footer__signature{
+  color:rgba(255,255,255,.50)!important;
+  font-size:11px!important;
+  font-weight:400!important;
+  letter-spacing:1.54px!important;
+  text-transform:uppercase!important;
+}
+
+/* Ürün yüzeyi tam ekran görüntüleyici */
+.pd-image-viewer{
+  position:fixed;inset:0;z-index:5000;display:none;
+  background:rgba(20,20,19,.92);color:#fff;
+}
+.pd-image-viewer.is-open{display:flex;flex-direction:column}
+.pd-image-viewer__toolbar{
+  position:absolute;top:18px;left:50%;z-index:2;
+  display:flex;align-items:center;gap:7px;
+  transform:translateX(-50%);padding:7px;
+  background:rgba(35,34,32,.86);border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 8px 28px rgba(0,0,0,.24);
+}
+.pd-image-viewer__toolbar button{
+  width:40px;height:40px;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;
+  font-size:22px;line-height:1;cursor:pointer;
+}
+.pd-image-viewer__toolbar button:hover{background:#fff;color:#2d2926}
+.pd-image-viewer__scale{min-width:58px;text-align:center;font-size:12px}
+.pd-image-viewer__close{font-size:26px!important}
+.pd-image-viewer__stage{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;touch-action:none;cursor:grab;
+}
+.pd-image-viewer__stage.is-dragging{cursor:grabbing}
+.pd-image-viewer__image{
+  display:block;max-width:min(88vw,1200px);max-height:86vh;
+  width:auto;height:auto;object-fit:contain;user-select:none;
+  transform-origin:center center;will-change:transform;
+}
+.pd-image-viewer__hint{
+  position:absolute;left:50%;bottom:18px;transform:translateX(-50%);
+  margin:0;padding:8px 12px;background:rgba(35,34,32,.72);
+  color:rgba(255,255,255,.82);font-size:11px;letter-spacing:.04em;
+  white-space:nowrap;pointer-events:none;
+}
+body.pd-viewer-open{overflow:hidden}
+@media(max-width:600px){
+  .pd-image-viewer__toolbar{top:10px}
+  .pd-image-viewer__toolbar button{width:36px;height:36px}
+  .pd-image-viewer__image{max-width:94vw;max-height:82vh}
+  .pd-image-viewer__hint{bottom:10px;font-size:10px}
+}
+
+/* Üst alanın yüksekliği görsel ve ürün bilgilerine göre doğal olarak belirlenir. */
+.pd-layout--aligned{
+  align-items:start!important;
+  --pd-row-height:auto!important;
+}
+.pd-layout--aligned .pd-gallery{
+  height:auto!important;
+  min-height:0!important;
+  align-self:start!important;
+}
+.pd-layout--aligned .pd-face{
+  height:auto!important;
+  min-height:0!important;
+}
+.pd-layout--aligned .pd-face>img{
+  height:min(61vh,620px)!important;
+  min-height:0!important;
+  object-fit:cover!important;
+}
+.pd-layout--aligned>aside{
+  height:auto!important;
+  min-height:0!important;
+  align-self:start!important;
+}
+.pd-layout--aligned .pd-actions{
+  margin-top:16px!important;
+  padding-top:0!important;
+}
+
+/* Ürün galerisi: 6 eşit küçük görsel + sabit büyük favori görsel */
+@media(min-width:981px){
+  .pd-layout--aligned{
+    --pd-product-gallery-height:clamp(560px,calc(100vh - 190px),680px)!important;
+    align-items:stretch!important;
+  }
+  .pd-layout--aligned .pd-gallery{
+    grid-template-columns:72px minmax(0,1fr)!important;
+    gap:12px!important;
+    height:var(--pd-product-gallery-height)!important;
+    min-height:var(--pd-product-gallery-height)!important;
+    max-height:var(--pd-product-gallery-height)!important;
+    align-self:stretch!important;
+  }
+  .pd-layout--aligned .pd-thumbs{
+    display:grid!important;
+    grid-template-rows:repeat(6,minmax(0,1fr))!important;
+    grid-auto-rows:minmax(0,1fr)!important;
+    gap:8px!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .pd-layout--aligned .pd-thumb{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+  .pd-layout--aligned .pd-thumb img{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    object-fit:cover!important;
+    object-position:center!important;
+  }
+  .pd-layout--aligned .pd-face{
+    height:100%!important;
+    min-height:0!important;
+    max-height:100%!important;
+  }
+  .pd-layout--aligned .pd-face>img{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    max-height:100%!important;
+    object-fit:cover!important;
+    object-position:center!important;
+  }
+  .pd-layout--aligned>aside{
+    display:flex!important;
+    flex-direction:column!important;
+    height:var(--pd-product-gallery-height)!important;
+    min-height:var(--pd-product-gallery-height)!important;
+    max-height:var(--pd-product-gallery-height)!important;
+    align-self:stretch!important;
+  }
+  .pd-layout--aligned .pd-actions{
+    margin-top:auto!important;
+    padding-top:16px!important;
+  }
+}
+</style><link href="assets/footer-equal-columns.css" rel="stylesheet"/><script defer src="assets/cms-integration.js"></script></head>
+<body><header class="header" id="header">
+<div class="header__inner">
+<a class="header__brand" href="#">
+<img alt="NG Kütahya Seramik" class="logo-img" src="assets/ng-kutahya-logo.png"/>
+</a>
+<nav aria-label="Ana navigasyon" class="nav nav--mega">
+<button class="nav__trigger" data-mega="megaBrands" type="button">Markalarımız</button>
+<button class="nav__trigger" data-mega="megaProducts" type="button">Ürünler</button>
+<button class="nav__trigger" data-mega="megaProfessionals" type="button">Profesyoneller</button>
+<button class="nav__trigger" data-mega="megaContact" type="button">İletişim</button>
+</nav>
+<div class="header__right">
+<button aria-label="Ara" id="searchToggle">
+<svg fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-width="1.3" viewbox="0 0 24 24" width="19">
+<circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path>
+</svg>
+</button>
+<div class="lang">
+<button class="lang__btn" onclick="toggleLang()"><img alt="" class="lang__flag" height="15" src="assets/flags/tr.svg" width="22"/><span class="lang__code">TR</span><svg fill="none" height="11" stroke="currentColor" stroke-width="1.6" viewbox="0 0 24 24" width="11"><path d="M6 9l6 6 6-6"></path></svg></button>
+<div class="lang__dd" id="langDd"><button class="active" onclick="selLang('tr','TR',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/tr.svg" width="22"/>TR</button><button onclick="selLang('en','EN',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/en.svg" width="22"/>EN</button><button onclick="selLang('de','DE',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/de.svg" width="22"/>DE</button><button onclick="selLang('fr','FR',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/fr.svg" width="22"/>FR</button><button onclick="selLang('ru','RU',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/ru.svg" width="22"/>RU</button><button onclick="selLang('es','ES',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/es.svg" width="22"/>ES</button><button onclick="selLang('ar','AR',this)"><img alt="" class="lang__flag" height="15" src="assets/flags/ar.svg" width="22"/>AR</button></div>
+</div>
+<a class="dealer-btn" href="#">İş Ortağı Portalı</a>
+<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Menü" id="mobileMenuToggle">
+<svg fill="none" height="21" stroke="currentColor" stroke-width="1.3" viewbox="0 0 24 24" width="21">
+<path d="M3 7h18M3 12h18M3 17h18"></path>
+</svg>
+</button>
+</div>
+</div>
+<div class="mega-menu" id="megaBrands">
+<div class="mega-menu__inner">
+<div class="mega-menu__links">
+<a href="#">NG Kütahya Seramik</a><a href="#">NG Stone</a><a href="#">NG Slim</a><a href="#">NG Performa</a></div>
+</div>
+</div>
+<div class="mega-menu" id="megaProducts">
+<div class="mega-menu__inner">
+<div class="mega-menu__columns">
+<div><h4>Yüzey Desenleri</h4><a href="#">Mermer Görünümlü</a><a href="#">Doğal Taş Görünümlü</a><a href="#">Ahşap Görünümlü</a><a href="#">Cement Görünümlü</a><a href="#">Solid Görünümlü</a></div>
+<div><h4>Uygulama Alanları</h4><a href="#">Mutfak</a><a href="#">Banyo</a><a href="#">Dış Mekân</a><a href="#">İç Mekân</a><a href="#">Mobilya</a><a href="#">Havuz</a><a href="#">Zemin</a><a href="#">Duvar</a></div>
+</div>
+</div>
+</div>
+<div class="mega-menu" id="megaProfessionals">
+<div class="mega-menu__inner">
+<div class="mega-menu__links">
+<a href="#">3D Viewer / Mekân Görselleştirici</a><a href="#">Referans Projeler</a><a href="#">Teknik Uygulamalar</a><a href="#">Teknik Dokümanlar</a>
+</div>
+</div>
+</div>
+<div class="mega-menu" id="megaContact">
+<div class="mega-menu__inner">
+<div class="mega-menu__links">
+<a href="#">Genel Merkez</a><a href="#">Fabrika</a><a href="#">Showroomlar</a><a href="#">Satış Noktaları</a>
+</div>
+</div>
+</div>
+</header>
+<!-- .......... HEADER .......... -->
+<main class="pd-main">
+<div class="pd-wrap pd-breadcrumb">
+<a href="index.html">Ana Sayfa</a> / <a href="#">Ürünler</a> / Amazonit
+  </div>
+<section class="pd-hero">
+<div class="pd-wrap pd-layout pd-layout--aligned">
+<div class="pd-gallery">
+<div class="pd-thumbs">
+<button class="pd-thumb is-active" data-pd-src="assets/amazonit-face-1.svg"><img alt="Amazonit yüzey 1" src="assets/amazonit-face-1.svg"/></button>
+<button class="pd-thumb" data-pd-src="assets/amazonit-face-2.svg"><img alt="Amazonit yüzey 2" src="assets/amazonit-face-2.svg"/></button>
+<button class="pd-thumb" data-pd-src="assets/amazonit-face-3.svg"><img alt="Amazonit yüzey 3" src="assets/amazonit-face-3.svg"/></button>
+<button class="pd-thumb" data-pd-src="assets/amazonit-face-4.svg"><img alt="Amazonit yüzey 4" src="assets/amazonit-face-4.svg"/></button>
+<button class="pd-thumb" data-media-type="render" data-pd-src="assets/3d-gorsellestirme.png"><img alt="Amazonit render uygulama görseli" src="assets/3d-gorsellestirme.png"/></button><button class="pd-thumb" data-media-type="render" data-pd-src="assets/showroom-deneyim.png"><img alt="Amazonit iç mekân render görseli" src="assets/showroom-deneyim.png"/></button></div>
+<div class="pd-face">
+<img alt="Amazonit ürün yüzey görseli" id="pdMainFace" src="assets/amazonit-face-1.svg"/>
+<div class="pd-face-actions">
+<button class="pd-face-note pd-face-download" id="pdFaceDownload" type="button">İndir</button>
+<span class="pd-face-note">Yüzeyi büyüt</span>
+</div>
+</div>
+</div>
+<aside>
+<p class="pd-eyebrow">Amazonit Koleksiyonu</p>
+<h1 class="pd-title">Amazonit</h1>
+<div class="pd-quick pd-quick--variant"><div class="pd-quick-item pd-quick-item--wide"><small>Ürün Kodu</small><strong id="pdProductCode">55018167RP</strong></div><div class="pd-variant-group pd-quick-item--wide"><small>Ebat</small><div class="pd-variant-chips" data-variant-group="size"><button class="pd-variant-chip is-active" data-variant-value="120×280 cm" type="button">120×280 cm</button><button class="pd-variant-chip" data-variant-value="120×120 cm" type="button">120×120 cm</button><button class="pd-variant-chip" data-variant-value="60×120 cm" type="button">60×120 cm</button></div></div><div class="pd-variant-group pd-quick-item--wide"><small>Kalınlık</small><div class="pd-variant-chips" data-variant-group="thickness"><button class="pd-variant-chip is-active" data-variant-value="6 mm" type="button">6 mm</button><button class="pd-variant-chip" data-variant-value="9 mm" type="button">9 mm</button></div></div><div class="pd-variant-group pd-quick-item--wide"><small>Yüzey</small><div class="pd-variant-chips" data-variant-group="surface"><button class="pd-variant-chip is-active" data-variant-value="Mat" type="button">Mat</button><button class="pd-variant-chip" data-variant-value="Lappato" type="button">Lappato</button><button class="pd-variant-chip" data-variant-value="Parlak" type="button">Parlak</button></div></div><div class="pd-variant-group pd-quick-item--wide"><small>Renk</small><div class="pd-variant-chips" data-variant-group="color"><button class="pd-variant-chip is-active" data-variant-value="Yeşil" type="button">Yeşil</button></div></div></div><p class="pd-cert-title">Ürün Sertifikaları</p>
+<div class="pd-certs pd-certs--official-logos"><a aria-label="NSF" class="pd-cert-mark" href="#" title="NSF"><svg aria-label="NSF Sertifikası" role="img" viewbox="0 0 120 120">
+<circle class="logo-stroke" cx="60" cy="60" r="51"></circle>
+<circle class="logo-stroke thin" cx="60" cy="60" r="42"></circle>
+<path class="logo-fill" d="M30 56c13-18 47-24 61-5-14-5-27-2-38 8-8 7-15 12-23 13 5-5 7-10 0-16z"></path>
+<text class="logo-word logo-word--nsf" text-anchor="middle" x="60" y="75">NSF</text>
+</svg></a><a aria-label="EPD" class="pd-cert-mark" href="#" title="EPD"><svg aria-label="EPD Sertifikası" role="img" viewbox="0 0 150 110">
+<path class="logo-stroke" d="M75 12c24 0 43 18 43 41 0 20-15 36-36 40"></path>
+<path class="logo-stroke" d="M75 12C51 12 32 30 32 53c0 20 15 36 36 40"></path>
+<path class="logo-fill" d="M78 24c-7 17-7 34 0 51 7-17 7-34 0-51z"></path>
+<path class="logo-stroke thin" d="M48 48c12 4 22 12 30 24M108 48c-12 4-22 12-30 24"></path>
+<text class="logo-word logo-word--epd" text-anchor="middle" x="75" y="104">EPD</text>
+</svg></a><a aria-label="GREENGUARD GOLD" class="pd-cert-mark" href="#" title="GREENGUARD GOLD"><svg aria-label="GREENGUARD Gold Sertifikası" role="img" viewbox="0 0 150 120">
+<path class="logo-stroke" d="M75 10 122 27v32c0 26-18 43-47 52-29-9-47-26-47-52V27z"></path>
+<path class="logo-fill" d="M76 30c-20 8-28 24-25 43 14-3 26-13 32-28 2 14-1 26-10 36 22-5 33-23 31-43-11-5-20-7-28-8z"></path>
+<text class="logo-word logo-word--gg" text-anchor="middle" x="75" y="94">GREENGUARD</text>
+<text class="logo-subword" text-anchor="middle" x="75" y="108">GOLD</text>
+</svg></a><a aria-label="TSE" class="pd-cert-mark" href="#" title="TSE"><svg aria-label="TSE Sertifikası" role="img" viewbox="0 0 120 120">
+<circle class="logo-stroke" cx="60" cy="60" r="50"></circle>
+<path class="logo-fill" d="M31 42h58v12H67v35H53V54H31z"></path>
+<path class="logo-stroke thin" d="M31 74h58"></path>
+<text class="logo-word logo-word--tse" text-anchor="middle" x="60" y="102">TSE</text>
+</svg></a></div>
+<div class="pd-actions">
+<a class="pd-btn pd-btn--dark" href="#bilgi-talebi">Bilgi Talep Et →</a>
+<a class="pd-btn" href="#">Favorilere Ekle</a>
+</div>
+</aside>
+</div>
+</section>
+<nav aria-label="Ürün detay bölümleri" class="pd-anchor">
+<div class="pd-wrap pd-anchor-inner">
+<a href="#teknik-ozellikler">Teknik Özellikler</a>
+<a class="pd-external" href="/teknik-dokumanlar">Belgeler</a>
+<a class="pd-external" href="/3d-viewer">İlham Alın</a>
+<a class="pd-external pd-catalog-link" href="/kataloglar">Katalog İndir<svg aria-hidden="true" class="pd-catalog-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24"><path d="M12 4v10"></path><path d="m8 10 4 4 4-4"></path><path d="M5 20h14"></path></svg></a>
+</div>
+</nav>
+<section class="pd-section" id="teknik-ozellikler">
+<div class="pd-wrap">
+<div class="pd-section-head" hidden>
+<h2 data-product-description-title></h2>
+<p data-product-description></p>
+</div>
+<div class="pd-tech-group">
+<h3>Ürün ve yüzey bilgileri</h3>
+<dl class="pd-tech-table">
+<div class="pd-tech-row"><dt>Ürün Adı</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Ürün Kodu</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Durum</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Ürün Grubu</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Kategori</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Ebat</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Birim</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Yüzey</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Özel Yüzey</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Rölyef</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Face</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Mekân</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Face Sayısı</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Renk</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Renk Malzeme Grubu</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Kalınlık</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Bünye</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Bitiş</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>PEI</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>V Değeri</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>R Değeri</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Derin Aşınma</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Isıya Dayanıklılık</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Kaymaz</dt><dd>-</dd></div>
+<div class="pd-tech-row"><dt>Sırlı Granite</dt><dd>-</dd></div></dl>
+</div>
+<div class="pd-tech-group">
+<h3>Uygulama bilgileri</h3>
+<dl class="pd-tech-table">
+<div class="pd-tech-row"><dt>Uygulama Alanı</dt><dd>Yer, Duvar</dd></div>
+<div class="pd-tech-row"><dt>Kullanım Alanı</dt><dd>Banyo, Mutfak</dd></div>
+</dl>
+</div>
+<div class="pd-tech-group">
+<h3>Paketleme ve satış</h3>
+<dl class="pd-tech-table"><div class="pd-tech-row"><dt>Kutu m²</dt><dd>-</dd></div><div class="pd-tech-row"><dt>Palet m²</dt><dd>-</dd></div></dl>
+</div>
+</div>
+</section>
+<section class="pd-section pd-contact" id="bilgi-talebi">
+<div class="pd-wrap pd-contact-grid">
+<div>
+<h2 data-product-contact-title></h2>
+<p>Numune, stok, teknik uygulama veya proje desteği talepleriniz için formu doldurun. Ekibimiz sizinle iletişime geçsin.</p>
+</div>
+<form class="pd-form">
+<input placeholder="Ad Soyad"/>
+<input placeholder="E-posta"/>
+<input placeholder="Telefon"/>
+<select><option>Talep konusu</option><option>Numune</option><option>Teknik bilgi</option><option>Proje danışmanlığı</option></select>
+<textarea placeholder="Mesajınız"></textarea>
+<button class="pd-btn pd-btn--dark" type="button">Talebi Gönder</button>
+</form>
+</div>
+</section>
+</main>
+<div aria-hidden="true" aria-label="Ürün yüzeyi görüntüleyici" class="pd-image-viewer" id="pdImageViewer" role="dialog">
+<div class="pd-image-viewer__toolbar">
+<button aria-label="Uzaklaştır" id="pdViewerZoomOut" type="button">−</button>
+<span aria-live="polite" class="pd-image-viewer__scale" id="pdViewerScale">100%</span>
+<button aria-label="Yakınlaştır" id="pdViewerZoomIn" type="button">+</button>
+<button aria-label="Görseli ekrana sığdır" id="pdViewerReset" type="button">↺</button>
+<button aria-label="Görüntüleyiciyi kapat" class="pd-image-viewer__close" id="pdViewerClose" type="button">×</button>
+</div>
+<div class="pd-image-viewer__stage" id="pdViewerStage">
+<img alt="Amazonit ürün yüzeyi büyütülmüş görünüm" class="pd-image-viewer__image" draggable="false" id="pdViewerImage"/>
+</div>
+<p class="pd-image-viewer__hint">Fare tekerleğiyle yakınlaştırın · Görseli sürükleyerek hareket ettirin</p>
+</div>
+<!-- .......... FOOTER .......... -->
+<!-- .......... JAVASCRIPT .......... -->
+<button aria-controls="filterDrawer" aria-expanded="false" class="filter-rail" id="filterToggle">
+<span>Filtre</span>
+<svg fill="none" height="18" stroke="currentColor" stroke-width="1.4" viewbox="0 0 24 24" width="18"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
+</button><div class="drawer-backdrop" id="filterBackdrop"></div><aside aria-hidden="true" class="filter-drawer" id="filterDrawer">
+<div class="drawer-head">
+<div><p class="eyebrow">Ürün Keşfi</p><h3>Filtre</h3></div>
+<button aria-label="Filtreyi kapat" id="filterClose">×</button>
+</div>
+<form class="filter-form">
+<label>Marka<select name="brand"><option value="">Tümü</option><option value="NG Kütahya Seramik">NG Kütahya Seramik</option><option value="NG Slim">NG Slim</option><option value="NG Stone">NG Stone</option><option value="NG Performa">NG Performa</option><option value="NG USA">NG USA</option></select></label><label>Ürün Adı<input placeholder="Ürün ara" type="search"/></label>
+<label>Koleksiyon<select><option>Tümü</option></select></label>
+<label>Ebat<select><option>Tümü</option></select></label>
+<label>Kalınlık<select><option>Tümü</option></select></label>
+<label>Kategori<select><option>Tümü</option></select></label>
+<label>Yüzey<select><option>Tümü</option></select></label>
+<button class="cta filter-submit" type="button">Ürünleri Göster</button>
+</form>
+</aside><div class="drawer-backdrop" id="mobileMenuBackdrop"></div><aside aria-hidden="true" class="mobile-menu" id="mobileMenu">
+<div class="drawer-head">
+<img alt="NG Kütahya Seramik" src="assets/ng-kutahya-logo.png"/>
+<button aria-label="Menüyü kapat" id="mobileMenuClose">×</button>
+</div>
+<nav>
+<a href="#">Markalarımız <span>→</span></a>
+<a href="#">Ürünler <span>→</span></a>
+<a href="#">Profesyoneller <span>→</span></a>
+<a href="#">İletişim <span>→</span></a>
+<a href="#">İş Ortağı Portalı <span>→</span></a>
+</nav>
+</aside><footer class="footer footer--dark">
+<div class="wrap"><div class="footer__main-final"><div class="footer__identity-final"><div class="footer__info">
+<img alt="NG Kütahya Seramik" class="logo-img logo-img--footer" src="assets/ng-kutahya-logo.png"/></div></div><div class="footer__menus-final"><div class="footer__col"><h4>Kurumsal</h4><a href="#">Hakkımızda</a><a href="#">Tarihçe</a><a href="#">Üretim</a><a href="#">Temel Değerlerimiz</a><a href="#">Başarılar / Ödüller</a><a href="#">Sertifikalar</a><a href="#">İş Birlikleri</a><a href="#">Kariyer</a><a href="#">Bilgi Toplumu Hizmetleri</a></div><div class="footer__col"><h4>Sürdürülebilirlik</h4><a href="#">Çevresel Sorumluluk</a><a href="#">Sürdürülebilirlik Raporu</a></div><div class="footer__col"><h4>Katalog ve Belgeler</h4><a href="#">Ürün Katalogları</a><a href="#">Sertifikalar</a><a href="#">Teknik Dokümanlar</a></div><div class="footer__col"><h4>Fuar</h4><a href="#">Fuarlar</a><a href="#">Sanal Tur</a></div><div class="footer__col"><h4>Medya</h4><a href="#">NG Dergi</a><a href="#">Bültenler</a><a href="#">Trendler</a><a href="#">Videolar</a></div><div class="footer__col"><h4>Grup Şirketleri</h4><a href="#">Kütahya Porselen</a><a href="#">NG Hotels</a><a href="#">NG Residence</a><a href="#">NG Yatırım</a><a href="#">NG Makine</a><a href="#">NG Lojistik</a></div><div class="footer__col"><h4>Global Şirketler</h4><a href="#">NG USA</a><a href="#">NG Arteka</a></div></div></div><div class="footer__social-row"><div aria-label="Sosyal medya" class="footer__socials">
+<a aria-label="Instagram" href="#"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5ZM17.5 5.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></a>
+<a aria-label="Facebook" href="#"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M13.5 22v-9h3l.45-3.5H13.5V7.26c0-1.01.28-1.7 1.73-1.7H17V2.14A23.7 23.7 0 0 0 14.4 2C11.82 2 10 3.58 10 6.49V9.5H7V13h3v9h3.5Z"/></svg></a>
+<a aria-label="YouTube" href="#"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M23.5 6.19a3 3 0 0 0-2.11-2.12C19.5 3.56 12 3.56 12 3.56s-7.5 0-9.39.51A3 3 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3 3 0 0 0 2.11 2.12c1.89.51 9.39.51 9.39.51s7.5 0 9.39-.51a3 3 0 0 0 2.11-2.12A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81ZM9.6 15.6V8.4l6.26 3.6-6.26 3.6Z"/></svg></a>
+<a aria-label="LinkedIn" href="#"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5.34 7.5H1.67V22h3.67V7.5ZM3.5 2A2.13 2.13 0 1 0 3.5 6.26 2.13 2.13 0 0 0 3.5 2ZM22 13.68c0-4.36-2.33-6.39-5.44-6.39-2.51 0-3.63 1.38-4.26 2.35V7.5H8.63V22h3.67v-7.2c0-1.9.36-3.75 2.72-3.75 2.33 0 2.36 2.18 2.36 3.87V22H22v-8.32Z"/></svg></a>
+</div></div>
+<div class="footer__bottom">
+<p class="footer__copy">© 2026 NG Kütahya Seramik. Tüm hakları saklıdır.</p>
+<div class="footer__bottom-right footer__bottom-right--legal-only"><div class="footer__legal">
+<a href="#">Gizlilik</a>
+<a href="#">Çerezler</a>
+<a href="#">KVKK</a>
+<a href="#">Yasal Uyarı</a>
+</div></div></div><div class="footer__signature">Digital Experience by Most Idea</div></div>
+</footer><script>
+// "?"?"? Header scroll "?"?"?
+window.addEventListener('scroll',()=>{
+  document.getElementById('header').classList.toggle('scrolled',window.scrollY>30)
+});
+
+// "?"?"? Language selector "?"?"?
+function toggleLang(){document.getElementById('langDd').classList.toggle('open')}
+function selLang(flag,code,btn){
+  const b=document.querySelector('.lang__btn');
+  b.innerHTML=`<img class="lang__flag" src="assets/flags/${flag}.svg" alt="" width="22" height="15"><span class="lang__code">${code}</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>`;
+  document.getElementById('langDd').classList.remove('open');
+  document.querySelectorAll('.lang__dd button').forEach(button=>button.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.lang'))document.getElementById('langDd').classList.remove('open')
+});
+
+// "?"?"? Scroll reveal "?"?"?
+const ro=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target)}})
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// "?"?"? Mouse-driven carousel "?"?"?
+(function(){
+  const carousel=document.getElementById('carousel');
+  if(!carousel)return;
+  const wrap=carousel.parentElement;
+  
+  let isDragging=false;
+  let startX=0;
+  let scrollLeft=0;
+  let currentX=0;
+  let velocity=0;
+  let animFrame;
+  
+  // Calculate max scroll
+  function getMaxScroll(){
+    return Math.max(0,carousel.scrollWidth-wrap.clientWidth)
+  }
+  
+  // Mouse move parallax (passive hover effect)
+  wrap.addEventListener('mousemove',function(e){
+    if(isDragging)return;
+    const rect=wrap.getBoundingClientRect();
+    const mouseX=(e.clientX-rect.left)/rect.width; // 0 to 1
+    const maxScroll=getMaxScroll();
+    const targetX=-mouseX*maxScroll;
+    
+    // Smooth lerp
+    cancelAnimationFrame(animFrame);
+    function animate(){
+      currentX+=(targetX-currentX)*0.06;
+      carousel.style.transform=`translateX(${currentX}px)`;
+      if(Math.abs(targetX-currentX)>0.5){
+        animFrame=requestAnimationFrame(animate)
+      }
+    }
+    animate()
+  });
+  
+  // Mouse leave - snap back gently
+  wrap.addEventListener('mouseleave',function(){
+    if(isDragging)return;
+    cancelAnimationFrame(animFrame);
+    function snapBack(){
+      currentX+=(0-currentX)*0.04;
+      carousel.style.transform=`translateX(${currentX}px)`;
+      if(Math.abs(currentX)>0.5){
+        animFrame=requestAnimationFrame(snapBack)
+      }
+    }
+    snapBack()
+  });
+  
+  // Drag functionality
+  carousel.addEventListener('mousedown',function(e){
+    isDragging=true;
+    startX=e.pageX;
+    scrollLeft=currentX;
+    carousel.style.transition='none';
+    e.preventDefault()
+  });
+  
+  document.addEventListener('mousemove',function(e){
+    if(!isDragging)return;
+    const x=e.pageX-startX;
+    currentX=Math.max(-getMaxScroll(),Math.min(0,scrollLeft+x));
+    carousel.style.transform=`translateX(${currentX}px)`
+  });
+  
+  document.addEventListener('mouseup',function(){
+    if(!isDragging)return;
+    isDragging=false;
+    carousel.style.transition='transform 0.1s ease-out'
+  });
+  
+  // Prevent link clicks during drag
+  carousel.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click',function(e){
+      if(Math.abs(startX-(e.pageX||0))>5)e.preventDefault()
+    })
+  })
+})();
+
+
+// "?"?"? Sağ menü "?"?"?
+document.addEventListener('DOMContentLoaded', () => {
+
+const menuToggle = document.getElementById('menuToggle');
+const sideMenu = document.getElementById('sideMenu');
+const menuBackdrop = document.getElementById('menuBackdrop');
+const menuClose = document.getElementById('menuClose');
+
+function setSideMenu(open){
+  sideMenu?.classList.toggle('open', open);
+  menuBackdrop?.classList.toggle('open', open);
+  sideMenu?.setAttribute('aria-hidden', String(!open));
+  menuBackdrop?.setAttribute('aria-hidden', String(!open));
+  menuToggle?.setAttribute('aria-expanded', String(open));
+  document.body.classList.toggle('menu-open', open);
+}
+
+menuToggle?.addEventListener('click', () => setSideMenu(true));
+menuClose?.addEventListener('click', () => setSideMenu(false));
+menuBackdrop?.addEventListener('click', () => setSideMenu(false));
+sideMenu?.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => setSideMenu(false));
+});
+document.addEventListener('keydown', event => {
+  if(event.key === 'Escape') setSideMenu(false);
+});
+
+});
+
+// "?"?"? Mega menüler "?"?"?
+const megaTriggers=[...document.querySelectorAll('[data-mega]')];
+const megaMenus=[...document.querySelectorAll('.mega-menu')];
+function closeMegaMenus(){
+  megaMenus.forEach(menu=>menu.classList.remove('open'));
+  megaTriggers.forEach(trigger=>trigger.classList.remove('active'));
+}
+megaTriggers.forEach(trigger=>{
+  trigger.addEventListener('click',event=>{
+    event.stopPropagation();
+    const menu=document.getElementById(trigger.dataset.mega);
+    const open=!menu.classList.contains('open');
+    closeMegaMenus();
+    if(open){menu.classList.add('open');trigger.classList.add('active')}
+  });
+});
+document.addEventListener('click',event=>{
+  if(!event.target.closest('.mega-menu')&&!event.target.closest('[data-mega]'))closeMegaMenus();
+});
+
+// "?"?"? Drawer yardımcıları "?"?"?
+function setDrawer(drawer,backdrop,toggle,open){
+  drawer?.classList.toggle('open',open);
+  backdrop?.classList.toggle('open',open);
+  drawer?.setAttribute('aria-hidden',String(!open));
+  toggle?.setAttribute('aria-expanded',String(open));
+  document.body.classList.toggle('drawer-open',open);
+}
+
+const filterToggle=document.getElementById('filterToggle');
+const filterDrawer=document.getElementById('filterDrawer');
+const filterBackdrop=document.getElementById('filterBackdrop');
+filterToggle?.addEventListener('click',()=>setDrawer(filterDrawer,filterBackdrop,filterToggle,true));
+document.getElementById('filterClose')?.addEventListener('click',()=>setDrawer(filterDrawer,filterBackdrop,filterToggle,false));
+filterBackdrop?.addEventListener('click',()=>setDrawer(filterDrawer,filterBackdrop,filterToggle,false));
+
+const mobileToggle=document.getElementById('mobileMenuToggle');
+const mobileMenu=document.getElementById('mobileMenu');
+const mobileBackdrop=document.getElementById('mobileMenuBackdrop');
+mobileToggle?.addEventListener('click',()=>setDrawer(mobileMenu,mobileBackdrop,mobileToggle,true));
+document.getElementById('mobileMenuClose')?.addEventListener('click',()=>setDrawer(mobileMenu,mobileBackdrop,mobileToggle,false));
+mobileBackdrop?.addEventListener('click',()=>setDrawer(mobileMenu,mobileBackdrop,mobileToggle,false));
+
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){
+    closeMegaMenus();
+    setDrawer(filterDrawer,filterBackdrop,filterToggle,false);
+    setDrawer(mobileMenu,mobileBackdrop,mobileToggle,false);
+  }
+});
+
+
+// "?"?"? Hero kullanım modu "?"?"?
+// data-mode="video-scroll-image": ilk açılışta video, kaydırmada fotoğraf.
+// data-mode="image": yalnızca statik fotoğraf/render.
+(function(){
+  const hero=document.querySelector('.hero');
+  if(!hero)return;
+
+  const video=hero.querySelector('.hero__video');
+  const mode=hero.dataset.mode || 'video-scroll-image';
+
+  function applyHeroMode(){
+    if(mode==='image'){
+      hero.classList.add('is-image');
+      video?.pause();
+      return;
+    }
+
+    const showImage=window.scrollY>90;
+    hero.classList.toggle('is-image',showImage);
+
+    if(showImage){
+      video?.pause();
+    }else{
+      const playPromise=video?.play();
+      if(playPromise && typeof playPromise.catch==='function') playPromise.catch(()=>{});
+    }
+  }
+
+  applyHeroMode();
+  window.addEventListener('scroll',applyHeroMode,{passive:true});
+})();
+</script>
+<script>
+/* Büyük ürün görselini, soldaki küçük görsel kolonunun alt çizgisine eşitler. */
+(function(){
+  const gallery=document.querySelector('.pd-layout--aligned .pd-gallery');
+  const thumbs=gallery?.querySelector('.pd-thumbs');
+  if(!gallery||!thumbs)return;
+
+  function syncProductFaceHeight(){
+    if(window.matchMedia('(max-width: 980px)').matches){
+      gallery.style.removeProperty('--pd-face-height');
+      return;
+    }
+    gallery.style.setProperty('--pd-face-height',Math.ceil(thumbs.getBoundingClientRect().height)+'px');
+  }
+
+  syncProductFaceHeight();
+  window.addEventListener('load',syncProductFaceHeight);
+  window.addEventListener('resize',syncProductFaceHeight,{passive:true});
+  if('ResizeObserver' in window){
+    new ResizeObserver(syncProductFaceHeight).observe(thumbs);
+  }
+})();
+
+document.querySelectorAll('.pd-thumb').forEach(function(button){
+  button.addEventListener('click',function(){
+    document.querySelectorAll('.pd-thumb').forEach(function(item){item.classList.remove('is-active')});
+    button.classList.add('is-active');
+    const image=document.getElementById('pdMainFace');
+    image.style.opacity='.2';
+    setTimeout(function(){
+      image.src=button.dataset.pdSrc;
+      image.style.opacity='1';
+    },130);
+  });
+});
+
+const pdInlineAssets={'assets/amazonit-face-1.svg':'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iMTMyMCIgdmlld0JveD0iMCAwIDkwMCAxMzIwIj4KPGRlZnM+CiA8ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4wMTgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEyMSIvPjxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMSAwIDAgMCAuMTUgIDAgMSAwIDAgLjE1ICAwIDAgMSAwIC4xNSAgMCAwIDAgLjIzIDAiLz48L2ZpbHRlcj4KIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZThlNGRiIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiM4NDlhOTciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNWM4YjciLz48L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYmcpIi8+CjxlbGxpcHNlIGN4PSI5OCIgY3k9IjM2NiIgcng9IjIwNCIgcnk9IjEzNiIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoMTYwIDk4IDM2NikiLz48ZWxsaXBzZSBjeD0iMjgzIiBjeT0iNTk2IiByeD0iMTI4IiByeT0iODIiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuMjEiIHRyYW5zZm9ybT0icm90YXRlKDE2MyAyODMgNTk2KSIvPjxlbGxpcHNlIGN4PSI4MDQiIGN5PSIxODciIHJ4PSI2MSIgcnk9IjE1NSIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC4zOCIgdHJhbnNmb3JtPSJyb3RhdGUoMTA5IDgwNCAxODcpIi8+PGVsbGlwc2UgY3g9IjM4OSIgY3k9IjIyNSIgcng9IjE0MyIgcnk9IjgxIiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjMyIiB0cmFuc2Zvcm09InJvdGF0ZSgxMTAgMzg5IDIyNSkiLz48ZWxsaXBzZSBjeD0iNDAzIiBjeT0iMTI0NiIgcng9IjE2NCIgcnk9IjE3MCIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC40NyIgdHJhbnNmb3JtPSJyb3RhdGUoMTI1IDQwMyAxMjQ2KSIvPjxlbGxpcHNlIGN4PSIxNDkiIGN5PSI3NjQiIHJ4PSI2MCIgcnk9IjcyIiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjM0IiB0cmFuc2Zvcm09InJvdGF0ZSg4NSAxNDkgNzY0KSIvPjxlbGxpcHNlIGN4PSItNjIiIGN5PSIxMDY3IiByeD0iODkiIHJ5PSIzNyIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4zNyIgdHJhbnNmb3JtPSJyb3RhdGUoMTc3IC02MiAxMDY3KSIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjEwMTAiIHJ4PSI5MyIgcnk9IjkwIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjI3IiB0cmFuc2Zvcm09InJvdGF0ZSg0NyAxNiAxMDEwKSIvPjxlbGxpcHNlIGN4PSI2OTEiIGN5PSIzMjUiIHJ4PSIxODEiIHJ5PSI2NiIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC4yOCIgdHJhbnNmb3JtPSJyb3RhdGUoMyA2OTEgMzI1KSIvPjxlbGxpcHNlIGN4PSIzNDAiIGN5PSIxMjE3IiByeD0iMTAxIiByeT0iMzkiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNDgiIHRyYW5zZm9ybT0icm90YXRlKDkyIDM0MCAxMjE3KSIvPjxlbGxpcHNlIGN4PSIxMDEiIGN5PSI2MjMiIHJ4PSIyMDMiIHJ5PSIxNTAiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuMjkiIHRyYW5zZm9ybT0icm90YXRlKDk4IDEwMSA2MjMpIi8+PGVsbGlwc2UgY3g9IjQ3NSIgY3k9IjEyNjMiIHJ4PSIxNTgiIHJ5PSIxMzIiIGZpbGw9IiNjNWI2YTMiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDk5IDQ3NSAxMjYzKSIvPjxlbGxpcHNlIGN4PSI2NjIiIGN5PSI4MTUiIHJ4PSIxODIiIHJ5PSI4MyIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC40NyIgdHJhbnNmb3JtPSJyb3RhdGUoMTI2IDY2MiA4MTUpIi8+PGVsbGlwc2UgY3g9IjcxMyIgY3k9IjE2MyIgcng9Ijc2IiByeT0iNDciIGZpbGw9IiNjNWI2YTMiIG9wYWNpdHk9IjAuMzQiIHRyYW5zZm9ybT0icm90YXRlKDE5IDcxMyAxNjMpIi8+PGVsbGlwc2UgY3g9IjU1MiIgY3k9IjI4OCIgcng9IjEyNiIgcnk9IjcxIiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjQzIiB0cmFuc2Zvcm09InJvdGF0ZSg4MSA1NTIgMjg4KSIvPjxlbGxpcHNlIGN4PSI0OTAiIGN5PSIzODQiIHJ4PSIxMDEiIHJ5PSI1MiIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4zNiIgdHJhbnNmb3JtPSJyb3RhdGUoMTggNDkwIDM4NCkiLz48ZWxsaXBzZSBjeD0iNjk5IiBjeT0iNTc5IiByeD0iNTciIHJ5PSIxMjYiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuMjAiIHRyYW5zZm9ybT0icm90YXRlKDQ5IDY5OSA1NzkpIi8+PGVsbGlwc2UgY3g9Ii0zNSIgY3k9IjQyNCIgcng9IjE0OSIgcnk9Ijc0IiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjUwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNjAgLTM1IDQyNCkiLz48ZWxsaXBzZSBjeD0iMTc1IiBjeT0iLTY3IiByeD0iMTk3IiByeT0iMTM5IiBmaWxsPSIjYTlhNTlhIiBvcGFjaXR5PSIwLjIxIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjcgMTc1IC02NykiLz48ZWxsaXBzZSBjeD0iMzQ0IiBjeT0iMjQiIHJ4PSIxNzAiIHJ5PSIxNzAiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDQxIDM0NCAyNCkiLz48ZWxsaXBzZSBjeD0iMjQzIiBjeT0iNjkwIiByeD0iMTA4IiByeT0iMTIyIiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjMzIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDggMjQzIDY5MCkiLz48ZWxsaXBzZSBjeD0iNDUyIiBjeT0iMjY3IiByeD0iMTY4IiByeT0iNzciIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuMzciIHRyYW5zZm9ybT0icm90YXRlKDE1NyA0NTIgMjY3KSIvPjxlbGxpcHNlIGN4PSIxNTYiIGN5PSI2ODciIHJ4PSIxNDkiIHJ5PSIxNzAiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuNTYiIHRyYW5zZm9ybT0icm90YXRlKDYzIDE1NiA2ODcpIi8+PGVsbGlwc2UgY3g9IjUwMiIgY3k9IjEwNjIiIHJ4PSIxMjAiIHJ5PSI0MiIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4yMSIgdHJhbnNmb3JtPSJyb3RhdGUoMTY4IDUwMiAxMDYyKSIvPjxlbGxpcHNlIGN4PSItNjUiIGN5PSI0NDciIHJ4PSI5MiIgcnk9IjQwIiBmaWxsPSIjN2Q5OTk2IiBvcGFjaXR5PSIwLjQyIiB0cmFuc2Zvcm09InJvdGF0ZSg2NSAtNjUgNDQ3KSIvPjxlbGxpcHNlIGN4PSI5NCIgY3k9IjYxMiIgcng9IjE5MSIgcnk9Ijk4IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjE5IiB0cmFuc2Zvcm09InJvdGF0ZSgxMDYgOTQgNjEyKSIvPjxlbGxpcHNlIGN4PSI1MzYiIGN5PSIxMTA4IiByeD0iMTY3IiByeT0iMTM1IiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjI1IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTYgNTM2IDExMDgpIi8+PGVsbGlwc2UgY3g9IjIyMSIgY3k9IjgxMCIgcng9IjE3NiIgcnk9IjQyIiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjI5IiB0cmFuc2Zvcm09InJvdGF0ZSgxNDcgMjIxIDgxMCkiLz48ZWxsaXBzZSBjeD0iNzE1IiBjeT0iNDE4IiByeD0iMTAxIiByeT0iOTkiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMzYiIHRyYW5zZm9ybT0icm90YXRlKDE2OSA3MTUgNDE4KSIvPjxlbGxpcHNlIGN4PSIxMCIgY3k9IjcxOSIgcng9IjEyNSIgcnk9IjU2IiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjI2IiB0cmFuc2Zvcm09InJvdGF0ZSg0OCAxMCA3MTkpIi8+PGVsbGlwc2UgY3g9IjI0NyIgY3k9IjEwNDUiIHJ4PSIxNzQiIHJ5PSI0NCIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC4zNiIgdHJhbnNmb3JtPSJyb3RhdGUoNTQgMjQ3IDEwNDUpIi8+PGVsbGlwc2UgY3g9IjIxMyIgY3k9IjU5NCIgcng9IjE5NiIgcnk9IjE2NyIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC41NCIgdHJhbnNmb3JtPSJyb3RhdGUoMTMyIDIxMyA1OTQpIi8+PGVsbGlwc2UgY3g9IjY0NyIgY3k9IjM3MCIgcng9Ijc5IiByeT0iMTMxIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjI0IiB0cmFuc2Zvcm09InJvdGF0ZSgzIDY0NyAzNzApIi8+PGVsbGlwc2UgY3g9IjMwIiBjeT0iODMxIiByeD0iMTEzIiByeT0iNTMiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNDEiIHRyYW5zZm9ybT0icm90YXRlKDkwIDMwIDgzMSkiLz48ZWxsaXBzZSBjeD0iMjI1IiBjeT0iMzM5IiByeD0iMTg0IiByeT0iMTI4IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjUwIiB0cmFuc2Zvcm09InJvdGF0ZSg3OSAyMjUgMzM5KSIvPjxlbGxpcHNlIGN4PSIzODMiIGN5PSIxMzg2IiByeD0iMTE4IiByeT0iNzciIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNTMiIHRyYW5zZm9ybT0icm90YXRlKDQyIDM4MyAxMzg2KSIvPjxlbGxpcHNlIGN4PSI4NjciIGN5PSIxMjg5IiByeD0iMTg4IiByeT0iMTYyIiBmaWxsPSIjYTlhNTlhIiBvcGFjaXR5PSIwLjM1IiB0cmFuc2Zvcm09InJvdGF0ZSgxMDIgODY3IDEyODkpIi8+PGVsbGlwc2UgY3g9Ijg0IiBjeT0iNjQ5IiByeD0iMTc1IiByeT0iNzAiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNTgiIHRyYW5zZm9ybT0icm90YXRlKDc4IDg0IDY0OSkiLz48ZWxsaXBzZSBjeD0iMTE1IiBjeT0iNDc4IiByeD0iODYiIHJ5PSI0NyIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4yMCIgdHJhbnNmb3JtPSJyb3RhdGUoMTcwIDExNSA0NzgpIi8+PGVsbGlwc2UgY3g9IjMyMiIgY3k9IjEyNjUiIHJ4PSIxMTIiIHJ5PSI1NSIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC41MCIgdHJhbnNmb3JtPSJyb3RhdGUoOCAzMjIgMTI2NSkiLz48ZWxsaXBzZSBjeD0iLTQyIiBjeT0iMTA0IiByeD0iMjA5IiByeT0iNjAiIGZpbGw9IiM3ZDk5OTYiIG9wYWNpdHk9IjAuMzgiIHRyYW5zZm9ybT0icm90YXRlKDExNyAtNDIgMTA0KSIvPjxlbGxpcHNlIGN4PSI1NjQiIGN5PSI1NTMiIHJ4PSI2MyIgcnk9IjQxIiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjIyIiB0cmFuc2Zvcm09InJvdGF0ZSgxMzIgNTY0IDU1MykiLz48ZWxsaXBzZSBjeD0iNzExIiBjeT0iOTAzIiByeD0iMTQ5IiByeT0iMTMxIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjUxIiB0cmFuc2Zvcm09InJvdGF0ZSgyMyA3MTEgOTAzKSIvPjxlbGxpcHNlIGN4PSItNzEiIGN5PSI5OTciIHJ4PSIxODkiIHJ5PSIxNjgiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuNDkiIHRyYW5zZm9ybT0icm90YXRlKDQzIC03MSA5OTcpIi8+PGVsbGlwc2UgY3g9IjI5NyIgY3k9IjUxIiByeD0iODciIHJ5PSIxMTkiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuNDIiIHRyYW5zZm9ybT0icm90YXRlKDE4IDI5NyA1MSkiLz48ZWxsaXBzZSBjeD0iMTA5IiBjeT0iMTI0MCIgcng9IjEyNCIgcnk9Ijk5IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjM2IiB0cmFuc2Zvcm09InJvdGF0ZSgxMzEgMTA5IDEyNDApIi8+PGVsbGlwc2UgY3g9IjQ2NCIgY3k9Ii03OSIgcng9IjExMCIgcnk9IjQzIiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjQxIiB0cmFuc2Zvcm09InJvdGF0ZSgxMTEgNDY0IC03OSkiLz48ZWxsaXBzZSBjeD0iMjM0IiBjeT0iNDYxIiByeD0iNTUiIHJ5PSI2NiIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC4yMiIgdHJhbnNmb3JtPSJyb3RhdGUoNzcgMjM0IDQ2MSkiLz48ZWxsaXBzZSBjeD0iMjY2IiBjeT0iMzIiIHJ4PSI2NCIgcnk9IjE1NiIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4yOSIgdHJhbnNmb3JtPSJyb3RhdGUoOTggMjY2IDMyKSIvPjxlbGxpcHNlIGN4PSI2NjciIGN5PSIzOTQiIHJ4PSI2OSIgcnk9IjEzOCIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC41NSIgdHJhbnNmb3JtPSJyb3RhdGUoNjIgNjY3IDM5NCkiLz48ZWxsaXBzZSBjeD0iNzkxIiBjeT0iMTM1NSIgcng9IjY0IiByeT0iOTAiIGZpbGw9IiNjNWI2YTMiIG9wYWNpdHk9IjAuMTgiIHRyYW5zZm9ybT0icm90YXRlKDE0NyA3OTEgMTM1NSkiLz48ZWxsaXBzZSBjeD0iLTE2IiBjeT0iNzAwIiByeD0iMTE3IiByeT0iMTU5IiBmaWxsPSIjN2Q5OTk2IiBvcGFjaXR5PSIwLjI4IiB0cmFuc2Zvcm09InJvdGF0ZSgxNzYgLTE2IDcwMCkiLz48ZWxsaXBzZSBjeD0iNzciIGN5PSIxMzUxIiByeD0iMTE4IiByeT0iMTE1IiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjI4IiB0cmFuc2Zvcm09InJvdGF0ZSg3NSA3NyAxMzUxKSIvPjxlbGxpcHNlIGN4PSI1OTUiIGN5PSIxMDM5IiByeD0iODYiIHJ5PSI0NSIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC40NSIgdHJhbnNmb3JtPSJyb3RhdGUoNCA1OTUgMTAzOSkiLz48ZWxsaXBzZSBjeD0iNDkzIiBjeT0iMTA0OCIgcng9IjEzMCIgcnk9IjQ4IiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjQ2IiB0cmFuc2Zvcm09InJvdGF0ZSgzIDQ5MyAxMDQ4KSIvPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbm9pc2UpIiBvcGFjaXR5PSIuNyIvPgo8cGF0aCBkPSJNLTEwMCA0OSBDIDE4MCAtNDksIDM2MCAxNDcsIDU2MCA1IFMgNzkwIC00MSwgMTAwMCAtMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjQiIHN0cm9rZS13aWR0aD0iNC44Ii8+PHBhdGggZD0iTS0xMDAgMTM1MSBDIDE4MCAxMjQ2LCAzNjAgMTQ1NiwgNTYwIDEyOTAgUyA3OTAgMTQxNywgMTAwMCAxNDEwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjM4IiBzdHJva2Utd2lkdGg9IjIuOCIvPjxwYXRoIGQ9Ik0tMTAwIC05OCBDIDE4MCAtMTY3LCAzNjAgLTI5LCA1NjAgLTExOSBTIDc5MCAtODIsIDEwMDAgLTk5IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjIxIiBzdHJva2Utd2lkdGg9IjQuNSIvPjxwYXRoIGQ9Ik0tMTAwIDE2NiBDIDE4MCAxMzIsIDM2MCAyMDAsIDU2MCA3OSBTIDc5MCA5NiwgMTAwMCAxOTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuNDUiIHN0cm9rZS13aWR0aD0iMS45Ii8+PHBhdGggZD0iTS0xMDAgMTM3NCBDIDE4MCAxMzMzLCAzNjAgMTQxNSwgNTYwIDEzMDMgUyA3OTAgMTI4NCwgMTAwMCAxMzQ1IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjI0IiBzdHJva2Utd2lkdGg9IjQuNyIvPjxwYXRoIGQ9Ik0tMTAwIDUzMiBDIDE4MCA0OTYsIDM2MCA1NjgsIDU2MCA0NDYgUyA3OTAgNTE2LCAxMDAwIDU3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC4zNCIgc3Ryb2tlLXdpZHRoPSI1LjUiLz48cGF0aCBkPSJNLTEwMCAxNDMgQyAxODAgODMsIDM2MCAyMDMsIDU2MCA0NSBTIDc5MCAxNjUsIDEwMDAgMjA0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjI0IiBzdHJva2Utd2lkdGg9IjIuMyIvPjxwYXRoIGQ9Ik0tMTAwIDM3MyBDIDE4MCAyOTQsIDM2MCA0NTIsIDU2MCAzMjMgUyA3OTAgNDYyLCAxMDAwIDM4OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC4yOSIgc3Ryb2tlLXdpZHRoPSIyLjEiLz48cGF0aCBkPSJNLTEwMCAzMTcgQyAxODAgMjcyLCAzNjAgMzYyLCA1NjAgMjIxIFMgNzkwIDM1MywgMTAwMCAzMzciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjQiIHN0cm9rZS13aWR0aD0iNC45Ii8+PHBhdGggZD0iTS0xMDAgMjc5IEMgMTgwIDIwOSwgMzYwIDM0OSwgNTYwIDIzNyBTIDc5MCAyMzIsIDEwMDAgMzExIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjI1IiBzdHJva2Utd2lkdGg9IjIuMCIvPjxwYXRoIGQ9Ik0tMTAwIDExOSBDIDE4MCAzMCwgMzYwIDIwOCwgNTYwIDc5IFMgNzkwIDIxNCwgMTAwMCAxOTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjIiIHN0cm9rZS13aWR0aD0iNC45Ii8+PHBhdGggZD0iTS0xMDAgMTExNiBDIDE4MCAxMDQ1LCAzNjAgMTE4NywgNTYwIDEwNTMgUyA3OTAgMTIxMCwgMTAwMCAxMDU2IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjU2IiBzdHJva2Utd2lkdGg9IjQuMyIvPjxwYXRoIGQ9Ik0tMTAwIDY4MCBDIDE4MCA2MzQsIDM2MCA3MjYsIDU2MCA2MDYgUyA3OTAgNTk0LCAxMDAwIDcwNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4yNyIgc3Ryb2tlLXdpZHRoPSIyLjYiLz48cGF0aCBkPSJNLTEwMCA2MDMgQyAxODAgNDk1LCAzNjAgNzExLCA1NjAgNTYxIFMgNzkwIDU4MywgMTAwMCA2MDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMzgiIHN0cm9rZS13aWR0aD0iMy45Ii8+PHBhdGggZD0iTS0xMDAgMTAxOCBDIDE4MCA5MjMsIDM2MCAxMTEzLCA1NjAgOTIwIFMgNzkwIDEwMDIsIDEwMDAgOTYyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjU3IiBzdHJva2Utd2lkdGg9IjUuMyIvPjxwYXRoIGQ9Ik0tMTAwIDEwMjEgQyAxODAgOTEzLCAzNjAgMTEyOSwgNTYwIDk0MiBTIDc5MCA5NzQsIDEwMDAgMTA4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4zNyIgc3Ryb2tlLXdpZHRoPSIzLjciLz48cGF0aCBkPSJNLTEwMCA0OTcgQyAxODAgMzkyLCAzNjAgNjAyLCA1NjAgNDU1IFMgNzkwIDQwMCwgMTAwMCA1NTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuNDEiIHN0cm9rZS13aWR0aD0iNC43Ii8+PHBhdGggZD0iTS0xMDAgMzQ3IEMgMTgwIDI5MCwgMzYwIDQwNCwgNTYwIDMwMCBTIDc5MCAzODcsIDEwMDAgMzQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjMzIiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0tMTAwIDEyNjkgQyAxODAgMTE4NCwgMzYwIDEzNTQsIDU2MCAxMTg3IFMgNzkwIDEyMzgsIDEwMDAgMTI5MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC40OSIgc3Ryb2tlLXdpZHRoPSIzLjIiLz48cGF0aCBkPSJNLTEwMCA5OTYgQyAxODAgODc4LCAzNjAgMTExNCwgNTYwIDkzOCBTIDc5MCAxMDU5LCAxMDAwIDEwNTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuNDEiIHN0cm9rZS13aWR0aD0iMy4yIi8+PHBhdGggZD0iTS0xMDAgMTEgQyAxODAgLTc1LCAzNjAgOTcsIDU2MCAtMjAgUyA3OTAgODgsIDEwMDAgLTI5IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjM5IiBzdHJva2Utd2lkdGg9IjIuMSIvPjxwYXRoIGQ9Ik0tMTAwIDE0MTAgQyAxODAgMTMzMSwgMzYwIDE0ODksIDU2MCAxMzM4IFMgNzkwIDE0MDksIDEwMDAgMTM2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC4zMSIgc3Ryb2tlLXdpZHRoPSIzLjUiLz4KPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9Ijg4NCIgaGVpZ2h0PSIxMzA0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIuMjIiLz4KPC9zdmc+','assets/amazonit-face-2.svg':'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iMTMyMCIgdmlld0JveD0iMCAwIDkwMCAxMzIwIj4KPGRlZnM+CiA8ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4wMTgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEyMiIvPjxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMSAwIDAgMCAuMTUgIDAgMSAwIDAgLjE1ICAwIDAgMSAwIC4xNSAgMCAwIDAgLjIzIDAiLz48L2ZpbHRlcj4KIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZThlNGRiIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiM4NDlhOTciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNWM4YjciLz48L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYmcpIi8+CjxlbGxpcHNlIGN4PSI5NjQiIGN5PSIzNTYiIHJ4PSIyMDciIHJ5PSIxMTIiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuNTEiIHRyYW5zZm9ybT0icm90YXRlKDE4IDk2NCAzNTYpIi8+PGVsbGlwc2UgY3g9Ijg1OCIgY3k9IjEyOTAiIHJ4PSIyMDYiIHJ5PSI3NiIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4zOCIgdHJhbnNmb3JtPSJyb3RhdGUoMjcgODU4IDEyOTApIi8+PGVsbGlwc2UgY3g9IjQxNCIgY3k9IjEwNjIiIHJ4PSIxNTYiIHJ5PSIxMzEiIGZpbGw9IiM3ZDk5OTYiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDE2MCA0MTQgMTA2MikiLz48ZWxsaXBzZSBjeD0iNDk0IiBjeT0iODg1IiByeD0iNzMiIHJ5PSIxMzQiIGZpbGw9IiNjNWI2YTMiIG9wYWNpdHk9IjAuNDUiIHRyYW5zZm9ybT0icm90YXRlKDMwIDQ5NCA4ODUpIi8+PGVsbGlwc2UgY3g9IjkzMSIgY3k9IjQ5NyIgcng9IjE0OSIgcnk9IjQ1IiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjM1IiB0cmFuc2Zvcm09InJvdGF0ZSgxMzggOTMxIDQ5NykiLz48ZWxsaXBzZSBjeD0iMjIyIiBjeT0iMTMyNSIgcng9IjE0OSIgcnk9IjEzMiIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC4yMiIgdHJhbnNmb3JtPSJyb3RhdGUoMTggMjIyIDEzMjUpIi8+PGVsbGlwc2UgY3g9Ii0zNSIgY3k9Ii01MyIgcng9IjEwNSIgcnk9IjE1NiIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4zNCIgdHJhbnNmb3JtPSJyb3RhdGUoMTA2IC0zNSAtNTMpIi8+PGVsbGlwc2UgY3g9IjMzOCIgY3k9Ii03NCIgcng9IjExMiIgcnk9IjEyNyIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC4zOSIgdHJhbnNmb3JtPSJyb3RhdGUoMTE4IDMzOCAtNzQpIi8+PGVsbGlwc2UgY3g9IjYwMyIgY3k9IjExNTUiIHJ4PSI4MCIgcnk9Ijk4IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjQ2IiB0cmFuc2Zvcm09InJvdGF0ZSgxMyA2MDMgMTE1NSkiLz48ZWxsaXBzZSBjeD0iMTM4IiBjeT0iNjcyIiByeD0iMjE4IiByeT0iNTgiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNTMiIHRyYW5zZm9ybT0icm90YXRlKDc0IDEzOCA2NzIpIi8+PGVsbGlwc2UgY3g9IjQwOSIgY3k9Ijc0MCIgcng9IjIwNSIgcnk9Ijk3IiBmaWxsPSIjN2Q5OTk2IiBvcGFjaXR5PSIwLjQ5IiB0cmFuc2Zvcm09InJvdGF0ZSg1MiA0MDkgNzQwKSIvPjxlbGxpcHNlIGN4PSI2OTgiIGN5PSI2NjYiIHJ4PSIxNDIiIHJ5PSIxNTYiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNTEiIHRyYW5zZm9ybT0icm90YXRlKDQ0IDY5OCA2NjYpIi8+PGVsbGlwc2UgY3g9IjU4NiIgY3k9IjMwIiByeD0iMTU2IiByeT0iNjIiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNDYiIHRyYW5zZm9ybT0icm90YXRlKDEyOCA1ODYgMzApIi8+PGVsbGlwc2UgY3g9IjI3MCIgY3k9IjI0IiByeD0iMTc5IiByeT0iODEiIGZpbGw9IiM3ZDk5OTYiIG9wYWNpdHk9IjAuNDEiIHRyYW5zZm9ybT0icm90YXRlKDEwNSAyNzAgMjQpIi8+PGVsbGlwc2UgY3g9IjE0NCIgY3k9IjExNzYiIHJ4PSIxODQiIHJ5PSI1NyIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC4yNSIgdHJhbnNmb3JtPSJyb3RhdGUoOTAgMTQ0IDExNzYpIi8+PGVsbGlwc2UgY3g9IjgzNiIgY3k9IjEzMTEiIHJ4PSIyMTAiIHJ5PSIxMzgiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMzEiIHRyYW5zZm9ybT0icm90YXRlKDg4IDgzNiAxMzExKSIvPjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMjg0IiByeD0iMjE5IiByeT0iNTgiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuMjkiIHRyYW5zZm9ybT0icm90YXRlKDExNSAxMDAgMTI4NCkiLz48ZWxsaXBzZSBjeD0iLTQ1IiBjeT0iMzkiIHJ4PSIxODUiIHJ5PSIxMjQiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuMjYiIHRyYW5zZm9ybT0icm90YXRlKDEzIC00NSAzOSkiLz48ZWxsaXBzZSBjeD0iNDk2IiBjeT0iMTM5MiIgcng9IjE0OSIgcnk9IjY1IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjM4IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTUgNDk2IDEzOTIpIi8+PGVsbGlwc2UgY3g9IjUxOSIgY3k9IjI3IiByeD0iMTQyIiByeT0iODIiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuMjciIHRyYW5zZm9ybT0icm90YXRlKDEyMCA1MTkgMjcpIi8+PGVsbGlwc2UgY3g9IjE3IiBjeT0iODY2IiByeD0iNzciIHJ5PSI2NSIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC41NiIgdHJhbnNmb3JtPSJyb3RhdGUoNSAxNyA4NjYpIi8+PGVsbGlwc2UgY3g9IjMyMCIgY3k9IjU4MiIgcng9IjE1NyIgcnk9IjEwNSIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4xOCIgdHJhbnNmb3JtPSJyb3RhdGUoNjggMzIwIDU4MikiLz48ZWxsaXBzZSBjeD0iMTM4IiBjeT0iMTI4MiIgcng9IjE0NCIgcnk9IjEzNCIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC40OSIgdHJhbnNmb3JtPSJyb3RhdGUoMTYwIDEzOCAxMjgyKSIvPjxlbGxpcHNlIGN4PSIzMTgiIGN5PSI1NjQiIHJ4PSIxMzciIHJ5PSI2OCIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4yOCIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDMxOCA1NjQpIi8+PGVsbGlwc2UgY3g9IjY0NiIgY3k9Ii01MCIgcng9IjE5OSIgcnk9Ijc3IiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjU0IiB0cmFuc2Zvcm09InJvdGF0ZSg4MyA2NDYgLTUwKSIvPjxlbGxpcHNlIGN4PSIzNzYiIGN5PSIxOTciIHJ4PSIxNDQiIHJ5PSIxMzAiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuMjgiIHRyYW5zZm9ybT0icm90YXRlKDE3OSAzNzYgMTk3KSIvPjxlbGxpcHNlIGN4PSIxODEiIGN5PSI1MTAiIHJ4PSIxNjkiIHJ5PSIxMjQiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuMjIiIHRyYW5zZm9ybT0icm90YXRlKDExMyAxODEgNTEwKSIvPjxlbGxpcHNlIGN4PSIxMTgiIGN5PSI0MTUiIHJ4PSIxNTgiIHJ5PSI0OCIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4yMyIgdHJhbnNmb3JtPSJyb3RhdGUoMTUzIDExOCA0MTUpIi8+PGVsbGlwc2UgY3g9IjcxNiIgY3k9IjgxMiIgcng9Ijk5IiByeT0iMTQ1IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjI5IiB0cmFuc2Zvcm09InJvdGF0ZSg3MCA3MTYgODEyKSIvPjxlbGxpcHNlIGN4PSI0MjciIGN5PSI1MjUiIHJ4PSIyMTYiIHJ5PSIxMDciIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuNDUiIHRyYW5zZm9ybT0icm90YXRlKDE4IDQyNyA1MjUpIi8+PGVsbGlwc2UgY3g9Ijg1OSIgY3k9IjE3OCIgcng9IjE5NSIgcnk9IjU4IiBmaWxsPSIjYTlhNTlhIiBvcGFjaXR5PSIwLjYxIiB0cmFuc2Zvcm09InJvdGF0ZSg4MiA4NTkgMTc4KSIvPjxlbGxpcHNlIGN4PSIxMTMiIGN5PSI5NTEiIHJ4PSIxNzkiIHJ5PSI1MCIgZmlsbD0iIzU1N2M3YiIgb3BhY2l0eT0iMC41MiIgdHJhbnNmb3JtPSJyb3RhdGUoMTU3IDExMyA5NTEpIi8+PGVsbGlwc2UgY3g9IjY5MiIgY3k9Ijg4MCIgcng9IjEwMSIgcnk9IjU1IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjQ1IiB0cmFuc2Zvcm09InJvdGF0ZSgxMSA2OTIgODgwKSIvPjxlbGxpcHNlIGN4PSIyNjUiIGN5PSI4IiByeD0iMTMzIiByeT0iNjAiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuNDgiIHRyYW5zZm9ybT0icm90YXRlKDEyNiAyNjUgOCkiLz48ZWxsaXBzZSBjeD0iNTcxIiBjeT0iNzkxIiByeD0iMTMyIiByeT0iMTQ3IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjQwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNzAgNTcxIDc5MSkiLz48ZWxsaXBzZSBjeD0iNDEiIGN5PSI3OSIgcng9IjE3NiIgcnk9IjY2IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjIzIiB0cmFuc2Zvcm09InJvdGF0ZSg0MyA0MSA3OSkiLz48ZWxsaXBzZSBjeD0iOTIiIGN5PSI2OTIiIHJ4PSIyMDgiIHJ5PSI3OSIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4xOSIgdHJhbnNmb3JtPSJyb3RhdGUoOTEgOTIgNjkyKSIvPjxlbGxpcHNlIGN4PSI3MDUiIGN5PSI1NDQiIHJ4PSIxNDUiIHJ5PSIxNDUiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNDYiIHRyYW5zZm9ybT0icm90YXRlKDE2NCA3MDUgNTQ0KSIvPjxlbGxpcHNlIGN4PSI4MjMiIGN5PSItMTciIHJ4PSI5NSIgcnk9IjY0IiBmaWxsPSIjYTlhNTlhIiBvcGFjaXR5PSIwLjU3IiB0cmFuc2Zvcm09InJvdGF0ZSg3MCA4MjMgLTE3KSIvPjxlbGxpcHNlIGN4PSI0MzgiIGN5PSI4NTgiIHJ4PSIxMTkiIHJ5PSI4OSIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC41MiIgdHJhbnNmb3JtPSJyb3RhdGUoMTM5IDQzOCA4NTgpIi8+PGVsbGlwc2UgY3g9Ijc4NyIgY3k9IjExNzAiIHJ4PSIxMTAiIHJ5PSI5NiIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC40OCIgdHJhbnNmb3JtPSJyb3RhdGUoMzQgNzg3IDExNzApIi8+PGVsbGlwc2UgY3g9IjM1MiIgY3k9IjY2MCIgcng9IjE2MCIgcnk9IjEwOCIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC4zMSIgdHJhbnNmb3JtPSJyb3RhdGUoNzcgMzUyIDY2MCkiLz48ZWxsaXBzZSBjeD0iNjk5IiBjeT0iMTEzIiByeD0iNjciIHJ5PSI2OSIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC4yOSIgdHJhbnNmb3JtPSJyb3RhdGUoMTcgNjk5IDExMykiLz48ZWxsaXBzZSBjeD0iMTgiIGN5PSIyMTIiIHJ4PSIyMDgiIHJ5PSIxMDQiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuNDMiIHRyYW5zZm9ybT0icm90YXRlKDMwIDE4IDIxMikiLz48ZWxsaXBzZSBjeD0iOTc3IiBjeT0iOTAwIiByeD0iMTEyIiByeT0iNTEiIGZpbGw9IiM3ZDk5OTYiIG9wYWNpdHk9IjAuMzEiIHRyYW5zZm9ybT0icm90YXRlKDc3IDk3NyA5MDApIi8+PGVsbGlwc2UgY3g9IjUzMyIgY3k9Ii00OCIgcng9IjE3NSIgcnk9IjE0OSIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC4yMCIgdHJhbnNmb3JtPSJyb3RhdGUoMTQ2IDUzMyAtNDgpIi8+PGVsbGlwc2UgY3g9Ii04MCIgY3k9IjkxMCIgcng9IjEzNCIgcnk9IjQzIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjMwIiB0cmFuc2Zvcm09InJvdGF0ZSg4MiAtODAgOTEwKSIvPjxlbGxpcHNlIGN4PSI2NjUiIGN5PSI5MzYiIHJ4PSI4MCIgcnk9IjY1IiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjQ3IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTYgNjY1IDkzNikiLz48ZWxsaXBzZSBjeD0iMjQiIGN5PSIxMzk1IiByeD0iMTEwIiByeT0iMTYwIiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjU5IiB0cmFuc2Zvcm09InJvdGF0ZSg1NSAyNCAxMzk1KSIvPjxlbGxpcHNlIGN4PSIwIiBjeT0iMjI2IiByeD0iMjEwIiByeT0iMTEzIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjUzIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjQgMCAyMjYpIi8+PGVsbGlwc2UgY3g9IjY2IiBjeT0iLTMiIHJ4PSIxMjgiIHJ5PSIxNTIiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuMTkiIHRyYW5zZm9ybT0icm90YXRlKDc4IDY2IC0zKSIvPjxlbGxpcHNlIGN4PSI3MDIiIGN5PSIxMjA0IiByeD0iMjExIiByeT0iNDUiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuNjIiIHRyYW5zZm9ybT0icm90YXRlKDIgNzAyIDEyMDQpIi8+PGVsbGlwc2UgY3g9IjU4MCIgY3k9IjExMCIgcng9IjE3OSIgcnk9IjU2IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjU0IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTkgNTgwIDExMCkiLz48ZWxsaXBzZSBjeD0iNTUiIGN5PSI4MjgiIHJ4PSI2OSIgcnk9IjEzNCIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC40MyIgdHJhbnNmb3JtPSJyb3RhdGUoMTI1IDU1IDgyOCkiLz48ZWxsaXBzZSBjeD0iOTIzIiBjeT0iMzU4IiByeD0iMTI0IiByeT0iMTU3IiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjI2IiB0cmFuc2Zvcm09InJvdGF0ZSgxMDggOTIzIDM1OCkiLz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iLjciLz4KPHBhdGggZD0iTS0xMDAgNDEwIEMgMTgwIDMwNywgMzYwIDUxMywgNTYwIDMyNiBTIDc5MCAzNjksIDEwMDAgNDA1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjIzIiBzdHJva2Utd2lkdGg9IjMuNCIvPjxwYXRoIGQ9Ik0tMTAwIDExNiBDIDE4MCAxOSwgMzYwIDIxMywgNTYwIDI5IFMgNzkwIDE5NCwgMTAwMCAxNzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuNDkiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTS0xMDAgMTA3OSBDIDE4MCA5NzgsIDM2MCAxMTgwLCA1NjAgMTA1OCBTIDc5MCAxMDQxLCAxMDAwIDEwMTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjkiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTS0xMDAgODU2IEMgMTgwIDgwNywgMzYwIDkwNSwgNTYwIDgzMCBTIDc5MCA4ODUsIDEwMDAgNzk0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjE4IiBzdHJva2Utd2lkdGg9IjQuNiIvPjxwYXRoIGQ9Ik0tMTAwIDExNjkgQyAxODAgMTA5NiwgMzYwIDEyNDIsIDU2MCAxMTEyIFMgNzkwIDExNjksIDEwMDAgMTEwMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC40MiIgc3Ryb2tlLXdpZHRoPSIyLjkiLz48cGF0aCBkPSJNLTEwMCA3MzIgQyAxODAgNjMzLCAzNjAgODMxLCA1NjAgNjk4IFMgNzkwIDcwOSwgMTAwMCA3MTMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuNTEiIHN0cm9rZS13aWR0aD0iMy4xIi8+PHBhdGggZD0iTS0xMDAgMTE1OSBDIDE4MCAxMDk3LCAzNjAgMTIyMSwgNTYwIDExMjkgUyA3OTAgMTE4NSwgMTAwMCAxMTI3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjQyIiBzdHJva2Utd2lkdGg9IjMuNCIvPjxwYXRoIGQ9Ik0tMTAwIC04MSBDIDE4MCAtMTM1LCAzNjAgLTI3LCA1NjAgLTEwMiBTIDc5MCAtMzUsIDEwMDAgLTU5IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjU0IiBzdHJva2Utd2lkdGg9IjMuMiIvPjxwYXRoIGQ9Ik0tMTAwIDI2MCBDIDE4MCAxNDUsIDM2MCAzNzUsIDU2MCAxOTkgUyA3OTAgMjUzLCAxMDAwIDMxNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC41MiIgc3Ryb2tlLXdpZHRoPSI1LjEiLz48cGF0aCBkPSJNLTEwMCA4NjQgQyAxODAgNzk2LCAzNjAgOTMyLCA1NjAgODQwIFMgNzkwIDgwOCwgMTAwMCA5MDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMzciIHN0cm9rZS13aWR0aD0iMS4zIi8+PHBhdGggZD0iTS0xMDAgNDA2IEMgMTgwIDMwNywgMzYwIDUwNSwgNTYwIDM4MyBTIDc5MCA0ODcsIDEwMDAgMzI2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjQ2IiBzdHJva2Utd2lkdGg9IjQuOCIvPjxwYXRoIGQ9Ik0tMTAwIDEwNjQgQyAxODAgOTQ1LCAzNjAgMTE4MywgNTYwIDEwMzAgUyA3OTAgMTAzMCwgMTAwMCAxMDk5IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjE5IiBzdHJva2Utd2lkdGg9IjIuMCIvPjxwYXRoIGQ9Ik0tMTAwIDEzODQgQyAxODAgMTMyMCwgMzYwIDE0NDgsIDU2MCAxMjk3IFMgNzkwIDEzMDAsIDEwMDAgMTM1NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC41OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNLTEwMCAxMzQzIEMgMTgwIDEyNDYsIDM2MCAxNDQwLCA1NjAgMTI1MSBTIDc5MCAxMzYzLCAxMDAwIDEzNzkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjAiIHN0cm9rZS13aWR0aD0iMy45Ii8+PHBhdGggZD0iTS0xMDAgOTk2IEMgMTgwIDkwNCwgMzYwIDEwODgsIDU2MCA5NDYgUyA3OTAgOTU5LCAxMDAwIDk1NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmY3Nzc2IiBzdHJva2Utb3BhY2l0eT0iMC40NSIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cGF0aCBkPSJNLTEwMCA1MzcgQyAxODAgNDQ5LCAzNjAgNjI1LCA1NjAgNTE0IFMgNzkwIDYzNSwgMTAwMCA1NTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMzYiIHN0cm9rZS13aWR0aD0iNS40Ii8+PHBhdGggZD0iTS0xMDAgMjI3IEMgMTgwIDExMCwgMzYwIDM0NCwgNTYwIDE0MCBTIDc5MCAyODAsIDEwMDAgMjU1IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjI3IiBzdHJva2Utd2lkdGg9IjIuNCIvPjxwYXRoIGQ9Ik0tMTAwIDc4MyBDIDE4MCA2NjUsIDM2MCA5MDEsIDU2MCA3MTEgUyA3OTAgNjg2LCAxMDAwIDg2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC4zMCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNLTEwMCAxMDUwIEMgMTgwIDk3MywgMzYwIDExMjcsIDU2MCAxMDA4IFMgNzkwIDEwODMsIDEwMDAgMTExOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC4zNiIgc3Ryb2tlLXdpZHRoPSIzLjkiLz48cGF0aCBkPSJNLTEwMCA2MDUgQyAxODAgNTYyLCAzNjAgNjQ4LCA1NjAgNTUzIFMgNzkwIDY4MSwgMTAwMCA1MzkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuNDciIHN0cm9rZS13aWR0aD0iMy45Ii8+PHBhdGggZD0iTS0xMDAgMjI1IEMgMTgwIDE3NywgMzYwIDI3MywgNTYwIDEyOSBTIDc5MCAxODksIDEwMDAgMjYzIiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjI0IiBzdHJva2Utd2lkdGg9IjQuMSIvPjxwYXRoIGQ9Ik0tMTAwIDEyODcgQyAxODAgMTE4MywgMzYwIDEzOTEsIDU2MCAxMjY1IFMgNzkwIDEzMjIsIDEwMDAgMTM0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmY3Nzc2IiBzdHJva2Utb3BhY2l0eT0iMC41MCIgc3Ryb2tlLXdpZHRoPSIzLjQiLz4KPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9Ijg4NCIgaGVpZ2h0PSIxMzA0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIuMjIiLz4KPC9zdmc+','assets/amazonit-face-3.svg':'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iMTMyMCIgdmlld0JveD0iMCAwIDkwMCAxMzIwIj4KPGRlZnM+CiA8ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4wMTgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEyMyIvPjxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMSAwIDAgMCAuMTUgIDAgMSAwIDAgLjE1ICAwIDAgMSAwIC4xNSAgMCAwIDAgLjIzIDAiLz48L2ZpbHRlcj4KIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZThlNGRiIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiM4NDlhOTciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNWM4YjciLz48L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYmcpIi8+CjxlbGxpcHNlIGN4PSIyNyIgY3k9IjQ2OCIgcng9Ijc3IiByeT0iMTM5IiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjU1IiB0cmFuc2Zvcm09InJvdGF0ZSg2OCAyNyA0NjgpIi8+PGVsbGlwc2UgY3g9Ii0yIiBjeT0iNjk2IiByeD0iMTkyIiByeT0iMTIwIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjI1IiB0cmFuc2Zvcm09InJvdGF0ZSg4NyAtMiA2OTYpIi8+PGVsbGlwc2UgY3g9IjYxMCIgY3k9IjEwNjgiIHJ4PSIxNDAiIHJ5PSI5NyIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC41OCIgdHJhbnNmb3JtPSJyb3RhdGUoNDEgNjEwIDEwNjgpIi8+PGVsbGlwc2UgY3g9Ijk5IiBjeT0iMTE0MyIgcng9IjE1MSIgcnk9IjUyIiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjUwIiB0cmFuc2Zvcm09InJvdGF0ZSgxIDk5IDExNDMpIi8+PGVsbGlwc2UgY3g9IjEyOCIgY3k9IjkiIHJ4PSI3OCIgcnk9IjcxIiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjMxIiB0cmFuc2Zvcm09InJvdGF0ZSgzMiAxMjggOSkiLz48ZWxsaXBzZSBjeD0iODAxIiBjeT0iMTA5NCIgcng9IjE3NyIgcnk9IjEwMiIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC41MiIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDgwMSAxMDk0KSIvPjxlbGxpcHNlIGN4PSI2MjMiIGN5PSI5ODgiIHJ4PSIxNzgiIHJ5PSI4NyIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC4xOSIgdHJhbnNmb3JtPSJyb3RhdGUoMTU1IDYyMyA5ODgpIi8+PGVsbGlwc2UgY3g9Ijk3MCIgY3k9IjgwOSIgcng9IjE5MiIgcnk9IjE1OSIgZmlsbD0iIzZmN2Y4MiIgb3BhY2l0eT0iMC4zNCIgdHJhbnNmb3JtPSJyb3RhdGUoMTMzIDk3MCA4MDkpIi8+PGVsbGlwc2UgY3g9Ii0xNSIgY3k9IjEyNDEiIHJ4PSIxMDEiIHJ5PSI1NiIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4yNSIgdHJhbnNmb3JtPSJyb3RhdGUoMTI0IC0xNSAxMjQxKSIvPjxlbGxpcHNlIGN4PSI2MTAiIGN5PSIxMDU1IiByeD0iMTU1IiByeT0iNTMiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNDMiIHRyYW5zZm9ybT0icm90YXRlKDExNiA2MTAgMTA1NSkiLz48ZWxsaXBzZSBjeD0iNjA4IiBjeT0iLTQ3IiByeD0iMTAzIiByeT0iNTciIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuMTkiIHRyYW5zZm9ybT0icm90YXRlKDE2MCA2MDggLTQ3KSIvPjxlbGxpcHNlIGN4PSI2NDAiIGN5PSIzODkiIHJ4PSIxNTgiIHJ5PSIxNjMiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNjIiIHRyYW5zZm9ybT0icm90YXRlKDE1IDY0MCAzODkpIi8+PGVsbGlwc2UgY3g9IjM5NyIgY3k9IjEwMzQiIHJ4PSIxNzgiIHJ5PSI4MCIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC4zNSIgdHJhbnNmb3JtPSJyb3RhdGUoMzkgMzk3IDEwMzQpIi8+PGVsbGlwc2UgY3g9Ijg2NCIgY3k9IjEwIiByeD0iNTciIHJ5PSI2OSIgZmlsbD0iIzU1N2M3YiIgb3BhY2l0eT0iMC4xOSIgdHJhbnNmb3JtPSJyb3RhdGUoMTE2IDg2NCAxMCkiLz48ZWxsaXBzZSBjeD0iNjQwIiBjeT0iMTMyMiIgcng9IjEyNCIgcnk9IjE0NiIgZmlsbD0iIzZmN2Y4MiIgb3BhY2l0eT0iMC4xOCIgdHJhbnNmb3JtPSJyb3RhdGUoMTYyIDY0MCAxMzIyKSIvPjxlbGxpcHNlIGN4PSI0OCIgY3k9Ijk2NSIgcng9IjE0NSIgcnk9IjU3IiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjU3IiB0cmFuc2Zvcm09InJvdGF0ZSgyMSA0OCA5NjUpIi8+PGVsbGlwc2UgY3g9IjY5MyIgY3k9IjcwIiByeD0iMTk0IiByeT0iMTM4IiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjMwIiB0cmFuc2Zvcm09InJvdGF0ZSg3IDY5MyA3MCkiLz48ZWxsaXBzZSBjeD0iODg3IiBjeT0iLTEzIiByeD0iMTk4IiByeT0iMTIwIiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjE5IiB0cmFuc2Zvcm09InJvdGF0ZSgxMDYgODg3IC0xMykiLz48ZWxsaXBzZSBjeD0iMjU1IiBjeT0iNzc4IiByeD0iNzEiIHJ5PSI3MSIgZmlsbD0iIzU1N2M3YiIgb3BhY2l0eT0iMC41MSIgdHJhbnNmb3JtPSJyb3RhdGUoOTUgMjU1IDc3OCkiLz48ZWxsaXBzZSBjeD0iMzciIGN5PSI5ODIiIHJ4PSIxNTQiIHJ5PSIxMTMiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDM3IDM3IDk4MikiLz48ZWxsaXBzZSBjeD0iNzE3IiBjeT0iNjc0IiByeD0iODciIHJ5PSIxMjEiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuNDYiIHRyYW5zZm9ybT0icm90YXRlKDEzMiA3MTcgNjc0KSIvPjxlbGxpcHNlIGN4PSI3MTEiIGN5PSI4MDUiIHJ4PSI3MCIgcnk9IjY5IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjMzIiB0cmFuc2Zvcm09InJvdGF0ZSgxMTYgNzExIDgwNSkiLz48ZWxsaXBzZSBjeD0iODQzIiBjeT0iNTQyIiByeD0iMTY0IiByeT0iNDIiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuNTYiIHRyYW5zZm9ybT0icm90YXRlKDQwIDg0MyA1NDIpIi8+PGVsbGlwc2UgY3g9Ijk3NCIgY3k9IjEwNTkiIHJ4PSI5MCIgcnk9IjEyMiIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC40MiIgdHJhbnNmb3JtPSJyb3RhdGUoMTI4IDk3NCAxMDU5KSIvPjxlbGxpcHNlIGN4PSI2NzUiIGN5PSIzODAiIHJ4PSIyMDAiIHJ5PSIxMjIiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNTkiIHRyYW5zZm9ybT0icm90YXRlKDIzIDY3NSAzODApIi8+PGVsbGlwc2UgY3g9IjQxOCIgY3k9IjMzNiIgcng9IjEzNyIgcnk9IjEwMiIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC41OSIgdHJhbnNmb3JtPSJyb3RhdGUoMTAxIDQxOCAzMzYpIi8+PGVsbGlwc2UgY3g9Ijg0IiBjeT0iMzIzIiByeD0iMTg0IiByeT0iODYiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuMzAiIHRyYW5zZm9ybT0icm90YXRlKDQgODQgMzIzKSIvPjxlbGxpcHNlIGN4PSIzOTIiIGN5PSI5NCIgcng9IjIwOCIgcnk9IjExNiIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC40MiIgdHJhbnNmb3JtPSJyb3RhdGUoMjEgMzkyIDk0KSIvPjxlbGxpcHNlIGN4PSIxOTMiIGN5PSIxMDE0IiByeD0iODkiIHJ5PSIxNTgiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDEyNiAxOTMgMTAxNCkiLz48ZWxsaXBzZSBjeD0iNDQ2IiBjeT0iMTM4MSIgcng9IjIwMiIgcnk9IjE1OSIgZmlsbD0iIzZmN2Y4MiIgb3BhY2l0eT0iMC41OCIgdHJhbnNmb3JtPSJyb3RhdGUoODcgNDQ2IDEzODEpIi8+PGVsbGlwc2UgY3g9Ijk0NiIgY3k9IjE3OCIgcng9IjIxMSIgcnk9IjM2IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjMzIiB0cmFuc2Zvcm09InJvdGF0ZSgxNTMgOTQ2IDE3OCkiLz48ZWxsaXBzZSBjeD0iMTcwIiBjeT0iMTMzNSIgcng9IjY4IiByeT0iMTI3IiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjYwIiB0cmFuc2Zvcm09InJvdGF0ZSgxMTcgMTcwIDEzMzUpIi8+PGVsbGlwc2UgY3g9Ijc4MSIgY3k9IjU2NiIgcng9IjE0NiIgcnk9IjkwIiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjU0IiB0cmFuc2Zvcm09InJvdGF0ZSgxMTQgNzgxIDU2NikiLz48ZWxsaXBzZSBjeD0iMzE0IiBjeT0iMjkwIiByeD0iMTUyIiByeT0iNTAiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNDAiIHRyYW5zZm9ybT0icm90YXRlKDEwNiAzMTQgMjkwKSIvPjxlbGxpcHNlIGN4PSIyNzgiIGN5PSIxMDY0IiByeD0iMTUxIiByeT0iMTI5IiBmaWxsPSIjYTlhNTlhIiBvcGFjaXR5PSIwLjIzIiB0cmFuc2Zvcm09InJvdGF0ZSgxNyAyNzggMTA2NCkiLz48ZWxsaXBzZSBjeD0iNDYzIiBjeT0iOTQ5IiByeD0iMjA5IiByeT0iMTE3IiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNCA0NjMgOTQ5KSIvPjxlbGxpcHNlIGN4PSI3MTUiIGN5PSI1MzEiIHJ4PSI4MiIgcnk9IjE1NCIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC4yOSIgdHJhbnNmb3JtPSJyb3RhdGUoMTQ2IDcxNSA1MzEpIi8+PGVsbGlwc2UgY3g9IjgzMiIgY3k9IjQ2NCIgcng9IjE2NyIgcnk9IjEyMyIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC40MCIgdHJhbnNmb3JtPSJyb3RhdGUoNjMgODMyIDQ2NCkiLz48ZWxsaXBzZSBjeD0iNDgzIiBjeT0iNjEwIiByeD0iNjciIHJ5PSI4MSIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4zNyIgdHJhbnNmb3JtPSJyb3RhdGUoMzEgNDgzIDYxMCkiLz48ZWxsaXBzZSBjeD0iOTM2IiBjeT0iMTkwIiByeD0iMTc3IiByeT0iNDUiIGZpbGw9IiM3ZDk5OTYiIG9wYWNpdHk9IjAuMzIiIHRyYW5zZm9ybT0icm90YXRlKDEyMCA5MzYgMTkwKSIvPjxlbGxpcHNlIGN4PSI2NzciIGN5PSIzNzIiIHJ4PSIyMDgiIHJ5PSI0MyIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC40OSIgdHJhbnNmb3JtPSJyb3RhdGUoMTE4IDY3NyAzNzIpIi8+PGVsbGlwc2UgY3g9Ii01MiIgY3k9IjU3NiIgcng9IjE1MyIgcnk9IjkzIiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjU2IiB0cmFuc2Zvcm09InJvdGF0ZSgxNzYgLTUyIDU3NikiLz48ZWxsaXBzZSBjeD0iNTAzIiBjeT0iMjY0IiByeD0iMTYxIiByeT0iMTI2IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjQ1IiB0cmFuc2Zvcm09InJvdGF0ZSgxMDggNTAzIDI2NCkiLz48ZWxsaXBzZSBjeD0iOTM3IiBjeT0iMTI5OSIgcng9Ijk3IiByeT0iODUiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNDEiIHRyYW5zZm9ybT0icm90YXRlKDExIDkzNyAxMjk5KSIvPjxlbGxpcHNlIGN4PSIzMTciIGN5PSI1NDAiIHJ4PSIxODIiIHJ5PSIxNTQiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuNDEiIHRyYW5zZm9ybT0icm90YXRlKDU3IDMxNyA1NDApIi8+PGVsbGlwc2UgY3g9IjEzMSIgY3k9IjgyNiIgcng9IjIxMSIgcnk9IjEwNiIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC40NiIgdHJhbnNmb3JtPSJyb3RhdGUoNDkgMTMxIDgyNikiLz48ZWxsaXBzZSBjeD0iNzIzIiBjeT0iNzUyIiByeD0iMTY5IiByeT0iNjMiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDE1IDcyMyA3NTIpIi8+PGVsbGlwc2UgY3g9IjgxMiIgY3k9Ijk3OSIgcng9IjE0NiIgcnk9Ijc0IiBmaWxsPSIjN2Q5OTk2IiBvcGFjaXR5PSIwLjI3IiB0cmFuc2Zvcm09InJvdGF0ZSgxMjYgODEyIDk3OSkiLz48ZWxsaXBzZSBjeD0iMzUzIiBjeT0iNDE0IiByeD0iNjQiIHJ5PSI5NyIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC4zNiIgdHJhbnNmb3JtPSJyb3RhdGUoNTMgMzUzIDQxNCkiLz48ZWxsaXBzZSBjeD0iLTI4IiBjeT0iLTU4IiByeD0iMTYwIiByeT0iMTE3IiBmaWxsPSIjZDhkN2NmIiBvcGFjaXR5PSIwLjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDAgLTI4IC01OCkiLz48ZWxsaXBzZSBjeD0iNDI0IiBjeT0iODEyIiByeD0iMTI5IiByeT0iODIiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMzAiIHRyYW5zZm9ybT0icm90YXRlKDc3IDQyNCA4MTIpIi8+PGVsbGlwc2UgY3g9IjU4NSIgY3k9IjM1NCIgcng9IjE4NiIgcnk9IjQxIiBmaWxsPSIjN2Q5OTk2IiBvcGFjaXR5PSIwLjM4IiB0cmFuc2Zvcm09InJvdGF0ZSg5MiA1ODUgMzU0KSIvPjxlbGxpcHNlIGN4PSI3NjgiIGN5PSIzNzQiIHJ4PSIxODUiIHJ5PSIxNDYiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuMzUiIHRyYW5zZm9ybT0icm90YXRlKDEwMCA3NjggMzc0KSIvPjxlbGxpcHNlIGN4PSI5MzciIGN5PSI3IiByeD0iMTI4IiByeT0iNzAiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMjQiIHRyYW5zZm9ybT0icm90YXRlKDEyMSA5MzcgNykiLz48ZWxsaXBzZSBjeD0iODYyIiBjeT0iNjQyIiByeD0iMTk2IiByeT0iMzkiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuMzEiIHRyYW5zZm9ybT0icm90YXRlKDExMyA4NjIgNjQyKSIvPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbm9pc2UpIiBvcGFjaXR5PSIuNyIvPgo8cGF0aCBkPSJNLTEwMCAzMzYgQyAxODAgMjU3LCAzNjAgNDE1LCA1NjAgMzA0IFMgNzkwIDM4NywgMTAwMCAzMzkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjIiIHN0cm9rZS13aWR0aD0iNC44Ii8+PHBhdGggZD0iTS0xMDAgMTQwNyBDIDE4MCAxMzY3LCAzNjAgMTQ0NywgNTYwIDEzNzEgUyA3OTAgMTQyOCwgMTAwMCAxMzYyIiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjU2IiBzdHJva2Utd2lkdGg9IjIuMCIvPjxwYXRoIGQ9Ik0tMTAwIC05MCBDIDE4MCAtMTQwLCAzNjAgLTQwLCA1NjAgLTEzOCBTIDc5MCAtNzMsIDEwMDAgLTYwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjMxIiBzdHJva2Utd2lkdGg9IjEuNiIvPjxwYXRoIGQ9Ik0tMTAwIDMxMSBDIDE4MCAxOTcsIDM2MCA0MjUsIDU2MCAyMzIgUyA3OTAgMzg5LCAxMDAwIDI1NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4yMCIgc3Ryb2tlLXdpZHRoPSIxLjkiLz48cGF0aCBkPSJNLTEwMCAxNzUgQyAxODAgNjAsIDM2MCAyOTAsIDU2MCAxMjkgUyA3OTAgMTM2LCAxMDAwIDE1NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC4zMiIgc3Ryb2tlLXdpZHRoPSI1LjMiLz48cGF0aCBkPSJNLTEwMCA3ODMgQyAxODAgNzEwLCAzNjAgODU2LCA1NjAgNzIyIFMgNzkwIDg1NCwgMTAwMCA4MDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjIiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHBhdGggZD0iTS0xMDAgNjA3IEMgMTgwIDU0OCwgMzYwIDY2NiwgNTYwIDU1NiBTIDc5MCA1ODAsIDEwMDAgNTg3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjIwIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik0tMTAwIDE1NiBDIDE4MCA1NSwgMzYwIDI1NywgNTYwIDY3IFMgNzkwIDEyMywgMTAwMCAxODMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuNDkiIHN0cm9rZS13aWR0aD0iMy44Ii8+PHBhdGggZD0iTS0xMDAgMTAzNyBDIDE4MCA5NjAsIDM2MCAxMTE0LCA1NjAgMTAxMyBTIDc5MCAxMDkxLCAxMDAwIDEwMzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuNDMiIHN0cm9rZS13aWR0aD0iNC44Ii8+PHBhdGggZD0iTS0xMDAgNjE2IEMgMTgwIDU0NiwgMzYwIDY4NiwgNTYwIDU5NiBTIDc5MCA2ODEsIDEwMDAgNjExIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjUwIiBzdHJva2Utd2lkdGg9IjMuNCIvPjxwYXRoIGQ9Ik0tMTAwIDYzIEMgMTgwIC0xNSwgMzYwIDE0MSwgNTYwIDMwIFMgNzkwIDE1MCwgMTAwMCAxMzUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuNDIiIHN0cm9rZS13aWR0aD0iMy4xIi8+PHBhdGggZD0iTS0xMDAgOTkzIEMgMTgwIDkzOCwgMzYwIDEwNDgsIDU2MCA5NDcgUyA3OTAgMTA3NywgMTAwMCAxMDA0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjQzIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik0tMTAwIDc3NSBDIDE4MCA2ODQsIDM2MCA4NjYsIDU2MCA2ODYgUyA3OTAgNzE2LCAxMDAwIDc5NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC40NCIgc3Ryb2tlLXdpZHRoPSIzLjYiLz48cGF0aCBkPSJNLTEwMCAtNDYgQyAxODAgLTEwOSwgMzYwIDE3LCA1NjAgLTg2IFMgNzkwIDUzLCAxMDAwIC03NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC40OSIgc3Ryb2tlLXdpZHRoPSI1LjEiLz48cGF0aCBkPSJNLTEwMCA2NDggQyAxODAgNTk1LCAzNjAgNzAxLCA1NjAgNjE2IFMgNzkwIDYxNywgMTAwMCA1OTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjMiIHN0cm9rZS13aWR0aD0iNC4zIi8+PHBhdGggZD0iTS0xMDAgNTAgQyAxODAgLTI2LCAzNjAgMTI2LCA1NjAgLTIgUyA3OTAgNTUsIDEwMDAgLTciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuNTUiIHN0cm9rZS13aWR0aD0iMi44Ii8+PHBhdGggZD0iTS0xMDAgMTE3MSBDIDE4MCAxMTA4LCAzNjAgMTIzNCwgNTYwIDExMDkgUyA3OTAgMTE0NCwgMTAwMCAxMTY5IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjQ1IiBzdHJva2Utd2lkdGg9IjEuNyIvPjxwYXRoIGQ9Ik0tMTAwIDgwMCBDIDE4MCA3NDAsIDM2MCA4NjAsIDU2MCA3NjggUyA3OTAgODk2LCAxMDAwIDgzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC4yMiIgc3Ryb2tlLXdpZHRoPSIxLjciLz48cGF0aCBkPSJNLTEwMCA2OTUgQyAxODAgNjIwLCAzNjAgNzcwLCA1NjAgNjc1IFMgNzkwIDcwMSwgMTAwMCA2NjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuNTEiIHN0cm9rZS13aWR0aD0iMS44Ii8+PHBhdGggZD0iTS0xMDAgMzkxIEMgMTgwIDM2MSwgMzYwIDQyMSwgNTYwIDM0OSBTIDc5MCA0MjgsIDEwMDAgMzc5IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjIzIiBzdHJva2Utd2lkdGg9IjQuOCIvPjxwYXRoIGQ9Ik0tMTAwIDc2MiBDIDE4MCA3MTEsIDM2MCA4MTMsIDU2MCA3MzkgUyA3OTAgNjkzLCAxMDAwIDgyNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC41MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNLTEwMCA3MDYgQyAxODAgNjQyLCAzNjAgNzcwLCA1NjAgNjYyIFMgNzkwIDY4NSwgMTAwMCA3MDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuNDQiIHN0cm9rZS13aWR0aD0iMy41Ii8+CjxyZWN0IHg9IjgiIHk9IjgiIHdpZHRoPSI4ODQiIGhlaWdodD0iMTMwNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iLjIyIi8+Cjwvc3ZnPg==','assets/amazonit-face-4.svg':'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iMTMyMCIgdmlld0JveD0iMCAwIDkwMCAxMzIwIj4KPGRlZnM+CiA8ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4wMTgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEyNCIvPjxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMSAwIDAgMCAuMTUgIDAgMSAwIDAgLjE1ICAwIDAgMSAwIC4xNSAgMCAwIDAgLjIzIDAiLz48L2ZpbHRlcj4KIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZThlNGRiIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiM4NDlhOTciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNWM4YjciLz48L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYmcpIi8+CjxlbGxpcHNlIGN4PSI0ODgiIGN5PSIxMDQyIiByeD0iNTYiIHJ5PSI4MCIgZmlsbD0iIzZmN2Y4MiIgb3BhY2l0eT0iMC4zMCIgdHJhbnNmb3JtPSJyb3RhdGUoMTUgNDg4IDEwNDIpIi8+PGVsbGlwc2UgY3g9IjY2NSIgY3k9Ii0xNiIgcng9IjEzNiIgcnk9Ijc3IiBmaWxsPSIjYTlhNTlhIiBvcGFjaXR5PSIwLjU0IiB0cmFuc2Zvcm09InJvdGF0ZSgxMDEgNjY1IC0xNikiLz48ZWxsaXBzZSBjeD0iLTM2IiBjeT0iMTAzMiIgcng9IjE3NiIgcnk9IjE0MyIgZmlsbD0iIzU1N2M3YiIgb3BhY2l0eT0iMC4yOCIgdHJhbnNmb3JtPSJyb3RhdGUoNCAtMzYgMTAzMikiLz48ZWxsaXBzZSBjeD0iNzQ1IiBjeT0iNTY3IiByeD0iMTA4IiByeT0iNzEiIGZpbGw9IiM1NTdjN2IiIG9wYWNpdHk9IjAuNTIiIHRyYW5zZm9ybT0icm90YXRlKDk5IDc0NSA1NjcpIi8+PGVsbGlwc2UgY3g9IjY0OSIgY3k9IjEwMjEiIHJ4PSIxMzAiIHJ5PSIxMzciIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMzgiIHRyYW5zZm9ybT0icm90YXRlKDQzIDY0OSAxMDIxKSIvPjxlbGxpcHNlIGN4PSI5NzAiIGN5PSIxMTU5IiByeD0iODMiIHJ5PSIxMzMiIGZpbGw9IiNjNWI2YTMiIG9wYWNpdHk9IjAuNTkiIHRyYW5zZm9ybT0icm90YXRlKDE0NSA5NzAgMTE1OSkiLz48ZWxsaXBzZSBjeD0iMTQ1IiBjeT0iMTE2MiIgcng9IjE2OCIgcnk9IjU4IiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjUzIiB0cmFuc2Zvcm09InJvdGF0ZSgzMyAxNDUgMTE2MikiLz48ZWxsaXBzZSBjeD0iMjk3IiBjeT0iODUyIiByeD0iMTg2IiByeT0iNDQiIGZpbGw9IiNjNWI2YTMiIG9wYWNpdHk9IjAuNDYiIHRyYW5zZm9ybT0icm90YXRlKDE2NSAyOTcgODUyKSIvPjxlbGxpcHNlIGN4PSI2NDAiIGN5PSIxMTMwIiByeD0iMTczIiByeT0iNTUiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuNDEiIHRyYW5zZm9ybT0icm90YXRlKDQ0IDY0MCAxMTMwKSIvPjxlbGxpcHNlIGN4PSI0NiIgY3k9IjM4IiByeD0iMTE1IiByeT0iMTY5IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjUzIiB0cmFuc2Zvcm09InJvdGF0ZSgyNSA0NiAzOCkiLz48ZWxsaXBzZSBjeD0iODg3IiBjeT0iODUiIHJ4PSIyMDMiIHJ5PSIxNTgiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuMzkiIHRyYW5zZm9ybT0icm90YXRlKDE2NCA4ODcgODUpIi8+PGVsbGlwc2UgY3g9Ijc0MiIgY3k9IjEzMjAiIHJ4PSI5NSIgcnk9IjkxIiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjQxIiB0cmFuc2Zvcm09InJvdGF0ZSg1IDc0MiAxMzIwKSIvPjxlbGxpcHNlIGN4PSI2NTEiIGN5PSI4ODYiIHJ4PSIxNjYiIHJ5PSI3NCIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC4zNCIgdHJhbnNmb3JtPSJyb3RhdGUoMTIxIDY1MSA4ODYpIi8+PGVsbGlwc2UgY3g9IjMzIiBjeT0iNDM0IiByeD0iMTU1IiByeT0iNTciIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuMjciIHRyYW5zZm9ybT0icm90YXRlKDI4IDMzIDQzNCkiLz48ZWxsaXBzZSBjeD0iMzMyIiBjeT0iNzg5IiByeD0iMjE4IiByeT0iOTIiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMTkiIHRyYW5zZm9ybT0icm90YXRlKDE4IDMzMiA3ODkpIi8+PGVsbGlwc2UgY3g9IjI1MyIgY3k9IjEzOTAiIHJ4PSI4MyIgcnk9Ijc4IiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjI3IiB0cmFuc2Zvcm09InJvdGF0ZSgyMyAyNTMgMTM5MCkiLz48ZWxsaXBzZSBjeD0iLTYiIGN5PSI3NjAiIHJ4PSIxNzciIHJ5PSIxNTUiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuNTUiIHRyYW5zZm9ybT0icm90YXRlKDAgLTYgNzYwKSIvPjxlbGxpcHNlIGN4PSI4NzAiIGN5PSI2NDkiIHJ4PSI3OCIgcnk9IjUzIiBmaWxsPSIjNmY3ZjgyIiBvcGFjaXR5PSIwLjM2IiB0cmFuc2Zvcm09InJvdGF0ZSgxMzYgODcwIDY0OSkiLz48ZWxsaXBzZSBjeD0iNjU4IiBjeT0iMzY5IiByeD0iMTIwIiByeT0iMTQ2IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjYxIiB0cmFuc2Zvcm09InJvdGF0ZSg1OSA2NTggMzY5KSIvPjxlbGxpcHNlIGN4PSItNDYiIGN5PSI4MDIiIHJ4PSIyMTYiIHJ5PSIxNjgiIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuMjgiIHRyYW5zZm9ybT0icm90YXRlKDE3MyAtNDYgODAyKSIvPjxlbGxpcHNlIGN4PSI4MjQiIGN5PSI5NjQiIHJ4PSI4OSIgcnk9IjE2NSIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC41NCIgdHJhbnNmb3JtPSJyb3RhdGUoMTYyIDgyNCA5NjQpIi8+PGVsbGlwc2UgY3g9IjgxIiBjeT0iMTc1IiByeD0iMTcwIiByeT0iNTciIGZpbGw9IiNlN2UyZDgiIG9wYWNpdHk9IjAuMzIiIHRyYW5zZm9ybT0icm90YXRlKDE0OSA4MSAxNzUpIi8+PGVsbGlwc2UgY3g9IjkzMyIgY3k9IjIxMiIgcng9IjcxIiByeT0iMTY4IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjM0IiB0cmFuc2Zvcm09InJvdGF0ZSgzIDkzMyAyMTIpIi8+PGVsbGlwc2UgY3g9IjI2MSIgY3k9IjEwNiIgcng9IjE0MCIgcnk9IjU3IiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNzkgMjYxIDEwNikiLz48ZWxsaXBzZSBjeD0iNDU4IiBjeT0iMTMwMSIgcng9IjE4NiIgcnk9IjExMCIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC4yNCIgdHJhbnNmb3JtPSJyb3RhdGUoNjggNDU4IDEzMDEpIi8+PGVsbGlwc2UgY3g9IjQ3OCIgY3k9IjQ3IiByeD0iMTY4IiByeT0iNjUiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuNDkiIHRyYW5zZm9ybT0icm90YXRlKDU5IDQ3OCA0NykiLz48ZWxsaXBzZSBjeD0iMTA2IiBjeT0iMTI2MCIgcng9IjE2MiIgcnk9IjUxIiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjM3IiB0cmFuc2Zvcm09InJvdGF0ZSg5OSAxMDYgMTI2MCkiLz48ZWxsaXBzZSBjeD0iODYzIiBjeT0iMTM1MSIgcng9IjIwNyIgcnk9IjgzIiBmaWxsPSIjYjljMWJkIiBvcGFjaXR5PSIwLjU2IiB0cmFuc2Zvcm09InJvdGF0ZSgxNjMgODYzIDEzNTEpIi8+PGVsbGlwc2UgY3g9IjEwMyIgY3k9Ijk1NSIgcng9IjExNSIgcnk9IjEyMiIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC4yNiIgdHJhbnNmb3JtPSJyb3RhdGUoMjMgMTAzIDk1NSkiLz48ZWxsaXBzZSBjeD0iNDM2IiBjeT0iMTM2NCIgcng9IjExOCIgcnk9IjU0IiBmaWxsPSIjN2Q5OTk2IiBvcGFjaXR5PSIwLjIzIiB0cmFuc2Zvcm09InJvdGF0ZSgxNTQgNDM2IDEzNjQpIi8+PGVsbGlwc2UgY3g9Ijk1MCIgY3k9IjgwNSIgcng9Ijg4IiByeT0iMTM0IiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjU3IiB0cmFuc2Zvcm09InJvdGF0ZSg5NyA5NTAgODA1KSIvPjxlbGxpcHNlIGN4PSItNTYiIGN5PSI1NTMiIHJ4PSI2NyIgcnk9IjEzMCIgZmlsbD0iI2U3ZTJkOCIgb3BhY2l0eT0iMC4yMiIgdHJhbnNmb3JtPSJyb3RhdGUoNDcgLTU2IDU1MykiLz48ZWxsaXBzZSBjeD0iMTU1IiBjeT0iMjY5IiByeD0iMTc3IiByeT0iNTYiIGZpbGw9IiNhOWE1OWEiIG9wYWNpdHk9IjAuMjUiIHRyYW5zZm9ybT0icm90YXRlKDEzNSAxNTUgMjY5KSIvPjxlbGxpcHNlIGN4PSItMTYiIGN5PSI1NTQiIHJ4PSI4OSIgcnk9IjEyMyIgZmlsbD0iI2I5YzFiZCIgb3BhY2l0eT0iMC4yMiIgdHJhbnNmb3JtPSJyb3RhdGUoNzcgLTE2IDU1NCkiLz48ZWxsaXBzZSBjeD0iNzg1IiBjeT0iNjY5IiByeD0iMTcxIiByeT0iMTMyIiBmaWxsPSIjZTdlMmQ4IiBvcGFjaXR5PSIwLjU2IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTkgNzg1IDY2OSkiLz48ZWxsaXBzZSBjeD0iODUwIiBjeT0iODg2IiByeD0iOTIiIHJ5PSIxMDAiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMjgiIHRyYW5zZm9ybT0icm90YXRlKDE0OSA4NTAgODg2KSIvPjxlbGxpcHNlIGN4PSI5MDYiIGN5PSI0MjEiIHJ4PSI5MyIgcnk9IjQwIiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjYxIiB0cmFuc2Zvcm09InJvdGF0ZSgyNiA5MDYgNDIxKSIvPjxlbGxpcHNlIGN4PSI4MTIiIGN5PSIxMjc5IiByeD0iNTciIHJ5PSIxMjMiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuNDgiIHRyYW5zZm9ybT0icm90YXRlKDk4IDgxMiAxMjc5KSIvPjxlbGxpcHNlIGN4PSIxMTQiIGN5PSIxMjE2IiByeD0iNjAiIHJ5PSIxMDciIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuNDUiIHRyYW5zZm9ybT0icm90YXRlKDQ2IDExNCAxMjE2KSIvPjxlbGxpcHNlIGN4PSI0NzUiIGN5PSIxMTI2IiByeD0iMjA1IiByeT0iNDEiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuMjQiIHRyYW5zZm9ybT0icm90YXRlKDE1MCA0NzUgMTEyNikiLz48ZWxsaXBzZSBjeD0iNTU3IiBjeT0iMTIyMCIgcng9Ijk0IiByeT0iODgiIGZpbGw9IiNiOWMxYmQiIG9wYWNpdHk9IjAuMzAiIHRyYW5zZm9ybT0icm90YXRlKDc3IDU1NyAxMjIwKSIvPjxlbGxpcHNlIGN4PSI5MDAiIGN5PSIyMjIiIHJ4PSIxNzIiIHJ5PSIxNjQiIGZpbGw9IiNkOGQ3Y2YiIG9wYWNpdHk9IjAuNDYiIHRyYW5zZm9ybT0icm90YXRlKDgyIDkwMCAyMjIpIi8+PGVsbGlwc2UgY3g9Ijc1MyIgY3k9IjExNzciIHJ4PSIxOTUiIHJ5PSI3OSIgZmlsbD0iIzdkOTk5NiIgb3BhY2l0eT0iMC41NiIgdHJhbnNmb3JtPSJyb3RhdGUoMTcxIDc1MyAxMTc3KSIvPjxlbGxpcHNlIGN4PSItMzkiIGN5PSIyMjYiIHJ4PSI4MyIgcnk9IjE0MyIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4yNCIgdHJhbnNmb3JtPSJyb3RhdGUoNTcgLTM5IDIyNikiLz48ZWxsaXBzZSBjeD0iLTMxIiBjeT0iLTgwIiByeD0iMjE0IiByeT0iMTMxIiBmaWxsPSIjNTU3YzdiIiBvcGFjaXR5PSIwLjQwIiB0cmFuc2Zvcm09InJvdGF0ZSg3MyAtMzEgLTgwKSIvPjxlbGxpcHNlIGN4PSI4NzciIGN5PSI2MTciIHJ4PSI1NiIgcnk9IjEwMSIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC41MCIgdHJhbnNmb3JtPSJyb3RhdGUoNDggODc3IDYxNykiLz48ZWxsaXBzZSBjeD0iNTkiIGN5PSIxMTE1IiByeD0iOTQiIHJ5PSIxMTMiIGZpbGw9IiM2ZjdmODIiIG9wYWNpdHk9IjAuMjMiIHRyYW5zZm9ybT0icm90YXRlKDEwNCA1OSAxMTE1KSIvPjxlbGxpcHNlIGN4PSI4NjEiIGN5PSIxMDg3IiByeD0iMTEwIiByeT0iMTAzIiBmaWxsPSIjYzViNmEzIiBvcGFjaXR5PSIwLjU4IiB0cmFuc2Zvcm09InJvdGF0ZSgxMjggODYxIDEwODcpIi8+PGVsbGlwc2UgY3g9IjExNiIgY3k9IjEyMDIiIHJ4PSIxNzMiIHJ5PSI2NCIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC41NyIgdHJhbnNmb3JtPSJyb3RhdGUoMTcyIDExNiAxMjAyKSIvPjxlbGxpcHNlIGN4PSI5NjAiIGN5PSIyNDgiIHJ4PSI4MCIgcnk9IjE2NCIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC4yMiIgdHJhbnNmb3JtPSJyb3RhdGUoNyA5NjAgMjQ4KSIvPjxlbGxpcHNlIGN4PSIxNSIgY3k9Ii02MyIgcng9IjIwNyIgcnk9IjE1NCIgZmlsbD0iI2E5YTU5YSIgb3BhY2l0eT0iMC4yMSIgdHJhbnNmb3JtPSJyb3RhdGUoMTE1IDE1IC02MykiLz48ZWxsaXBzZSBjeD0iODI2IiBjeT0iNjkxIiByeD0iMTM5IiByeT0iNzYiIGZpbGw9IiM3ZDk5OTYiIG9wYWNpdHk9IjAuMzYiIHRyYW5zZm9ybT0icm90YXRlKDExMSA4MjYgNjkxKSIvPjxlbGxpcHNlIGN4PSI4NzkiIGN5PSIxODciIHJ4PSIxNjYiIHJ5PSI2NCIgZmlsbD0iI2Q4ZDdjZiIgb3BhY2l0eT0iMC4yMSIgdHJhbnNmb3JtPSJyb3RhdGUoNDIgODc5IDE4NykiLz48ZWxsaXBzZSBjeD0iODkwIiBjeT0iMTMyMyIgcng9IjE0MCIgcnk9IjE1OCIgZmlsbD0iIzU1N2M3YiIgb3BhY2l0eT0iMC41MSIgdHJhbnNmb3JtPSJyb3RhdGUoMTczIDg5MCAxMzIzKSIvPjxlbGxpcHNlIGN4PSI3OTYiIGN5PSI0OTciIHJ4PSIxMTIiIHJ5PSI5NyIgZmlsbD0iI2M1YjZhMyIgb3BhY2l0eT0iMC41OSIgdHJhbnNmb3JtPSJyb3RhdGUoNjcgNzk2IDQ5NykiLz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iLjciLz4KPHBhdGggZD0iTS0xMDAgMTc1IEMgMTgwIDExNCwgMzYwIDIzNiwgNTYwIDE1NSBTIDc5MCAyNjYsIDEwMDAgMTkzIiBmaWxsPSJub25lIiBzdHJva2U9IiM2Zjc3NzYiIHN0cm9rZS1vcGFjaXR5PSIwLjQyIiBzdHJva2Utd2lkdGg9IjUuMSIvPjxwYXRoIGQ9Ik0tMTAwIDUwMCBDIDE4MCA0NDQsIDM2MCA1NTYsIDU2MCA0NTkgUyA3OTAgNDI3LCAxMDAwIDUyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjVmMWU5IiBzdHJva2Utb3BhY2l0eT0iMC4zOSIgc3Ryb2tlLXdpZHRoPSIyLjQiLz48cGF0aCBkPSJNLTEwMCAxMzg4IEMgMTgwIDEyNzIsIDM2MCAxNTA0LCA1NjAgMTM2MCBTIDc5MCAxMzc1LCAxMDAwIDEzOTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmNzc3NiIgc3Ryb2tlLW9wYWNpdHk9IjAuMzciIHN0cm9rZS13aWR0aD0iMS42Ii8+PHBhdGggZD0iTS0xMDAgMTIzNiBDIDE4MCAxMjAxLCAzNjAgMTI3MSwgNTYwIDExNTIgUyA3OTAgMTI5NiwgMTAwMCAxMjIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWYxZTkiIHN0cm9rZS1vcGFjaXR5PSIwLjQzIiBzdHJva2Utd2lkdGg9IjIuOCIvPjxwYXRoIGQ9Ik0tMTAwIC0yNyBDIDE4MCAtODQsIDM2MCAzMCwgNTYwIC00OCBTIDc5MCAtMTAxLCAxMDAwIC03MyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC40NiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48cGF0aCBkPSJNLTEwMCAtNDQgQyAxODAgLTExOCwgMzYwIDMwLCA1NjAgLTkxIFMgNzkwIC01MywgMTAwMCAzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC40MiIgc3Ryb2tlLXdpZHRoPSI1LjMiLz48cGF0aCBkPSJNLTEwMCAxMTgxIEMgMTgwIDEwODksIDM2MCAxMjczLCA1NjAgMTA5NyBTIDc5MCAxMjEyLCAxMDAwIDEyNDMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjciIHN0cm9rZS13aWR0aD0iNC4xIi8+PHBhdGggZD0iTS0xMDAgNjI4IEMgMTgwIDU1OSwgMzYwIDY5NywgNTYwIDU5NyBTIDc5MCA2MTUsIDEwMDAgNjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiNiNjkwNzIiIHN0cm9rZS1vcGFjaXR5PSIwLjIyIiBzdHJva2Utd2lkdGg9IjUuMiIvPjxwYXRoIGQ9Ik0tMTAwIDEzOTAgQyAxODAgMTMzOSwgMzYwIDE0NDEsIDU2MCAxMzI4IFMgNzkwIDE0ODMsIDEwMDAgMTQ0NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC4zNSIgc3Ryb2tlLXdpZHRoPSIyLjAiLz48cGF0aCBkPSJNLTEwMCA5NTAgQyAxODAgODk5LCAzNjAgMTAwMSwgNTYwIDkwMiBTIDc5MCA5MTQsIDEwMDAgOTIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiNjkwNzIiIHN0cm9rZS1vcGFjaXR5PSIwLjU2IiBzdHJva2Utd2lkdGg9IjEuNiIvPjxwYXRoIGQ9Ik0tMTAwIDcxMCBDIDE4MCA2ODAsIDM2MCA3NDAsIDU2MCA2NzEgUyA3OTAgNjM1LCAxMDAwIDc1MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmY3Nzc2IiBzdHJva2Utb3BhY2l0eT0iMC4yNSIgc3Ryb2tlLXdpZHRoPSI0LjUiLz48cGF0aCBkPSJNLTEwMCAxMTE0IEMgMTgwIDEwNDcsIDM2MCAxMTgxLCA1NjAgMTAxNSBTIDc5MCAxMTE3LCAxMDAwIDExMDkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjIiIHN0cm9rZS13aWR0aD0iMS42Ii8+PHBhdGggZD0iTS0xMDAgNTEzIEMgMTgwIDQwMCwgMzYwIDYyNiwgNTYwIDQyNSBTIDc5MCA0ODIsIDEwMDAgNTU3IiBmaWxsPSJub25lIiBzdHJva2U9IiNiNjkwNzIiIHN0cm9rZS1vcGFjaXR5PSIwLjU1IiBzdHJva2Utd2lkdGg9IjQuNyIvPjxwYXRoIGQ9Ik0tMTAwIDEwNzggQyAxODAgOTY5LCAzNjAgMTE4NywgNTYwIDk5NCBTIDc5MCAxMTczLCAxMDAwIDEwODUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1ZjFlOSIgc3Ryb2tlLW9wYWNpdHk9IjAuMzgiIHN0cm9rZS13aWR0aD0iMy41Ii8+PHBhdGggZD0iTS0xMDAgMTQ5IEMgMTgwIDcwLCAzNjAgMjI4LCA1NjAgNzggUyA3OTAgODUsIDEwMDAgODQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuMTkiIHN0cm9rZS13aWR0aD0iNS4zIi8+PHBhdGggZD0iTS0xMDAgNjkyIEMgMTgwIDYzNCwgMzYwIDc1MCwgNTYwIDY2NyBTIDc5MCA1OTksIDEwMDAgNjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjE5IiBzdHJva2Utd2lkdGg9IjMuOCIvPjxwYXRoIGQ9Ik0tMTAwIDU3MSBDIDE4MCA0NzksIDM2MCA2NjMsIDU2MCA1MTMgUyA3OTAgNjI3LCAxMDAwIDY0OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC41MiIgc3Ryb2tlLXdpZHRoPSI0LjEiLz48cGF0aCBkPSJNLTEwMCAtNzkgQyAxODAgLTE3MSwgMzYwIDEzLCA1NjAgLTE3NiBTIDc5MCAtMTQ4LCAxMDAwIC0xMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I2OTA3MiIgc3Ryb2tlLW9wYWNpdHk9IjAuMzgiIHN0cm9rZS13aWR0aD0iMi4yIi8+PHBhdGggZD0iTS0xMDAgNDk4IEMgMTgwIDQ1NywgMzYwIDUzOSwgNTYwIDQ3MiBTIDc5MCA0NTcsIDEwMDAgNDg0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjIyIiBzdHJva2Utd2lkdGg9IjIuNCIvPjxwYXRoIGQ9Ik0tMTAwIDEzNTEgQyAxODAgMTI3NiwgMzYwIDE0MjYsIDU2MCAxMjc3IFMgNzkwIDEzNTUsIDEwMDAgMTMxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjY5MDcyIiBzdHJva2Utb3BhY2l0eT0iMC41OCIgc3Ryb2tlLXdpZHRoPSIyLjMiLz48cGF0aCBkPSJNLTEwMCAxMDQ1IEMgMTgwIDEwMTMsIDM2MCAxMDc3LCA1NjAgOTkzIFMgNzkwIDk1NiwgMTAwMCAxMDMwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjI2IiBzdHJva2Utd2lkdGg9IjIuMSIvPjxwYXRoIGQ9Ik0tMTAwIDEwMjYgQyAxODAgOTE0LCAzNjAgMTEzOCwgNTYwIDk2NiBTIDc5MCAxMTE3LCAxMDAwIDEwNzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuNTYiIHN0cm9rZS13aWR0aD0iMy45Ii8+CjxyZWN0IHg9IjgiIHk9IjgiIHdpZHRoPSI4ODQiIGhlaWdodD0iMTMwNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iLjIyIi8+Cjwvc3ZnPg=='};
+(() => {
+  const openButton=document.getElementById('pdFaceDownload');
+  const viewer=document.getElementById('pdImageViewer');
+  const stage=document.getElementById('pdViewerStage');
+  const viewerImage=document.getElementById('pdViewerImage');
+  const scaleLabel=document.getElementById('pdViewerScale');
+  const zoomIn=document.getElementById('pdViewerZoomIn');
+  const zoomOut=document.getElementById('pdViewerZoomOut');
+  const resetButton=document.getElementById('pdViewerReset');
+  const closeButton=document.getElementById('pdViewerClose');
+  if(!openButton||!viewer||!stage||!viewerImage) return;
+
+  let scale=1;
+  let offsetX=0;
+  let offsetY=0;
+  let dragging=false;
+  let startX=0;
+  let startY=0;
+  let previousFocus=null;
+
+  const render=()=>{
+    viewerImage.style.transform=`translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    scaleLabel.textContent=Math.round(scale*100)+'%';
+    stage.classList.toggle('is-dragging',dragging);
+  };
+  const reset=()=>{scale=1;offsetX=0;offsetY=0;render();};
+  const setScale=value=>{
+    scale=Math.min(4,Math.max(.5,value));
+    if(scale<=1){offsetX=0;offsetY=0;}
+    render();
+  };
+  const close=()=>{
+    viewer.classList.remove('is-open');
+    viewer.setAttribute('aria-hidden','true');
+    document.body.classList.remove('pd-viewer-open');
+    reset();
+    previousFocus?.focus();
+  };
+  const downloadCurrentImage=source=>{
+    const activeThumb=document.querySelector('.pd-thumb.is-active');
+    const relativeSource=activeThumb?.dataset.pdSrc||source.getAttribute('src')||'';
+    const title=document.querySelector('.pd-title')?.textContent||'yuzey';
+    const productName=title.trim().toLocaleLowerCase('tr-TR')
+      .replace(/[^a-z0-9çğıöşü]+/gi,'-').replace(/^-|-$/g,'');
+    const extension=relativeSource.split('.').pop().split(/[?#]/)[0]||'svg';
+    const triggerDownload=href=>{
+      const link=document.createElement('a');
+      link.href=href;
+      link.download=productName+'.'+extension;
+      link.style.display='none';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    };
+    const inlineSource=pdInlineAssets[relativeSource];
+    if(extension.toLowerCase()==='svg'&&inlineSource?.startsWith('data:image/svg+xml;base64,')){
+      const viewerScript='<scr'+'ipt><![CDATA['+
+        'var z=1,x=0,y=0,drag=false,sx=0,sy=0;'+
+        'var art=document.getElementById("art"),pct=document.getElementById("pct"),stage=document.getElementById("stage");'+
+        'function draw(){art.setAttribute("transform","translate("+x+" "+y+") scale("+z+")");pct.textContent=Math.round(z*100)+"%";}'+
+        'function zoom(d){z=Math.max(.5,Math.min(4,z+d));if(z<=1){x=0;y=0;}draw();}'+
+        'function resetView(){z=1;x=0;y=0;draw();}'+
+        'document.getElementById("minus").onclick=function(){zoom(-.25)};'+
+        'document.getElementById("plus").onclick=function(){zoom(.25)};'+
+        'document.getElementById("reset").onclick=resetView;'+
+        'document.getElementById("close").onclick=function(){window.close()};'+
+        'stage.onwheel=function(e){e.preventDefault();zoom(e.deltaY<0?.2:-.2)};'+
+        'stage.onpointerdown=function(e){if(z<=1)return;drag=true;sx=e.clientX-x;sy=e.clientY-y;stage.setPointerCapture(e.pointerId)};'+
+        'stage.onpointermove=function(e){if(!drag)return;x=e.clientX-sx;y=e.clientY-sy;draw()};'+
+        'stage.onpointerup=stage.onpointercancel=function(){drag=false};'+
+        'stage.ondblclick=function(){z===1?zoom(1):resetView()};'+
+        'document.onkeydown=function(e){if(e.key==="+"||e.key==="=")zoom(.25);if(e.key==="-")zoom(-.25);if(e.key==="0")resetView();if(e.key==="Escape")window.close()};'+
+        ']]></scr'+'ipt>';
+      const svg='<?xml version="1.0" encoding="UTF-8"?>'+
+        '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid meet" style="display:block;width:100vw;height:100vh;background:#202020">'+
+        '<rect width="1200" height="900" fill="#202020"/>'+
+        '<defs><clipPath id="viewerClip"><rect x="24" y="76" width="1152" height="800"/></clipPath></defs>'+
+        '<rect id="stage" x="24" y="76" width="1152" height="800" fill="#202020" style="cursor:grab"/>'+
+        '<g clip-path="url(#viewerClip)" pointer-events="none"><g id="art" style="transform-origin:600px 476px"><image href="'+inlineSource+'" x="327" y="76" width="546" height="800" preserveAspectRatio="xMidYMid meet"/></g></g>'+
+        '<g transform="translate(410 18)" font-family="Arial,sans-serif" fill="#fff">'+
+        '<rect width="380" height="58" fill="#292929" stroke="#666"/>'+
+        '<g id="minus" style="cursor:pointer"><rect x="8" y="7" width="50" height="44" fill="none" stroke="#666"/><text x="33" y="37" text-anchor="middle" font-size="28">−</text></g>'+
+        '<text id="pct" x="105" y="36" text-anchor="middle" font-size="16" font-weight="bold">100%</text>'+
+        '<g id="plus" style="cursor:pointer"><rect x="148" y="7" width="50" height="44" fill="none" stroke="#666"/><text x="173" y="38" text-anchor="middle" font-size="29">+</text></g>'+
+        '<g id="reset" style="cursor:pointer"><rect x="207" y="7" width="50" height="44" fill="none" stroke="#666"/><text x="232" y="38" text-anchor="middle" font-size="27">↺</text></g>'+
+        '<g id="close" style="cursor:pointer"><rect x="266" y="7" width="50" height="44" fill="none" stroke="#666"/><text x="291" y="38" text-anchor="middle" font-size="28">×</text></g>'+
+        '</g><text x="600" y="894" text-anchor="middle" fill="#ccc" font-family="Arial,sans-serif" font-size="13">Fare tekerleğiyle yakınlaştırın · Görseli sürükleyerek hareket ettirin</text>'+
+        viewerScript+'</svg>';
+      const blobUrl=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'}));
+      triggerDownload(blobUrl);
+      setTimeout(()=>URL.revokeObjectURL(blobUrl),1500);
+      return;
+    }
+    triggerDownload(inlineSource||source.src);
+  };
+  const open=()=>{
+    const source=document.getElementById('pdMainFace');
+    if(!source?.src) return;
+    previousFocus=document.activeElement;
+    viewerImage.src=source.src;
+    viewerImage.alt=source.alt+' büyütülmüş görünüm';
+    reset();
+    viewer.classList.add('is-open');
+    viewer.setAttribute('aria-hidden','false');
+    document.body.classList.add('pd-viewer-open');
+    closeButton.focus();
+  };
+
+  openButton.addEventListener('click',()=>{
+    const source=document.getElementById('pdMainFace');
+    if(source?.src) downloadCurrentImage(source);
+  });
+  zoomIn.addEventListener('click',()=>setScale(scale+.25));
+  zoomOut.addEventListener('click',()=>setScale(scale-.25));
+  resetButton.addEventListener('click',reset);
+  closeButton.addEventListener('click',close);
+  viewer.addEventListener('click',event=>{if(event.target===viewer||event.target===stage) close();});
+  stage.addEventListener('wheel',event=>{
+    event.preventDefault();
+    setScale(scale+(event.deltaY<0?.2:-.2));
+  },{passive:false});
+  stage.addEventListener('pointerdown',event=>{
+    if(scale<=1) return;
+    dragging=true;
+    startX=event.clientX-offsetX;
+    startY=event.clientY-offsetY;
+    stage.setPointerCapture(event.pointerId);
+    render();
+  });
+  stage.addEventListener('pointermove',event=>{
+    if(!dragging) return;
+    offsetX=event.clientX-startX;
+    offsetY=event.clientY-startY;
+    render();
+  });
+  const stopDragging=()=>{dragging=false;render();};
+  stage.addEventListener('pointerup',stopDragging);
+  stage.addEventListener('pointercancel',stopDragging);
+  viewerImage.addEventListener('dblclick',()=>setScale(scale===1?2:1));
+  document.addEventListener('keydown',event=>{
+    if(!viewer.classList.contains('is-open')) return;
+    if(event.key==='Escape') close();
+    if(event.key==='+'||event.key==='=') setScale(scale+.25);
+    if(event.key==='-') setScale(scale-.25);
+    if(event.key==='0') reset();
+  });
+})();
+</script><script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.pd-variant-chips').forEach(function(group){
+    group.addEventListener('click', function(e){
+      var chip = e.target.closest('.pd-variant-chip');
+      if(!chip) return;
+      e.preventDefault();
+      group.querySelectorAll('.pd-variant-chip').forEach(function(item){
+        item.classList.remove('is-active');
+      });
+      chip.classList.add('is-active');
+
+      // Demo davranışı: gerçek projede seçilen varyantın URL'sine gidilebilir
+      // veya ürün bilgileri API/AJAX üzerinden güncellenebilir.
+      var selected = chip.dataset.variantValue;
+      var groupName = group.dataset.variantGroup;
+      document.dispatchEvent(new CustomEvent('productVariantChange', {
+        detail: { group: groupName, value: selected, href: chip.getAttribute('href') }
+      }));
+    });
+  });
+});
+</script><script id="product-variant-engine-v5">
+(() => {
+  const variants = [{"size": "120×280 cm", "thickness": "6 mm", "surface": "Mat", "code": "55018167MT", "otherSizes": "120×120 cm, 60×120 cm", "pei": "3", "vValue": "V2", "boxCount": "2", "boxArea": "6,72 m²", "palletBoxes": "20", "palletArea": "134,40 m²"}, {"size": "120×280 cm", "thickness": "6 mm", "surface": "Lappato", "code": "55018167LP", "otherSizes": "60×120 cm", "pei": "3", "vValue": "V2", "boxCount": "2", "boxArea": "6,72 m²", "palletBoxes": "20", "palletArea": "134,40 m²"}, {"size": "120×120 cm", "thickness": "9 mm", "surface": "Mat", "code": "55018121MT", "otherSizes": "120×280 cm, 60×120 cm", "pei": "4", "vValue": "V2", "boxCount": "2", "boxArea": "2,88 m²", "palletBoxes": "24", "palletArea": "69,12 m²"}, {"size": "120×120 cm", "thickness": "9 mm", "surface": "Parlak", "code": "55018121PR", "otherSizes": "120×280 cm", "pei": "3", "vValue": "V2", "boxCount": "2", "boxArea": "2,88 m²", "palletBoxes": "24", "palletArea": "69,12 m²"}, {"size": "60×120 cm", "thickness": "9 mm", "surface": "Mat", "code": "55018612MT", "otherSizes": "120×280 cm, 120×120 cm", "pei": "4", "vValue": "V3", "boxCount": "2", "boxArea": "1,44 m²", "palletBoxes": "32", "palletArea": "46,08 m²"}, {"size": "60×120 cm", "thickness": "9 mm", "surface": "Lappato", "code": "55018612LP", "otherSizes": "120×280 cm", "pei": "3", "vValue": "V2", "boxCount": "2", "boxArea": "1,44 m²", "palletBoxes": "32", "palletArea": "46,08 m²"}];
+  const keys = ["size", "thickness", "surface"];
+  const groups = Object.fromEntries(
+    keys.map(key => [key, document.querySelector(`[data-variant-group="${key}"]`)])
+  );
+  if (keys.some(key => !groups[key])) return;
+
+  const firstNumber = value => {
+    const match = String(value).replace(",", ".").match(/\d+(?:\.\d+)?/);
+    return match ? Number(match[0]) : 0;
+  };
+
+  const secondNumber = value => {
+    const matches = String(value).replace(",", ".").match(/\d+(?:\.\d+)?/g) || [];
+    return matches.length > 1 ? Number(matches[1]) : 0;
+  };
+
+  const unique = values => [...new Set(values)];
+
+  const sizeSort = (a, b) =>
+    firstNumber(b) - firstNumber(a) ||
+    secondNumber(b) - secondNumber(a) ||
+    String(a).localeCompare(String(b), "tr");
+
+  const thicknessSort = (a, b) =>
+    firstNumber(a) - firstNumber(b) ||
+    String(a).localeCompare(String(b), "tr");
+
+  const surfaceSort = (a, b) =>
+    String(a).localeCompare(String(b), "tr");
+
+  const sorters = {
+    size: sizeSort,
+    thickness: thicknessSort,
+    surface: surfaceSort
+  };
+
+  let selected = {
+    size: unique(variants.map(v => v.size)).sort(sizeSort)[0],
+    thickness: null,
+    surface: null
+  };
+
+  const exactVariant = () => variants.find(v =>
+    v.size === selected.size &&
+    v.thickness === selected.thickness &&
+    v.surface === selected.surface
+  );
+
+  const candidatesFor = key => {
+    if (key === "size") {
+      // Seçili yüzey varsa yalnız o yüzeyde bulunan ebatları göster.
+      const bySurface = selected.surface
+        ? variants.filter(v => v.surface === selected.surface)
+        : variants;
+      return unique(bySurface.map(v => v.size)).sort(sizeSort);
+    }
+
+    if (key === "thickness") {
+      const bySizeSurface = variants.filter(v =>
+        v.size === selected.size &&
+        (!selected.surface || v.surface === selected.surface)
+      );
+      const pool = bySizeSurface.length
+        ? bySizeSurface
+        : variants.filter(v => v.size === selected.size);
+      return unique(pool.map(v => v.thickness)).sort(thicknessSort);
+    }
+
+    const bySize = variants.filter(v => v.size === selected.size);
+    return unique(bySize.map(v => v.surface)).sort(surfaceSort);
+  };
+
+  const buildButtons = key => {
+    const values = candidatesFor(key);
+    const group = groups[key];
+    group.innerHTML = "";
+
+    values.forEach(value => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "pd-variant-chip";
+      button.dataset.variantValue = value;
+      button.textContent = value;
+      button.setAttribute("aria-pressed", value === selected[key] ? "true" : "false");
+      if (value === selected[key]) button.classList.add("is-active");
+      group.appendChild(button);
+    });
+
+    return values;
+  };
+
+  const normalizeSelection = changedKey => {
+    // Ebat her zaman büyükten küçüğe sıralı listenin ilk geçerli değeriyle başlar.
+    const sizes = candidatesFor("size");
+    if (!sizes.includes(selected.size)) selected.size = sizes[0];
+
+    const surfaces = candidatesFor("surface");
+    if (!surfaces.includes(selected.surface)) selected.surface = surfaces[0];
+
+    const thicknesses = candidatesFor("thickness");
+    if (!thicknesses.includes(selected.thickness)) selected.thickness = thicknesses[0];
+
+    let exact = exactVariant();
+    if (!exact) {
+      let pool = variants.filter(v => v.size === selected.size);
+
+      // Kullanıcının son seçimini mümkün olduğunca koru.
+      if (changedKey === "surface") {
+        const matched = pool.find(v => v.surface === selected.surface);
+        if (matched) exact = matched;
+      }
+      if (changedKey === "thickness") {
+        const matched = pool.find(v => v.thickness === selected.thickness);
+        if (matched) exact = matched;
+      }
+      exact = exact || pool[0] || variants[0];
+
+      selected = {
+        size: exact.size,
+        thickness: exact.thickness,
+        surface: exact.surface
+      };
+    }
+    return exact;
+  };
+
+  const setOutput = (field, value) => {
+    document.querySelectorAll(`[data-variant-output="${field}"]`).forEach(row => {
+      const dd = row.querySelector("dd");
+      if (dd) dd.textContent = value || "↓";
+    });
+  };
+
+  const render = changedKey => {
+    document.documentElement.classList.add("pd-variant-updating");
+    const variant = normalizeSelection(changedKey);
+
+    buildButtons("size");
+    buildButtons("thickness");
+    buildButtons("surface");
+
+    const code = document.getElementById("pdProductCode");
+    if (code) code.textContent = variant.code;
+
+    ["code","size","otherSizes","thickness","surface","pei","vValue",
+     "boxCount","boxArea","palletBoxes","palletArea"].forEach(key => {
+       setOutput(key, variant[key]);
+    });
+
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove("pd-variant-updating");
+    });
+  };
+
+  keys.forEach(key => {
+    groups[key].addEventListener("click", event => {
+      const button = event.target.closest(".pd-variant-chip");
+      if (!button) return;
+      selected[key] = button.dataset.variantValue;
+      render(key);
+    });
+  });
+
+  render("size");
+})();
+</script><script id="pd-row-alignment-engine">
+(() => {
+  const layout = document.querySelector('.pd-layout--aligned');
+  if (!layout) return;
+
+  const gallery = layout.querySelector('.pd-gallery');
+  const aside = layout.querySelector(':scope > aside');
+  const thumbs = layout.querySelector('.pd-thumbs');
+  if (!gallery || !aside || !thumbs) return;
+
+  const sync = () => {
+    if (window.matchMedia('(max-width: 980px)').matches) {
+      layout.style.removeProperty('--pd-row-height');
+      thumbs.style.removeProperty('--pd-thumb-count');
+      return;
+    }
+
+    // Satır yüksekliğini sabitleme; grid görsel ve içerikten uzun olana göre doğal büyüsün.
+    layout.style.removeProperty('--pd-row-height');
+    thumbs.style.setProperty('--pd-thumb-count', thumbs.children.length);
+  };
+
+  const observer = new ResizeObserver(sync);
+  observer.observe(aside);
+  observer.observe(thumbs);
+  window.addEventListener('resize', sync, { passive: true });
+  window.addEventListener('load', sync);
+  requestAnimationFrame(sync);
+})();
+</script><script src="assets/common-language-selector.js"></script><script src="assets/index-navbar.js?v=20260805-hover"></script></body>
+</html>

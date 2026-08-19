@@ -1,0 +1,479 @@
+@using System.Globalization
+@using System.Text
+@using Domain.Enums
+@using Presentation.Models.Language
+@model LanguageReportViewModel
+@{
+    ViewData["Title"] = "Eksik Çeviri Raporu";
+
+    var maxLanguageMissing = Math.Max(1, Model.Report.ByLanguage.Max(x => x.MissingCount));
+    var maxModuleMissing = Math.Max(1, Model.Report.ByModule.Max(x => x.MissingCount));
+    var query = Model.Query;
+    var completionPercent = Model.Report.CompletionRate.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+    var donutColors = new[] { "#8a5d38", "#d58642", "#76a984", "#6f9ec8", "#9b83b7", "#d889a8", "#a8a19a", "#c7a36f" };
+
+    string ToggleDirection(string column) =>
+        query.SortBy == column && query.SortDirection == "asc" ? "desc" : "asc";
+
+    string SortUrl(string column) => Url.Action("Report", new
+    {
+        type = query.Type,
+        languageId = query.LanguageId,
+        field = query.Field,
+        search = query.Search,
+        sortBy = column,
+        sortDirection = ToggleDirection(column),
+        page = 1
+    }) ?? "#";
+
+    string PageUrl(int page) => Url.Action("Report", new
+    {
+        type = query.Type,
+        languageId = query.LanguageId,
+        field = query.Field,
+        search = query.Search,
+        sortBy = query.SortBy,
+        sortDirection = query.SortDirection,
+        page
+    }) ?? "#";
+
+    List<int?> PaginationPages(int currentPage, int totalPages)
+    {
+        var pages = new List<int?>();
+        if (totalPages <= 0)
+        {
+            return pages;
+        }
+
+        void AddPage(int page)
+        {
+            if (page >= 1 && page <= totalPages && !pages.Contains(page))
+            {
+                pages.Add(page);
+            }
+        }
+
+        AddPage(1);
+        for (var page = currentPage - 2; page <= currentPage + 2; page++)
+        {
+            AddPage(page);
+        }
+        AddPage(totalPages);
+
+        pages.Sort((left, right) => Nullable.Compare(left, right));
+
+        var compact = new List<int?>();
+        int? previous = null;
+        foreach (var page in pages)
+        {
+            if (previous.HasValue && page.HasValue && page.Value - previous.Value > 1)
+            {
+                compact.Add(null);
+            }
+            compact.Add(page);
+            previous = page;
+        }
+
+        return compact;
+    }
+
+    string FlagPath(string code) => code.ToUpperInvariant() switch
+    {
+        "TR" => Url.Content("~/assets/images/flags/tr.svg"),
+        "EN" => Url.Content("~/assets/images/flags/en.svg"),
+        "DE" => Url.Content("~/assets/images/flags/de.svg"),
+        "FR" => Url.Content("~/assets/images/flags/fr.svg"),
+        "ES" => Url.Content("~/assets/images/flags/es.svg"),
+        "AR" => Url.Content("~/assets/images/flags/ar.svg"),
+        "RU" => Url.Content("~/assets/images/flags/ru.svg"),
+        _ => Url.Content("~/assets/images/flags/en.svg")
+    };
+
+    string ModuleIcon(EntityType type) => type switch
+    {
+        EntityType.Product => "ti-package",
+        EntityType.Category => "ti-category-2",
+        EntityType.Collection => "ti-layers-subtract",
+        EntityType.Blog => "ti-article",
+        EntityType.BlogCategory => "ti-folder",
+        EntityType.News => "ti-news",
+        EntityType.NewsCategory => "ti-list-details",
+        EntityType.Page => "ti-file-text",
+        EntityType.PageContentBlock => "ti-layout",
+        EntityType.Banner => "ti-photo",
+        EntityType.ReferenceProject => "ti-building-skyscraper",
+        _ => "ti-language"
+    };
+
+    string? ModuleController(EntityType type) => type switch
+    {
+        EntityType.Product => "Product",
+        EntityType.Category => "Category",
+        EntityType.Collection => "Collection",
+        EntityType.Blog => "Blog",
+        EntityType.BlogCategory => "BlogCategory",
+        EntityType.News => "News",
+        EntityType.NewsCategory => "NewsCategory",
+        EntityType.Page => "Page",
+        EntityType.Banner => "Banner",
+        EntityType.ReferenceProject => "ReferenceProject",
+        _ => null
+    };
+
+    string ModuleTone(int missing)
+    {
+        if (missing == 0)
+        {
+            return "language-report-progress-bar--zero";
+        }
+
+        var ratio = missing / (decimal)maxModuleMissing;
+        return ratio >= 0.66m
+            ? "language-report-progress-bar--high"
+            : ratio >= 0.33m
+                ? "language-report-progress-bar--mid"
+                : "language-report-progress-bar--low";
+    }
+
+    var distribution = Model.Report.ByModule
+        .Where(x => x.MissingCount > 0)
+        .OrderByDescending(x => x.MissingCount)
+        .Take(8)
+        .ToList();
+
+    var donut = new StringBuilder("conic-gradient(");
+    decimal cursor = 0;
+    for (var i = 0; i < distribution.Count; i++)
+    {
+        var percent = Model.Report.TotalMissing == 0 ? 0 : distribution[i].MissingCount * 100m / Model.Report.TotalMissing;
+        var next = cursor + percent;
+        if (i > 0)
+        {
+            donut.Append(", ");
+        }
+        donut.Append(donutColors[i % donutColors.Length])
+            .Append(' ')
+            .Append(cursor.ToString("0.##", CultureInfo.InvariantCulture))
+            .Append("% ")
+            .Append(next.ToString("0.##", CultureInfo.InvariantCulture))
+            .Append('%');
+        cursor = next;
+    }
+    if (distribution.Count == 0)
+    {
+        donut.Append("#e8ded3 0 100%");
+    }
+    donut.Append(')');
+
+    var routeData = new Dictionary<string, string?>
+    {
+        ["type"] = query.Type?.ToString(),
+        ["languageId"] = query.LanguageId?.ToString(),
+        ["field"] = query.Field,
+        ["search"] = query.Search,
+        ["sortBy"] = query.SortBy,
+        ["sortDirection"] = query.SortDirection
+    };
+
+    var moduleNavigation = Model.Report.ByModule
+        .Where(x => ModuleController(x.EntityType) is not null)
+        .OrderBy(x => x.ModuleLabel)
+        .ToList();
+
+    var paginationPages = PaginationPages(Model.CurrentPage, Model.TotalPages);
+}
+
+<div class="language-report-page">
+    <div class="admin-list-toolbar">
+        <div>
+            <h1 class="admin-list-title">Eksik Çeviri Analizi</h1>
+            <p class="admin-list-description">Aktif dillerde eksik kalan modül, kayıt ve alanları gerçek çeviri satırlarına göre izleyin.</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>Dil Yönetimi</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="language-report-summary-grid" aria-label="Eksik çeviri özeti">
+        <article class="card language-report-summary-card">
+            <div class="card-body">
+                <span class="language-report-card-label">Toplam Eksik Çeviri</span>
+                <strong>@Model.Report.TotalMissing</strong>
+                <span class="text-secondary">@Model.Report.TotalRequiredFields toplam alan kontrol edildi</span>
+            </div>
+        </article>
+        <article class="card language-report-summary-card language-report-summary-card--ring">
+            <div class="card-body">
+                <div class="language-report-ring-card">
+                    <div class="language-report-ring" style="--completion:@completionPercent">
+                        <div class="language-report-ring__inner">
+                            <strong>%@Model.Report.CompletionRate</strong>
+                        </div>
+                    </div>
+                    <div class="language-report-ring-stats">
+                        <span class="language-report-card-label">Çeviri Tamamlanma Oranı</span>
+                        <strong>@Model.Report.CompletedTranslations</strong>
+                        <span class="text-secondary">@Model.Report.TotalRequiredFields alan içinde tamamlanan</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <article class="card language-report-summary-card">
+            <div class="card-body">
+                <span class="language-report-card-label">En Çok Eksik Dil</span>
+                <strong>@(Model.MostMissingLanguage ?? "Yok")</strong>
+                <span class="text-secondary">Aktif dil listesine göre</span>
+            </div>
+        </article>
+        <article class="card language-report-summary-card">
+            <div class="card-body">
+                <span class="language-report-card-label">En Çok Eksik Modül</span>
+                <strong>@(Model.MostMissingModule ?? "Yok")</strong>
+                <span class="text-secondary">Modül kırılımına göre</span>
+            </div>
+        </article>
+    </section>
+
+    <section class="language-report-analysis-grid">
+        <article id="language-analysis" class="card language-report-card">
+            <div class="card-header">
+                <h2 class="card-title">Dile Göre Eksik Çeviri Analizi</h2>
+            </div>
+            <div class="card-body language-report-progress-list">
+                @foreach (var row in Model.Report.ByLanguage)
+                {
+                    var width = row.MissingCount == 0 ? 0 : Math.Max(6, row.MissingCount * 100 / maxLanguageMissing);
+                    <div class="language-report-progress-row language-report-progress-row--language">
+                        <div class="language-report-language-name">
+                            <img src="@FlagPath(row.LanguageCode)" alt="" class="language-report-flag" />
+                            <span>@row.LanguageName</span>
+                        </div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-primary" style="width:@width%"></div>
+                        </div>
+                        <strong>@row.MissingCount</strong>
+                    </div>
+                }
+            </div>
+            <div class="card-footer language-report-card-footer">
+                <a asp-controller="Language" asp-action="Index">Tüm Dilleri Görüntüle <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article id="module-analysis" class="card language-report-card">
+            <div class="card-header">
+                <h2 class="card-title">Modüle Göre Eksik Çeviri Analizi</h2>
+            </div>
+            <div class="card-body language-report-progress-list">
+                @foreach (var row in Model.Report.ByModule)
+                {
+                    var width = row.MissingCount == 0 ? 0 : Math.Max(6, row.MissingCount * 100 / maxModuleMissing);
+                    <div class="language-report-progress-row language-report-progress-row--module">
+                        <div class="language-report-module-name">
+                            <span class="language-report-module-icon"><i class="ti @ModuleIcon(row.EntityType)" aria-hidden="true"></i></span>
+                            <span>@row.ModuleLabel</span>
+                        </div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar @ModuleTone(row.MissingCount)" style="width:@width%"></div>
+                        </div>
+                        <strong>@row.MissingCount</strong>
+                    </div>
+                }
+            </div>
+            <div class="card-footer language-report-card-footer">
+                <div class="dropdown language-report-module-menu">
+                    <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tüm Modülleri Görüntüle
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        @foreach (var module in moduleNavigation)
+                        {
+                            var controller = ModuleController(module.EntityType);
+                            <a class="dropdown-item" asp-controller="@controller" asp-action="Index">
+                                <i class="ti @ModuleIcon(module.EntityType)" aria-hidden="true"></i>
+                                <span>@module.ModuleLabel</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="card language-report-card">
+            <div class="card-header">
+                <h2 class="card-title">Eksiklerin Dağılım Özeti</h2>
+            </div>
+            <div class="card-body language-report-donut-wrap">
+                <div class="language-report-donut" style="background:@donut">
+                    <div class="language-report-donut__inner">
+                        <strong>@Model.Report.TotalMissing</strong>
+                        <span>Toplam Eksik</span>
+                    </div>
+                </div>
+                <div class="language-report-donut-legend">
+                    @for (var i = 0; i < distribution.Count; i++)
+                    {
+                        var row = distribution[i];
+                        var percent = Model.Report.TotalMissing == 0 ? 0 : Math.Round(row.MissingCount * 100m / Model.Report.TotalMissing, 1);
+                        <div class="language-report-donut-legend-row">
+                            <span><i style="background:@donutColors[i % donutColors.Length]"></i>@row.ModuleLabel</span>
+                            <strong>%@percent</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="card admin-list-filter-card">
+        <div class="card-header">
+            <h2 class="card-title">Filtrele</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Report" method="get" class="language-report-filter-grid align-items-end">
+                <div>
+                    <label for="type" class="form-label">Modül</label>
+                    <select id="type" name="type" class="form-select">
+                        @foreach (var option in Model.ModuleOptions)
+                        {
+                            <option value="@option.Value" selected="@option.Selected">@option.Text</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="languageId" class="form-label">Dil</label>
+                    <select id="languageId" name="languageId" class="form-select">
+                        @foreach (var option in Model.LanguageOptions)
+                        {
+                            <option value="@option.Value" selected="@option.Selected">@option.Text</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="field" class="form-label">Alan</label>
+                    <select id="field" name="field" class="form-select">
+                        @foreach (var option in Model.FieldOptions)
+                        {
+                            <option value="@option.Value" selected="@option.Selected">@option.Text</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="search" class="form-label">Arama</label>
+                    <input id="search" name="search" type="search" class="form-control" value="@query.Search" placeholder="Kayıt ara..." />
+                </div>
+                <input type="hidden" name="sortBy" value="@query.SortBy" />
+                <input type="hidden" name="sortDirection" value="@query.SortDirection" />
+                <div>
+                    <a asp-action="Report" class="btn btn-outline-secondary admin-list-action-btn w-100">
+                        <i class="ti ti-refresh" aria-hidden="true"></i>
+                        <span>Filtreleri Temizle</span>
+                    </a>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary admin-list-action-btn w-100">
+                        <i class="ti ti-filter" aria-hidden="true"></i>
+                        <span>Filtrele</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="card admin-list-card">
+        <div class="card-header">
+            <h2 class="card-title">Eksik Çeviriler (@Model.TotalFiltered)</h2>
+            <div class="card-actions">
+                <a asp-action="ReportExportExcel" asp-all-route-data="@routeData" class="btn btn-sm btn-outline-secondary">Excel</a>
+                <a asp-action="ReportExportPdf" asp-all-route-data="@routeData" class="btn btn-sm btn-outline-secondary">PDF</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th><a href="@SortUrl("module")">Modül</a></th>
+                        <th><a href="@SortUrl("record")">Kayıt</a></th>
+                        <th><a href="@SortUrl("language")">Dil</a></th>
+                        <th><a href="@SortUrl("field")">Alan</a></th>
+                        <th>Öncelik</th>
+                        <th class="text-end">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var row in Model.PagedRows)
+                {
+                    var item = row.Item;
+                    var priority = LanguageReportLabels.Priority(item.FieldName);
+                    <tr>
+                        <td>@item.ModuleLabel</td>
+                        <td>
+                            <div class="fw-semibold">@item.DisplayName</div>
+                            <div class="text-secondary small">#@item.EntityId</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary-lt">@item.LanguageCode</span>
+                            <span class="text-secondary small">@item.LanguageName</span>
+                        </td>
+                        <td><span class="badge bg-danger-lt">@LanguageReportLabels.Field(item.FieldName)</span></td>
+                        <td>
+                            <span class="badge @(priority == "Yüksek" ? "bg-danger-lt" : "bg-warning-lt")">@priority</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="@row.EditUrl" class="btn btn-sm btn-ghost-secondary">
+                                <i class="ti ti-pencil" aria-hidden="true"></i>
+                                Düzenle
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!Model.PagedRows.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <p class="empty-title">Seçili filtrelerle eksik çeviri bulunmuyor.</p>
+            </div>
+        }
+
+        <div class="admin-list-pagination">
+            <span class="text-secondary">Toplam @Model.TotalFiltered sonuç · Sayfa @Model.CurrentPage / @(Model.TotalPages == 0 ? 1 : Model.TotalPages)</span>
+            @if (Model.TotalPages > 1)
+            {
+                <nav class="language-report-pagination" aria-label="Eksik çeviri sayfalama">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.CurrentPage <= 1 ? "#" : PageUrl(Model.CurrentPage - 1))" aria-label="Önceki">
+                                <i class="ti ti-chevron-left" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        @foreach (var page in paginationPages)
+                        {
+                            if (page is null)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            else
+                            {
+                                <li class="page-item @(page == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@PageUrl(page.Value)">@(page)</a>
+                                </li>
+                            }
+                        }
+                        <li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.CurrentPage >= Model.TotalPages ? "#" : PageUrl(Model.CurrentPage + 1))" aria-label="Sonraki">
+                                <i class="ti ti-chevron-right" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        </div>
+    </section>
+</div>

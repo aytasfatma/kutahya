@@ -1,0 +1,98 @@
+:root{--nav-black:#2d2926;--nav-gray:#77736f;--nav-border:#dedbd5;--nav-light:#f7f7f5}
+.header{position:fixed!important;top:12px!important;left:24px!important;right:24px!important;width:auto!important;z-index:2000!important;background:rgba(255,255,255,.97)!important;border:1px solid rgba(83,86,90,.1)!important;box-shadow:0 10px 30px rgba(45,41,38,.045)!important}.header__inner{display:flex!important;align-items:center!important;justify-content:space-between!important;height:62px!important;max-width:1320px!important;margin:0 auto!important;padding:0 28px!important}.header__brand{display:flex!important;align-items:center!important}.header__brand .logo-img{display:block!important;width:220px!important;max-width:100%!important;height:auto!important;object-fit:contain!important;transform:scale(1.25)!important;transform-origin:left center!important}.nav{display:flex!important}.nav--mega{gap:6px!important}.nav__trigger{position:relative!important;padding:22px 13px!important;border:0!important;background:transparent!important;color:var(--nav-black)!important;font-size:12px!important;font-weight:400!important;cursor:pointer!important}.nav__trigger::after{content:"";position:absolute;left:13px;right:100%;bottom:14px;height:1px;background:var(--nav-gray);transition:right .25s}.nav__trigger:hover::after,.nav__trigger.active::after{right:13px}.header__right{display:flex!important;align-items:center!important;gap:20px!important}.header__right>button{padding:4px!important;border:0!important;background:transparent!important;color:var(--nav-black)!important;cursor:pointer!important}.dealer-btn{padding:10px 15px!important;border:1px solid var(--nav-black)!important;color:var(--nav-black)!important;font-size:10.5px!important;letter-spacing:.07em!important;text-decoration:none!important;text-transform:uppercase!important;white-space:nowrap!important}.lang{position:relative!important}.lang__btn{display:flex!important;align-items:center!important;gap:7px!important;padding:4px!important;border:0!important;background:transparent!important;color:var(--nav-black)!important;font-size:12px!important;letter-spacing:.06em!important;cursor:pointer!important}.lang__flag{display:block!important;width:22px!important;height:15px!important;object-fit:cover!important;border:1px solid rgba(45,41,38,.12)!important}.lang__dd{position:absolute!important;top:calc(100% + 10px)!important;right:0!important;display:none!important;min-width:100px!important;background:#fff!important;border:1px solid var(--nav-border)!important;z-index:2200!important;box-shadow:0 8px 24px rgba(0,0,0,.06)!important}.lang__dd.open{display:block!important}.lang__dd button{display:flex!important;align-items:center!important;gap:9px!important;width:100%!important;padding:10px 16px!important;border:0!important;background:transparent!important;color:var(--nav-black)!important;font-size:12px!important;cursor:pointer!important}.lang__dd button:hover,.lang__dd button.active{background:var(--nav-light)!important}.mega-menu{position:absolute!important;top:62px!important;left:0!important;right:0!important;background:#fff!important;border-top:1px solid var(--nav-border)!important;border-bottom:1px solid var(--nav-border)!important;opacity:0!important;visibility:hidden!important;transform:translateY(-8px)!important;transition:.25s!important;box-shadow:0 18px 36px rgba(0,0,0,.045)!important}.mega-menu.open{opacity:1!important;visibility:visible!important;transform:none!important}.mega-menu__inner{display:grid!important;grid-template-columns:1fr!important;gap:0!important;width:min(1180px,calc(100% - 64px))!important;max-width:1180px!important;margin:0 auto!important;padding:36px 0!important}.mega-menu__links{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;column-gap:clamp(24px,4vw,64px)!important;row-gap:14px!important}.mega-menu__links a,.mega-menu__columns a{color:var(--nav-gray)!important;font-size:13px!important;line-height:1.45!important;text-decoration:none!important}.mega-menu__links a:hover,.mega-menu__columns a:hover{color:var(--nav-black)!important}.mega-menu__columns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:clamp(32px,5vw,72px)!important;row-gap:24px!important;width:min(760px,100%)!important;margin:0 auto!important}.mega-menu__columns>div{display:grid!important;gap:11px!important}.mega-menu__columns h4{margin:0 0 8px!important;font-size:11px!important;line-height:1.35!important;letter-spacing:.1em!important;text-transform:uppercase!important}#mobileMenuToggle{display:none!important}
+@media(max-width:1199px){.header__brand .logo-img{width:205px!important}}
+@media(max-width:1100px){.nav--mega{display:none!important}.dealer-btn{display:none!important}#mobileMenuToggle{display:block!important}}
+@media(max-width:767px){.header__brand .logo-img{width:170px!important}}
+@media(max-width:700px){.header{top:8px!important;left:10px!important;right:10px!important}.header__inner{height:58px!important;padding:0 16px!important}.mega-menu{display:none!important}}
+.nav-group{position:static!important}.mobile-menu-button{display:none!important}@media(max-width:1100px){#mobileMenuToggle{display:none!important}.mobile-menu-button{display:block!important}}
+.lang__dd button[hidden]{display:none!important}
+.header[data-shared-navbar="ng-slim"] .mega-menu__columns h4{font-weight:700!important}
+
+/* Navbar link underline: grid/flex hücresine değil, yalnızca metin genişliğine bağlanır. */
+.header .mega-menu__links a,
+.header .mega-menu__columns a{
+  position:relative!important;
+  display:inline-block!important;
+  justify-self:start!important;
+  align-self:start!important;
+  width:max-content!important;
+  max-width:100%!important;
+  padding-block-end:4px!important;
+  border-block-end:0!important;
+  box-shadow:none!important;
+  background-image:none!important;
+  text-decoration:none!important;
+  line-height:19px!important;
+}
+.header .mega-menu__links a::after,
+.header .mega-menu__columns a::after{
+  content:""!important;
+  position:absolute!important;
+  inset-inline-start:0!important;
+  inset-inline-end:100%!important;
+  inset-block-end:0!important;
+  display:block!important;
+  width:auto!important;
+  height:1px!important;
+  background:var(--nav-gray)!important;
+  transition:inset-inline-end .25s ease!important;
+}
+.header .mega-menu__links a:hover::after,
+.header .mega-menu__columns a:hover::after,
+.header .mega-menu__links a:focus-visible::after,
+.header .mega-menu__columns a:focus-visible::after,
+.header .mega-menu__links a.active::after,
+.header .mega-menu__columns a.active::after,
+.header .mega-menu__links a[aria-current="page"]::after,
+.header .mega-menu__columns a[aria-current="page"]::after{
+  inset-inline-end:0!important;
+}
+.header .mega-menu__links a:focus-visible,
+.header .mega-menu__columns a:focus-visible{
+  outline:2px solid var(--nav-black)!important;
+  outline-offset:4px!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .header .mega-menu__links a::after,
+  .header .mega-menu__columns a::after{transition:none!important}
+}
+
+/* Mobil menü satırı tıklanabilir kalır; hover çizgisi yalnızca metin etiketindedir. */
+.mobile-menu nav a,
+.side-menu__nav a{
+  text-decoration:none!important;
+}
+.mobile-menu nav a .nav-link__label,
+.side-menu__nav a .nav-link__label{
+  position:relative!important;
+  display:inline-block!important;
+  width:max-content!important;
+  max-width:100%!important;
+  padding-block-end:3px!important;
+}
+.mobile-menu nav a .nav-link__label::after,
+.side-menu__nav a .nav-link__label::after{
+  content:"";
+  position:absolute;
+  inset-inline-start:0;
+  inset-inline-end:100%;
+  inset-block-end:0;
+  width:auto;
+  height:1px;
+  background:currentColor;
+  transition:inset-inline-end .25s ease;
+}
+.mobile-menu nav a:hover .nav-link__label::after,
+.side-menu__nav a:hover .nav-link__label::after,
+.mobile-menu nav a:focus-visible .nav-link__label::after,
+.side-menu__nav a:focus-visible .nav-link__label::after,
+.mobile-menu nav a.active .nav-link__label::after,
+.side-menu__nav a.active .nav-link__label::after,
+.mobile-menu nav a[aria-current="page"] .nav-link__label::after,
+.side-menu__nav a[aria-current="page"] .nav-link__label::after{
+  inset-inline-end:0;
+}
+@media(prefers-reduced-motion:reduce){
+  .mobile-menu nav a .nav-link__label::after,
+  .side-menu__nav a .nav-link__label::after{transition:none}
+}

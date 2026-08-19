@@ -1,0 +1,44 @@
+@model Presentation.Models.Product.ProductCreatableComboboxViewModel
+
+@{
+    var comboboxId = $"product-combobox-{Model.FieldName}";
+    var listboxId = $"{comboboxId}-listbox";
+}
+
+<div class="admin-form-field">
+    <label for="@comboboxId" class="form-label">@Model.Label</label>
+    <div class="product-combobox" data-product-combobox data-creatable-select>
+        <input id="@comboboxId"
+               name="@Model.FieldName"
+               value="@Model.Value"
+               class="form-control product-combobox-input"
+               type="text"
+               autocomplete="off"
+               role="combobox"
+               aria-expanded="false"
+               aria-autocomplete="list"
+               aria-controls="@listboxId"
+               placeholder="@Model.Placeholder"
+               data-product-combobox-input />
+        <button type="button"
+                class="product-combobox-toggle"
+                aria-label="@Model.Label seçeneklerini aç"
+                tabindex="-1"
+                data-product-combobox-toggle>
+            <i class="ti ti-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div id="@listboxId" class="product-combobox-menu" role="listbox" data-product-combobox-menu hidden>
+            @if (!string.IsNullOrWhiteSpace(Model.EmptyOptionLabel))
+            {
+                <button type="button" class="product-combobox-option" role="option" data-product-combobox-option data-value="">@Model.EmptyOptionLabel</button>
+            }
+            @foreach (var option in Model.Options)
+            {
+                <button type="button" class="product-combobox-option" role="option" data-product-combobox-option data-value="@option">@option</button>
+            }
+            <button type="button" class="product-combobox-option product-combobox-create d-none" role="option" data-product-combobox-create></button>
+            <div class="product-combobox-empty d-none" data-product-combobox-empty>Sonuç yok. Yazdığınız değer kaydedilebilir.</div>
+        </div>
+    </div>
+    <span class="text-danger field-validation-valid" data-valmsg-for="@Model.FieldName" data-valmsg-replace="true"></span>
+</div>

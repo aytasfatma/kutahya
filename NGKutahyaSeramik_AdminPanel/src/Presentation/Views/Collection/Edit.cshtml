@@ -1,0 +1,18 @@
+@model Presentation.Models.Collection.CollectionFormViewModel
+@{
+    ViewData["Title"] = "Koleksiyon Düzenle";
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <p class="admin-form-description">Koleksiyon bilgilerini ve yayın ayarlarını güncelleyiniz.</p>
+        <a asp-controller="Collection" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Koleksiyon Yönetimi'ne Dön</span>
+        </a>
+    </div>
+
+    <form asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_CollectionForm", Model)
+    </form>
+</div>

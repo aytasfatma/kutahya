@@ -1,0 +1,112 @@
+@using Application.Pages
+@using Infrastructure.Identity
+@model PageDto
+
+@{
+    ViewData["Title"] = "Sayfa Detayı";
+    var blocks = (IReadOnlyList<PageContentBlockDto>)ViewBag.Blocks;
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div>
+            <h1 class="admin-list-title">Sayfa Detayı</h1>
+            <p class="admin-list-description">@Model.DisplayTitle sayfasının çevirilerini ve içerik bloklarını inceleyin.</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>Listeye Dön</span>
+            </a>
+            @if (canEdit)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-pencil" aria-hidden="true"></i>
+                    <span>Düzenle</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="card-header">
+            <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Çeviriler</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Dil</th>
+                        <th>Başlık</th>
+                        <th>SEO URL</th>
+                        <th>Meta Başlık</th>
+                        <th>Meta Açıklama</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var translation in Model.Translations)
+                {
+                    <tr>
+                        <td class="fw-semibold">@translation.LanguageName (@translation.LanguageCode)</td>
+                        <td>@translation.Title</td>
+                        <td>@translation.SeoUrl</td>
+                        <td>@translation.MetaTitle</td>
+                        <td>@translation.MetaDescription</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card admin-list-card">
+        <div class="card-header">
+            <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>İçerik Blokları</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Sıra</th>
+                        <th>Tip</th>
+                        <th>Başlık (TR)</th>
+                        <th>Görsel</th>
+                        <th>Video Linki</th>
+                    </tr>
+                </thead>
+                @if (blocks.Any())
+                {
+                    <tbody>
+                    @foreach (var block in blocks.OrderBy(b => b.DisplayOrder))
+                    {
+                        <tr>
+                            <td>@block.DisplayOrder</td>
+                            <td>@block.BlockTypeLabel</td>
+                            <td class="fw-semibold">@block.DisplayTitle</td>
+                            <td>
+                                @if (block.ImagePath is not null)
+                                {
+                                    <img src="@block.ImagePath" alt="" width="80" />
+                                }
+                            </td>
+                            <td>@block.VideoEmbedUrl</td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!blocks.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-layout-list"></i></span>
+                </div>
+                <p class="empty-title">Henüz içerik bloğu eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Bu sayfa için içerik blokları düzenleme ekranından eklenebilir.</p>
+            </div>
+        }
+    </section>
+</div>

@@ -1,0 +1,9 @@
+@model Presentation.Models.Blog.BlogFormViewModel
+
+<h2>Blog Yazısı Düzenle</h2>
+
+<form asp-controller="Blog" asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+    @await Html.PartialAsync("_BlogForm", Model)
+</form>
+
+<p><a asp-action="Index">Listeye Dön</a></p>

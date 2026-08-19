@@ -1,0 +1,260 @@
+@using System.Linq
+@using Application.Roles
+@model Presentation.Models.Role.RoleDetailViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Role.Name} Rol Detayı";
+
+    string AccessLabel(RoleAccessLevel level) => level switch
+    {
+        RoleAccessLevel.Full => "Tam Erişim",
+        RoleAccessLevel.ViewOnly => "Görüntüleme",
+        RoleAccessLevel.PartialFields => "Kısmi Erişim",
+        RoleAccessLevel.NotImplemented => "Henüz Uygulanmadı",
+        _ => "Erişim Yok"
+    };
+
+    string AccessBadgeClass(RoleAccessLevel level) => level switch
+    {
+        RoleAccessLevel.Full => "bg-success-lt text-success",
+        RoleAccessLevel.ViewOnly => "bg-primary-lt text-primary",
+        RoleAccessLevel.PartialFields => "bg-warning-lt text-warning",
+        RoleAccessLevel.NotImplemented => "bg-secondary-lt text-secondary",
+        _ => "bg-danger-lt text-danger"
+    };
+
+    string ModuleIconClass(string moduleName) => moduleName switch
+    {
+        "Dashboard" => "ti ti-layout-dashboard",
+        "Sayfa Yönetimi" => "ti ti-file-text",
+        "Ürün Yönetimi" => "ti ti-package",
+        "Koleksiyon/Kategori Yönetimi" => "ti ti-category",
+        "Blog Yönetimi" => "ti ti-article",
+        "Bülten Yönetimi" => "ti ti-mail-bolt",
+        "Banner Yönetimi" => "ti ti-photo",
+        "Referans Projeler" => "ti ti-building",
+        "Katalog/Doküman Yönetimi" => "ti ti-files",
+        "Bayi/Showroom Yönetimi" => "ti ti-map-pin",
+        "Form Yönetimi" => "ti ti-messages",
+        "Dil Yönetimi" => "ti ti-language",
+        "SEO Yönetimi" => "ti ti-search",
+        "Kullanıcı/Rol Yönetimi" => "ti ti-users",
+        _ => "ti ti-shield"
+    };
+
+    string? ModuleUrl(string moduleName) => moduleName switch
+    {
+        "Dashboard" => Url.Action("Index", "Home"),
+        "Sayfa Yönetimi" => Url.Action("Index", "Page"),
+        "Ürün Yönetimi" => Url.Action("Index", "Product"),
+        "Koleksiyon/Kategori Yönetimi" => Url.Action("Index", "Category"),
+        "Blog Yönetimi" => Url.Action("Index", "Blog"),
+        "Bülten Yönetimi" => Url.Action("Index", "News"),
+        "Banner Yönetimi" => Url.Action("Index", "Banner"),
+        "Referans Projeler" => Url.Action("Index", "ReferenceProject"),
+        "Katalog/Doküman Yönetimi" => Url.Action("Index", "Document"),
+        "Bayi/Showroom Yönetimi" => Url.Action("Index", "Dealer"),
+        "Form Yönetimi" => Url.Action("Index", "FormSubmission"),
+        "Dil Yönetimi" => Url.Action("Index", "Language"),
+        "SEO Yönetimi" => Url.Action("Index", "Seo"),
+        "Kullanıcı/Rol Yönetimi" => Url.Action("Index", "User"),
+        _ => null
+    };
+}
+
+<div class="admin-detail-page">
+    <div class="admin-detail-toolbar">
+        <div>
+            <h1 class="admin-list-title">@Model.Role.Name</h1>
+            <p class="admin-list-description">@Model.Role.Description</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>Rol Listesine Dön</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="card admin-detail-summary-card">
+        <div class="card-body">
+            <div class="admin-detail-summary-grid">
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-primary-lt text-primary admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-shield"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Rol Adı</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.Role.Name</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-warning-lt text-warning admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-align-left"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Rol Açıklaması</p>
+                    </div>
+                    <p class="admin-detail-summary-text">@Model.Role.Description</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-success-lt text-success admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-users"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Atanmış Kullanıcı</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.AssignedUserCount</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-success-lt text-success admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-user-check"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Aktif Kullanıcı</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.ActiveUserCount</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-primary-lt text-primary admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-layout-grid"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Erişilebilir Modül</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.AccessibleModuleCount</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card admin-detail-section">
+        <div class="card-header">
+            <h2 class="admin-detail-section-title">
+                <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-users"></i></span>
+                <span>Atanmış Kullanıcılar</span>
+            </h2>
+            <span class="badge bg-secondary-lt">@Model.AssignedUserCount</span>
+        </div>
+
+        @if (Model.Role.Users.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table admin-list-table">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı</th>
+                            <th>E-posta</th>
+                            <th>Durum</th>
+                            <th class="text-end">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var user in Model.Role.Users.OrderBy(user => user.Email))
+                    {
+                        var displayName = user.Email.Contains('@')
+                            ? user.Email.Split('@', 2)[0]
+                            : user.Email;
+
+                        <tr>
+                            <td class="fw-semibold">@displayName</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <span class="badge admin-status-badge @(user.IsActive ? "bg-success-lt" : "bg-secondary-lt")">
+                                    @(user.IsActive ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    <a asp-controller="User"
+                                       asp-action="Edit"
+                                       asp-route-id="@user.Id"
+                                       class="btn btn-sm btn-ghost-secondary"
+                                       aria-label="@user.Email kullanıcısının detayını görüntüle">
+                                        <i class="ti ti-user" aria-hidden="true"></i>
+                                        <span>Kullanıcı Detayı</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-users"></i></span>
+                </div>
+                <p class="empty-title">Bu role atanmış kullanıcı bulunmuyor.</p>
+                <p class="empty-subtitle text-secondary">Kullanıcı atamaları daha sonra kullanıcı yönetimi üzerinden yapılabilir.</p>
+            </div>
+        }
+    </section>
+
+    <section class="card admin-detail-section">
+        <div class="card-header">
+            <h2 class="admin-detail-section-title">
+                <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-layout-grid"></i></span>
+                <span>Erişebildiği Modüller</span>
+            </h2>
+            <span class="badge bg-secondary-lt">@Model.Role.Permissions.Count</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Modül</th>
+                        <th>Erişim Seviyesi</th>
+                        <th>Açıklama / Not</th>
+                        <th class="text-end">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var permission in Model.Role.Permissions)
+                {
+                    var moduleUrl = ModuleUrl(permission.ModuleName);
+                    var canNavigate = !string.IsNullOrWhiteSpace(moduleUrl) && permission.AccessLevel != RoleAccessLevel.None;
+
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="avatar admin-detail-module-icon bg-primary-lt text-primary" aria-hidden="true">
+                                    <i class="@ModuleIconClass(permission.ModuleName)"></i>
+                                </span>
+                                <span class="fw-semibold">@permission.ModuleName</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge admin-status-badge @AccessBadgeClass(permission.AccessLevel)">
+                                @AccessLabel(permission.AccessLevel)
+                            </span>
+                        </td>
+                        <td class="admin-detail-note" style="max-width: 34rem;">
+                            @(string.IsNullOrWhiteSpace(permission.Note) ? "—" : permission.Note)
+                        </td>
+                        <td class="text-end">
+                            <div class="admin-row-actions">
+                                @if (canNavigate)
+                                {
+                                    <a href="@moduleUrl" class="btn btn-sm btn-ghost-secondary" aria-label="@permission.ModuleName modülüne git">
+                                        <i class="ti ti-arrow-right" aria-hidden="true"></i>
+                                        <span>Modüle Git</span>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

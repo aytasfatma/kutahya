@@ -1,0 +1,82 @@
+@model IReadOnlyList<Application.Languages.LanguageDto>
+@{
+    ViewData["Title"] = "Dil Yönetimi";
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Diller</h1>
+                <p class="admin-list-description">Dil kayıtlarını, sıralama ve yayın durumlarını yönetin.</p>
+            </div>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Report" class="btn btn-sm btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+                <span>Eksik Çeviri Raporu</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>Kod</th>
+                    <th>Ad</th>
+                    <th>Sıralama</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var language in Model)
+            {
+                <tr>
+                    <td><span class="badge bg-secondary-lt">@language.Code</span></td>
+                    <td>
+                        @language.Name
+                        @if (language.Code == "TR")
+                        {
+                            <span class="badge bg-primary-lt ms-1">varsayılan</span>
+                        }
+                    </td>
+                    <td>@language.DisplayOrder</td>
+                    <td>
+                        @if (language.IsActive)
+                        {
+                            <span class="badge bg-success-lt">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary-lt">Pasif</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@language.Id" class="btn btn-sm btn-ghost-secondary">Düzenle</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    </section>
+</div>

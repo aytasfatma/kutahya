@@ -1,0 +1,78 @@
+@using Application.Seo
+@model IReadOnlyList<SeoDuplicateGroupDto>
+@{
+    ViewData["Title"] = "Duplicate SEO URL Raporu";
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div>
+            <h1 class="admin-list-title">Duplicate SEO URL Raporu</h1>
+            <p class="admin-list-description">Aynı içerik türü ve dilde normalize edilmiş SEO URL çakışmalarını inceleyin.</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>SEO Yönetimi'ne Dön</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        Bu rapor, aynı içerik türü ve dilde normalize edilmiş SEO URL'i aynı olan kayıtları listeler. Bu bir veritabanı kısıtı değil, uygulama-seviyesi bir uyarıdır.
+    </div>
+
+    <section class="card admin-detail-section">
+        <div class="card-header">
+            <h2 class="admin-detail-section-title">
+                <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-copy"></i></span>
+                <span>Çakışan SEO URL'ler</span>
+            </h2>
+            <span class="badge bg-secondary-lt">@Model.Count</span>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-success-lt text-success" aria-hidden="true"><i class="ti ti-check"></i></span>
+                </div>
+                <p class="empty-title">Çakışan SEO URL bulunmuyor.</p>
+                <p class="empty-subtitle text-secondary">Şu anda aynı içerik türü ve dilde normalize edilmiş tekrar eden SEO URL tespit edilmedi.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table admin-list-table">
+                    <thead>
+                        <tr>
+                            <th>İçerik Türü</th>
+                            <th>Dil</th>
+                            <th>Normalize SEO URL</th>
+                            <th>Çakışan Kayıtlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var group in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@group.EntityType</td>
+                            <td><span class="badge bg-secondary-lt">@group.LanguageCode</span></td>
+                            <td><code>@group.NormalizedSeoUrl</code></td>
+                            <td>
+                                @foreach (var record in group.Records)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@record.EntityId" asp-route-type="@record.EntityType" class="d-block">
+                                        @record.DisplayName
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</div>

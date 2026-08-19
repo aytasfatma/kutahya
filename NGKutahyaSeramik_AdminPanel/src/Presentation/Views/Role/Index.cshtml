@@ -1,0 +1,71 @@
+@model Presentation.Models.Role.RoleIndexViewModel
+@{
+    ViewData["Title"] = "Rol Yönetimi";
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Rol ve Yetki Listesi</h1>
+                <p class="admin-list-description">Yönetim paneli rollerini ve modül bazlı yetkileri görüntüleyin.</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Rol Adı</th>
+                        <th>Aktif Kullanıcı</th>
+                        <th>Toplam Kullanıcı</th>
+                        <th>Yetki Özeti</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Roles.Any())
+                {
+                    <tbody>
+                    @foreach (var role in Model.Roles)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@role.Name</td>
+                            <td>@role.ActiveUserCount</td>
+                            <td>@role.TotalUserCount</td>
+                            <td class="admin-list-meta">Modül bazlı yetkiler detay ekranında görüntülenir.</td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    <a asp-action="Details" asp-route-id="@role.Name" class="btn btn-sm btn-ghost-secondary" aria-label="@role.Name rol detayını görüntüle">
+                                        <i class="ti ti-eye" aria-hidden="true"></i>
+                                        <span>Detay</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Roles.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-shield"></i></span>
+                </div>
+                <p class="empty-title">Henüz rol tanımlanmamış.</p>
+                <p class="empty-subtitle text-secondary">Sistem rolleri yapılandırıldığında burada görüntülenecektir.</p>
+            </div>
+        }
+    </section>
+</div>

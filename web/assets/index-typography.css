@@ -1,0 +1,149 @@
+/* Yalnızca seçili iç sayfalarda yüklenir; navbar, footer ve yerleşime dokunmaz. */
+main{
+  font-family:"Noto Sans",sans-serif;
+  font-size:13px;
+  font-weight:300;
+}
+
+main h1,
+.blog-editorial-hero h1,
+.article-header h1,
+.dealer-info h1,
+.legal-hero h1,
+.page-header__title,
+.sales-hero h1,
+.docs-hero h1{
+  font-size:48px!important;
+  font-weight:300!important;
+  line-height:1.12!important;
+  letter-spacing:-.02em!important;
+}
+
+main h1 strong,
+main h1 b{
+  font-weight:500!important;
+}
+
+main h2{
+  font-size:28px!important;
+  font-weight:300!important;
+  line-height:1.2!important;
+  letter-spacing:-.01em;
+}
+
+main h3{
+  font-size:15px!important;
+  font-weight:400!important;
+  line-height:1.4!important;
+  letter-spacing:0;
+}
+
+main h4{
+  font-size:11px!important;
+  font-weight:500!important;
+  line-height:1.4!important;
+  letter-spacing:.12em;
+}
+
+main p,
+main li,
+main address,
+main dd,
+main td{
+  font-size:13px!important;
+  font-weight:300!important;
+  line-height:1.75!important;
+}
+
+/* Index'teki açıklama ve uzun anlatım metni ölçeği. */
+.blog-editorial-hero__intro>p:last-of-type,
+.article-header__spot,
+.dealer-lead,
+.legal-hero>p:last-child,
+.page-header__desc,
+.sales-hero__intro,
+.docs-hero__intro{
+  font-size:15px!important;
+  font-weight:300!important;
+  line-height:1.75!important;
+}
+
+.article-content>p,
+.article-content>ul li,
+.article-body>p,
+.article-body>ul li,
+.legal-content section>p,
+.legal-content section>ul li{
+  font-size:15px!important;
+  font-weight:300!important;
+  line-height:1.8!important;
+}
+
+main blockquote{
+  font-size:20px!important;
+  font-weight:300!important;
+  line-height:1.55!important;
+}
+
+main small,
+main time,
+main figcaption,
+main .blog-meta,
+main .article-meta,
+main .content-note,
+main .sales-count,
+main .docs-count{
+  font-size:11.5px!important;
+  font-weight:300!important;
+  line-height:1.6!important;
+}
+
+main .eyebrow,
+main [class*="eyebrow"],
+main .blog-category,
+main .sales-badge,
+main dt,
+main label>span:first-child{
+  font-size:11px!important;
+  font-weight:400!important;
+  line-height:1.4!important;
+  letter-spacing:.18em;
+}
+
+main button,
+main .cta,
+main [class*="button"],
+main [class*="action"] a{
+  font-size:12px!important;
+  font-weight:400!important;
+  letter-spacing:.1em;
+}
+
+main input,
+main select,
+main textarea{
+  font:400 13px/1.4 "Noto Sans",sans-serif!important;
+}
+
+main th{
+  font-size:13px!important;
+  font-weight:500!important;
+  line-height:1.5!important;
+}
+
+@media(max-width:700px){
+  main h1,
+  .blog-editorial-hero h1,
+  .article-header h1,
+  .dealer-info h1,
+  .legal-hero h1,
+  .page-header__title,
+  .sales-hero h1,
+  .docs-hero h1{
+    font-size:39px!important;
+  }
+
+  main h2{
+    font-size:27px!important;
+  }
+}

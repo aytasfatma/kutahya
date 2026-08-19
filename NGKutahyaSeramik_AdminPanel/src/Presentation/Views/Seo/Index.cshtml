@@ -1,0 +1,227 @@
+@using Domain.Enums
+@model Presentation.Models.Seo.SeoIndexViewModel
+@{
+    ViewData["Title"] = "SEO Yönetimi";
+
+    string TypeIcon(EntityType type) => type switch
+    {
+        EntityType.Product => "ti ti-package",
+        EntityType.Category => "ti ti-category",
+        EntityType.Collection => "ti ti-layers",
+        EntityType.Blog => "ti ti-article",
+        EntityType.News => "ti ti-news",
+        EntityType.Page => "ti ti-file-text",
+        EntityType.ReferenceProject => "ti ti-building",
+        _ => "ti ti-search"
+    };
+
+    string MetaStatusLabel(bool missing, bool supportsMeta) => !supportsMeta ? "—" : missing ? "Eksik" : "Tam";
+    string MetaStatusClass(bool missing, bool supportsMeta) => !supportsMeta
+        ? "bg-secondary-lt text-secondary"
+        : missing
+            ? "bg-danger-lt text-danger"
+            : "bg-success-lt text-success";
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">SEO Yönetimi</h1>
+                <p class="admin-list-description">Desteklenen içerik türlerinin SEO URL, meta başlık ve açıklama durumlarını tek merkezden yönetin.</p>
+            </div>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="MissingReport" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+                <span>Eksik SEO Raporu</span>
+            </a>
+            <a asp-action="Duplicates" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-copy" aria-hidden="true"></i>
+                <span>Duplicate SEO URL Raporu</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="card admin-detail-summary-card">
+        <div class="card-body">
+            <div class="admin-detail-summary-grid">
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-primary-lt text-primary admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-search"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Toplam SEO Kaydı</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.Summary.TotalRecords</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-warning-lt text-warning admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-alert-triangle"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Eksik SEO Alanı</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.Summary.MissingRows</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-danger-lt text-danger admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-copy"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">Duplicate SEO URL</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.Summary.DuplicateGroups</p>
+                </div>
+
+                <div class="admin-detail-summary-item">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="avatar bg-secondary-lt text-secondary admin-detail-summary-icon" aria-hidden="true">
+                            <i class="ti ti-file-text"></i>
+                        </span>
+                        <p class="admin-detail-summary-label">SEO URL-Only Kayıt</p>
+                    </div>
+                    <p class="admin-detail-summary-value">@Model.Summary.SeoUrlOnlyRecords</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card admin-detail-section">
+        <div class="card-header">
+            <h2 class="admin-detail-section-title">
+                <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-layout-grid"></i></span>
+                <span>İçerik Türü Seçimi</span>
+            </h2>
+            <span class="badge bg-secondary-lt">@Model.ContentTypes.Count</span>
+        </div>
+        <div class="card-body">
+            <div class="row row-cards">
+                @foreach (var type in Model.ContentTypes)
+                {
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <a asp-action="Index"
+                           asp-route-type="@type.EntityType"
+                           class="admin-detail-summary-item text-reset text-decoration-none @(type.IsSelected ? "border-primary" : "")">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="avatar bg-primary-lt text-primary admin-detail-summary-icon" aria-hidden="true">
+                                    <i class="@TypeIcon(type.EntityType)"></i>
+                                </span>
+                                <div>
+                                    <p class="admin-detail-summary-label">SEO Liste</p>
+                                    <p class="admin-detail-summary-value mb-0">@type.Label</p>
+                                </div>
+                            </div>
+                            <p class="admin-detail-summary-text">
+                                @(type.SupportsMetaFields ? "SEO URL, Meta Başlık ve Meta Açıklama desteklenir." : "Yalnızca SEO URL alanı desteklenir.")
+                            </p>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    @if (Model.SelectedType is not null)
+    {
+        <section class="card admin-detail-section">
+            <div class="card-header">
+                <h2 class="admin-detail-section-title">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-list-search"></i></span>
+                    <span>@Model.SelectedTypeLabel SEO Kayıtları</span>
+                </h2>
+                <span class="badge bg-secondary-lt">@Model.Rows.Count</span>
+            </div>
+
+            @if (!Model.Rows.Any())
+            {
+                <div class="empty admin-list-empty-state">
+                    <div class="empty-icon">
+                        <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-file-off"></i></span>
+                    </div>
+                    <p class="empty-title">Bu içerik türü için kayıt bulunmuyor.</p>
+                    <p class="empty-subtitle text-secondary">İçerik türü seçimi değiştirildiğinde ilgili SEO satırları burada listelenir.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table admin-list-table">
+                        <thead>
+                            <tr>
+                                <th>Kayıt</th>
+                                <th>İçerik Türü</th>
+                                <th>Dil</th>
+                                <th>SEO URL</th>
+                                <th>Meta Başlık Durumu</th>
+                                <th>Meta Açıklama Durumu</th>
+                                <th>SEO Sağlık Durumu</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var row in Model.Rows)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@row.DisplayName</td>
+                                <td>@row.ContentTypeLabel</td>
+                                <td>
+                                    <span class="badge bg-secondary-lt">@row.LanguageName (@row.LanguageCode)</span>
+                                </td>
+                                <td class="admin-detail-note" style="max-width: 24rem;">
+                                    @(string.IsNullOrWhiteSpace(row.SeoUrl) ? "—" : row.SeoUrl)
+                                </td>
+                                <td>
+                                    <span class="badge @MetaStatusClass(row.MissingMetaTitle, row.SupportsMetaFields)">
+                                        @MetaStatusLabel(row.MissingMetaTitle, row.SupportsMetaFields)
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge @MetaStatusClass(row.MissingMetaDescription, row.SupportsMetaFields)">
+                                        @MetaStatusLabel(row.MissingMetaDescription, row.SupportsMetaFields)
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge admin-status-badge @row.HealthBadgeClass">@row.HealthLabel</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="admin-row-actions">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@row.EntityId"
+                                           asp-route-type="@row.EntityType"
+                                           class="btn btn-sm btn-ghost-secondary">
+                                            <i class="ti ti-edit" aria-hidden="true"></i>
+                                            <span>SEO Düzenle</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    }
+    else
+    {
+        <section class="card admin-detail-section">
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-layout-grid"></i></span>
+                </div>
+                <p class="empty-title">Bir içerik türü seçin.</p>
+                <p class="empty-subtitle text-secondary">Yukarıdaki kartlardan birini seçerek ilgili SEO kayıtlarını listeleyin.</p>
+            </div>
+        </section>
+    }
+</div>

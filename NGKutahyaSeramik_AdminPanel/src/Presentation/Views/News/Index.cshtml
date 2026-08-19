@@ -1,0 +1,135 @@
+@using Infrastructure.Identity
+@using Domain.Enums
+@model IReadOnlyList<Application.News.NewsDto>
+@{
+    ViewData["Title"] = "Bülten Yönetimi";
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page newsletter-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Bülten Yönetimi</h1>
+                <p class="admin-list-description">Duyuru ve gelişmeleri hazırlayın, yayın akışını tek ekrandan yönetin.</p>
+            </div>
+        </div>
+        @if (canEdit)
+        {
+            <div class="admin-list-actions">
+                <a asp-controller="NewsCategory" asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                    <i class="ti ti-folders" aria-hidden="true"></i>
+                    <span>Bülten Kategorileri</span>
+                </a>
+                <a asp-controller="News" asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Bülten</span>
+                </a>
+            </div>
+        }
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Kapak</th>
+                        <th>Bülten</th>
+                        <th>Kategori</th>
+                        <th>Yayın Tarihi</th>
+                        <th>Durum</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var news in Model)
+                    {
+                        <tr>
+                            <td class="w-1">
+                                @if (news.FeaturedImagePath is not null)
+                                {
+                                    <img src="@news.FeaturedImagePath" alt="" class="admin-list-thumb" />
+                                }
+                                else
+                                {
+                                    <span class="avatar avatar-sm bg-secondary-lt text-secondary" aria-hidden="true"><i class="ti ti-photo-off"></i></span>
+                                }
+                            </td>
+                            <td>
+                                <div class="newsletter-title-cell">
+                                    <span class="fw-semibold text-truncate-cell">@news.DisplayTitle</span>
+                                    <small>#@news.Id</small>
+                                </div>
+                            </td>
+                            <td>@news.NewsCategoryName</td>
+                            <td>@(news.PublishDate?.ToString("dd.MM.yyyy"))</td>
+                            <td>
+                                <span class="badge admin-status-badge @(news.Status == NewsStatus.Published ? "bg-success-lt" : news.Status == NewsStatus.Draft ? "bg-yellow-lt" : "bg-secondary-lt")">
+                                    <i class="ti @(news.Status == NewsStatus.Published ? "ti-circle-check" : news.Status == NewsStatus.Draft ? "ti-clock" : "ti-archive")" aria-hidden="true"></i>
+                                    @news.StatusLabel
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                @if (canEdit)
+                                {
+                                    <div class="admin-row-actions">
+                                        <a asp-action="Edit" asp-route-id="@news.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@news.DisplayTitle bültenini düzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@news.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@news.DisplayTitle bültenini sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-mail-plus"></i></span>
+                </div>
+                <p class="empty-title">Henüz bülten hazırlanmadı.</p>
+                <p class="empty-subtitle text-secondary">Kurumsal gelişmeleri hedef kitlenizle buluşturacak ilk bülteni oluşturun.</p>
+                @if (canEdit)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-plus" aria-hidden="true"></i>
+                            <span>İlk Bülteni Hazırla</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>

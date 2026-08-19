@@ -1,0 +1,6 @@
+@model Presentation.Models.Recording.RecordingFormViewModel
+@{ ViewData["Title"] = "Yeni Kayıt"; }
+<div class="admin-form-page">
+    <div class="admin-form-header"><div><h1 class="admin-list-title">Yeni Kayıt</h1><p class="admin-form-description">Video ve açıklama bilgilerini ekleyin.</p></div><a asp-action="Index" class="btn btn-outline-secondary"><i class="ti ti-arrow-left"></i> Kayıt Yönetimi'ne Dön</a></div>
+    <form asp-action="Create" method="post" class="admin-form-shell">@await Html.PartialAsync("_RecordingForm", Model)</form>
+</div>

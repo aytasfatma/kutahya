@@ -1,0 +1,11 @@
+@model Presentation.Models.Page.PageContentBlockFormViewModel
+
+<h2>İçerik Bloğu Düzenle</h2>
+
+<form asp-controller="PageContentBlock" asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="pageId" value="@Model.PageId" />
+    <input type="hidden" name="blockId" value="@Model.Id" />
+    @await Html.PartialAsync("_PageContentBlockForm", Model)
+</form>
+
+<p><a asp-controller="Page" asp-action="Edit" asp-route-id="@Model.PageId">Sayfaya Dön</a></p>

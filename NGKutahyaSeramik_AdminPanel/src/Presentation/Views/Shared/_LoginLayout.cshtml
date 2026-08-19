@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] is not null ? $"{ViewData["Title"]} — NG Kütahya Seramik Yönetim Paneli" : "NG Kütahya Seramik Yönetim Paneli")</title>
+    <link rel="stylesheet" href="~/lib/tabler/css/tabler.min.css" />
+    <link rel="stylesheet" href="~/lib/tabler-icons/tabler-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="page page-center">
+        <div class="container container-tight py-4">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/lib/tabler/js/tabler.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

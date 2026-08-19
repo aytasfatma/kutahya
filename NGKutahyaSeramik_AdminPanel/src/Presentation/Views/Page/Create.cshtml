@@ -1,0 +1,17 @@
+@model Presentation.Models.Page.PageFormViewModel
+@{
+    ViewData["Title"] = "Yeni Sayfa";
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <p class="admin-form-description">Kurumsal sayfa yapısını ve içerik alanlarını oluşturunuz.</p>
+        <a asp-controller="Page" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Sayfa Yönetimi'ne Dön</span>
+        </a>
+    </div>
+    <form asp-controller="Page" asp-action="Create" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_PageForm", Model)
+    </form>
+</div>

@@ -1,0 +1,128 @@
+@model Presentation.Models.ReferenceProject.ReferenceProjectFormViewModel
+@{
+    ViewData["Title"] = "Referans Proje Düzenle";
+    ViewData["SuppressReferenceProjectFormFooter"] = true;
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <div>
+            <p class="admin-form-description">Referans proje bilgilerini, çevirilerini, ilişkili ürünlerini ve görsellerini düzenleyin.</p>
+        </div>
+        <a asp-controller="ReferenceProject" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Referans Projelere Dön</span>
+        </a>
+    </div>
+
+    <form id="reference-project-edit-form" asp-controller="ReferenceProject" asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_ReferenceProjectForm", Model)
+    </form>
+
+    <section class="card admin-form-section">
+        <div class="card-header">
+            <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">4</span>Görseller</h3>
+        </div>
+        <div class="card-body">
+            <p class="admin-form-section-intro">İzin verilen formatlar: JPG, JPEG, PNG, WEBP. Maksimum dosya boyutu: 5 MB.</p>
+
+            <form asp-controller="ReferenceProjectImage" asp-action="Upload" method="post" enctype="multipart/form-data" class="row g-3 align-items-end mb-3">
+                <input type="hidden" name="referenceProjectId" value="@Model.Id" />
+                <div class="col-md-9">
+                    <label class="form-label">Dosya</label>
+                    <input type="file" name="file" accept=".jpg,.jpeg,.png,.webp" required class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100"><i class="ti ti-upload me-1"></i>Yükle</button>
+                </div>
+            </form>
+
+            @if (!Model.Images.Any())
+            {
+                <div class="empty">
+                    <div class="empty-icon"><i class="ti ti-photo-off"></i></div>
+                    <p class="empty-title">Henüz görsel eklenmedi.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table">
+                        <thead>
+                            <tr>
+                                <th>Önizleme</th>
+                                <th>Sıra</th>
+                                <th>Kapak Görseli</th>
+                                <th class="text-end">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var image in Model.Images.OrderBy(i => i.DisplayOrder))
+                        {
+                            <tr>
+                                <td class="w-1">
+                                    <span class="avatar avatar-sm" style="background-image: url('@image.FilePath')"></span>
+                                </td>
+                                <td>@image.DisplayOrder</td>
+                                <td>
+                                    @if (image.IsFeatured)
+                                    {
+                                        <span class="badge bg-success-lt">Evet</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    @if (!image.IsFeatured)
+                                    {
+                                        <form asp-controller="ReferenceProjectImage" asp-action="SetFeatured" method="post" class="d-inline">
+                                            <input type="hidden" name="referenceProjectId" value="@Model.Id" />
+                                            <input type="hidden" name="imageId" value="@image.Id" />
+                                            <button type="submit" class="btn btn-sm btn-ghost-secondary">Kapak Görseli Yap</button>
+                                        </form>
+                                    }
+                                    <form asp-controller="ReferenceProjectImage" asp-action="MoveUp" method="post" class="d-inline">
+                                        <input type="hidden" name="referenceProjectId" value="@Model.Id" />
+                                        <input type="hidden" name="imageId" value="@image.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-secondary" title="Yukarı"><i class="ti ti-arrow-up"></i></button>
+                                    </form>
+                                    <form asp-controller="ReferenceProjectImage" asp-action="MoveDown" method="post" class="d-inline">
+                                        <input type="hidden" name="referenceProjectId" value="@Model.Id" />
+                                        <input type="hidden" name="imageId" value="@image.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-secondary" title="Aşağı"><i class="ti ti-arrow-down"></i></button>
+                                    </form>
+                                    <form asp-controller="ReferenceProjectImage" asp-action="Delete" method="post" class="d-inline">
+                                        <input type="hidden" name="referenceProjectId" value="@Model.Id" />
+                                        <input type="hidden" name="imageId" value="@image.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-danger">Sil</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </section>
+
+    <div class="admin-form-footer">
+        <div class="admin-form-actions">
+            <button type="submit" form="reference-project-edit-form" class="btn btn-primary admin-form-action-btn">
+                <i class="ti ti-device-floppy" aria-hidden="true"></i>
+                <span>Kaydet</span>
+            </button>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-x" aria-hidden="true"></i>
+            <span>İptal</span>
+        </a>
+    </div>
+</div>

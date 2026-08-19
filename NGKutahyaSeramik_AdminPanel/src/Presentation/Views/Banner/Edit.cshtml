@@ -1,0 +1,9 @@
+@model Presentation.Models.Banner.BannerFormViewModel
+
+<h2>Banner Düzenle</h2>
+
+<form asp-controller="Banner" asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+    @await Html.PartialAsync("_BannerForm", Model)
+</form>
+
+<p><a asp-action="Index">Listeye Dön</a></p>

@@ -1,0 +1,68 @@
+@model Presentation.Models.AboutManagement.AboutManagementViewModel
+@{ var selectedSection = ViewData["SectionKey"]?.ToString() ?? "header"; ViewData["Title"] = "Hakkımızda Yönetimi"; }
+@if (TempData["SuccessMessage"] is not null) { <div class="alert alert-success">@TempData["SuccessMessage"]</div> }
+@if (TempData["ErrorMessage"] is not null) { <div class="alert alert-danger">@TempData["ErrorMessage"]</div> }
+<div class="admin-list-page">
+<div class="admin-list-toolbar"><div><h1 class="admin-list-title">Hakkımızda Yönetimi</h1><p class="admin-list-description">Seçili Hakkımızda bölümünün içeriğini yönetin.</p></div></div>
+<form asp-action="Index" method="post" enctype="@(selectedSection == "statistics" ? "multipart/form-data" : null)">
+@Html.AntiForgeryToken()
+<input type="hidden" name="section" value="@selectedSection" />
+@{
+    var sections = new[] {
+      ("header","Kurumsal Sayfa Girişi", new[]{("HeaderEyebrow","Üst Başlık",false),("HeaderTitle","Alt Başlık",false),("HeaderDescription","Açıklama",true)}),
+      ("vision-mission","Vizyon ve Misyon", new[]{("VisionTitle","Vizyon Üst Başlığı",false),("VisionSubtitle","Vizyon Alt Başlığı",false),("VisionText","Vizyon Metni",true),("MissionTitle","Misyon Üst Başlığı",false),("MissionSubtitle","Misyon Alt Başlığı",false),("MissionText","Misyon Metni",true)}),
+      ("statistics","Sayılarla NG Kütahya", Array.Empty<(string,string,bool)>()),
+      ("history","Tarihçe", new[]{("HistoryTitle","Başlık",false),("HistoryDescription","Açıklama",true),("HistoryItems","Her satır: Dönem | Başlık | Açıklama",true)}),
+      ("values","Temel Değerler", new[]{("ValuesTitle","Başlık",false),("ValuesDescription","Açıklama",true),("Values","Her satır: Başlık | Açıklama",true)}),
+      ("production","Üretim", new[]{("ProductionTitle","Başlık",false),("ProductionText","Açıklama",true),("ProductionItems","Her satır: Başlık | Açıklama",true)}),
+      ("awards","Başarılar ve Ödüller", new[]{("AwardsTitle","Başlık",false),("AwardsDescription","Açıklama",true),("Awards","Her satır: Başlık | Durum",true)}),
+      ("certificates","Sertifikalar", new[]{("CertificatesTitle","Başlık",false),("CertificatesDescription","Açıklama",true)}),
+      ("partnerships","İş Birlikleri", new[]{("PartnershipsTitle","Başlık",false),("PartnershipsDescription","Açıklama",true),("Partnerships","Her satır: Başlık | Açıklama",true)}),
+      ("information","Bilgi Toplumu Hizmetleri", new[]{("InformationTitle","Başlık",false),("InformationDescription","Açıklama",true)})
+    };
+    var activeSection = sections.First(x => x.Item1 == selectedSection);
+}
+<section class="card admin-form-section"><div class="card-header"><h3 class="admin-form-section-title">@activeSection.Item2</h3></div><div class="card-body">
+@if (selectedSection == "statistics")
+{
+    <p class="admin-form-section-intro">Her rakamın altına küçük bir logo yükleyin. Logo yüklenmezse, logo eklenene kadar geçici olarak etiket metni gösterilir.</p>
+    <div class="admin-form-grid">
+    @for (var i = 0; i < Model.StatisticItems.Count; i++)
+    {
+        var item = Model.StatisticItems[i];
+        <div class="admin-form-field">
+            <input type="hidden" name="StatisticItems.Index" value="@i" />
+            <label class="form-label" for="StatisticItems_@(i)__Value">Değer</label>
+            <input class="form-control" id="StatisticItems_@(i)__Value" name="StatisticItems[@i].Value" value="@item.Value" />
+            <label class="form-label" for="StatisticItems_@(i)__Label" style="margin-top:.75rem">Etiket (logo yoksa gösterilir)</label>
+            <input class="form-control" id="StatisticItems_@(i)__Label" name="StatisticItems[@i].Label" value="@item.Label" />
+            @if (!string.IsNullOrWhiteSpace(item.IconPath))
+            {
+                <div class="mt-3">
+                    <div class="text-secondary small">Mevcut logo</div>
+                    <img src="@item.IconPath" alt="" class="admin-form-preview" style="max-height:48px;width:auto" />
+                </div>
+                <label class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input" name="StatisticItems[@i].RemoveIcon" value="true" />
+                    <input type="hidden" name="StatisticItems[@i].RemoveIcon" value="false" />
+                    <span class="form-check-label">Logoyu kaldır</span>
+                </label>
+            }
+            <label class="form-label" for="statisticIcon_@i" style="margin-top:.75rem">Logo @(string.IsNullOrWhiteSpace(item.IconPath) ? "(opsiyonel)" : "(değiştir, opsiyonel)")</label>
+            <input type="file" id="statisticIcon_@i" name="statisticIcons[@i]" accept=".jpg,.jpeg,.png,.webp,.svg" class="form-control" />
+        </div>
+    }
+    </div>
+}
+else
+{
+    <div class="admin-form-grid">
+    @foreach (var field in activeSection.Item3) { var prop = Model.GetType().GetProperty(field.Item1); var value = prop?.GetValue(Model)?.ToString();
+    <div class="admin-form-field @(field.Item3 ? "admin-form-field-full" : "")"><label class="form-label" for="@field.Item1">@field.Item2</label>
+    @if(field.Item3){<textarea class="form-control admin-form-autosize about-management-textarea" data-auto-resize data-auto-resize-unbounded id="@field.Item1" name="@field.Item1" rows="6">@value</textarea>}else{<input class="form-control" id="@field.Item1" name="@field.Item1" value="@value" />}
+    </div>}
+    </div>
+}
+</div></section>
+<div class="admin-form-footer"><button class="btn btn-primary admin-form-action-btn" type="submit"><i class="ti ti-device-floppy"></i><span>Kaydet</span></button></div>
+</form></div>

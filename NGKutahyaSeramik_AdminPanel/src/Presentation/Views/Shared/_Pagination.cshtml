@@ -1,0 +1,100 @@
+@model Presentation.Models.Shared.PaginationViewModel
+
+@functions {
+    private static IReadOnlyList<int?> BuildPages(int currentPage, int totalPages)
+    {
+        if (totalPages <= 0)
+        {
+            return Array.Empty<int?>();
+        }
+
+        var pages = new List<int?> { 1 };
+        var start = Math.Max(2, currentPage - 1);
+        var end = Math.Min(totalPages - 1, currentPage + 1);
+
+        if (start > 2)
+        {
+            pages.Add(null);
+        }
+
+        for (var page = start; page <= end; page++)
+        {
+            pages.Add(page);
+        }
+
+        if (end < totalPages - 1)
+        {
+            pages.Add(null);
+        }
+
+        if (totalPages > 1)
+        {
+            pages.Add(totalPages);
+        }
+
+        return pages;
+    }
+}
+
+@{
+    var totalPages = Model.TotalPages == 0 ? 1 : Model.TotalPages;
+    var pages = BuildPages(Model.CurrentPage, Model.TotalPages);
+
+    IDictionary<string, string?> RouteFor(int page)
+    {
+        var route = new Dictionary<string, string?>(Model.RouteValues);
+        route["page"] = page.ToString();
+        return route;
+    }
+
+}
+
+<nav class="admin-pagination" data-product-pagination aria-label="Sayfalama">
+    <div class="admin-pagination-summary">
+        <span>@Model.FirstItem-@Model.LastItem / @Model.TotalItems ürün</span>
+        <span>Sayfa @Model.CurrentPage / @totalPages</span>
+    </div>
+    <ul class="pagination pagination-sm admin-pagination-list mb-0">
+        <li class="page-item @(Model.HasPreviousPage ? null : "disabled")">
+            <a asp-action="@Model.ActionName"
+               asp-controller="@Model.ControllerName"
+               asp-all-route-data="RouteFor(Model.CurrentPage - 1)"
+               class="page-link"
+               tabindex="@(Model.HasPreviousPage ? null : "-1")"
+               aria-disabled="@(!Model.HasPreviousPage)">
+                Onceki
+            </a>
+        </li>
+
+        @foreach (var pageNumber in pages)
+        {
+            if (pageNumber is null)
+            {
+                <li class="page-item disabled admin-pagination-ellipsis" aria-hidden="true"><span class="page-link">...</span></li>
+            }
+            else
+            {
+                <li class="page-item @(pageNumber == Model.CurrentPage ? "active" : null)">
+                    <a asp-action="@Model.ActionName"
+                       asp-controller="@Model.ControllerName"
+                       asp-all-route-data="RouteFor(pageNumber.Value)"
+                       class="page-link"
+                       aria-current="@(pageNumber == Model.CurrentPage ? "page" : null)">
+                        @pageNumber.Value
+                    </a>
+                </li>
+            }
+        }
+
+        <li class="page-item @(Model.HasNextPage ? null : "disabled")">
+            <a asp-action="@Model.ActionName"
+               asp-controller="@Model.ControllerName"
+               asp-all-route-data="RouteFor(Model.CurrentPage + 1)"
+               class="page-link"
+               tabindex="@(Model.HasNextPage ? null : "-1")"
+               aria-disabled="@(!Model.HasNextPage)">
+                Sonraki
+            </a>
+        </li>
+    </ul>
+</nav>

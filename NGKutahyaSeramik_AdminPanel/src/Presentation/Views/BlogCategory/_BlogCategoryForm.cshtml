@@ -1,0 +1,82 @@
+@model Presentation.Models.BlogCategory.BlogCategoryFormViewModel
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Temel Bilgiler</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            <div class="admin-form-field">
+                <label asp-for="DisplayOrder" class="form-label"></label>
+                <input asp-for="DisplayOrder" type="number" min="1" step="1" class="form-control" />
+                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card admin-form-section" x-data="{ selectedLanguage: 'TR' }">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>Çeviriler</h3>
+    </div>
+    <div class="card-body">
+        <p class="admin-form-section-intro">Kullanmak istediğiniz içerik dilini seçerek ilgili alanları doldurun.</p>
+        <div class="admin-form-language-picker">
+            <label for="blog-category-language-select" class="form-label">İçerik Dili</label>
+            <select id="blog-category-language-select" class="form-select" x-model="selectedLanguage">
+                @for (var i = 0; i < Model.Translations.Count; i++)
+                {
+                    var code = Model.Translations[i].LanguageCode;
+                    var label = code switch
+                    {
+                        "TR" => "Türkçe (TR) - Zorunlu",
+                        "EN" => "English (EN)",
+                        "DE" => "Deutsch (DE)",
+                        "FR" => "Français (FR)",
+                        "ES" => "Español (ES)",
+                        "AR" => "العربية (AR)",
+                        "RU" => "Русский (RU)",
+                        _ => $"{Model.Translations[i].LanguageName} ({code})"
+                    };
+                    <option value="@code">@label</option>
+                }
+            </select>
+            <div class="admin-form-language-helper" x-text="selectedLanguage === 'TR' ? 'Türkçe içerik zorunludur.' : 'Bu dil için çeviri alanlarını doldurabilirsiniz.'"></div>
+        </div>
+
+        @for (var i = 0; i < Model.Translations.Count; i++)
+        {
+            var code = Model.Translations[i].LanguageCode;
+            var dir = code == "AR" ? "rtl" : "ltr";
+            <div class="admin-form-language-panel" x-show="selectedLanguage === '@code'" x-cloak x-bind:aria-hidden="selectedLanguage !== '@code'" dir="@dir">
+                <input type="hidden" name="Translations.Index" value="@i" />
+                <input type="hidden" asp-for="Translations[i].LanguageId" />
+                <input type="hidden" asp-for="Translations[i].LanguageCode" />
+                <input type="hidden" asp-for="Translations[i].LanguageName" />
+                <div class="admin-form-grid">
+                    <div class="admin-form-field">
+                        <label asp-for="Translations[i].Name" class="form-label"></label>
+                        <input asp-for="Translations[i].Name" class="form-control" placeholder="Blog kategori adı" />
+                        <span asp-validation-for="Translations[i].Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<div class="admin-form-footer">
+    <div class="admin-form-actions">
+        <button type="submit" class="btn btn-primary admin-form-action-btn">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            <span>Kaydet</span>
+        </button>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+        <i class="ti ti-x" aria-hidden="true"></i>
+        <span>İptal</span>
+    </a>
+</div>
+

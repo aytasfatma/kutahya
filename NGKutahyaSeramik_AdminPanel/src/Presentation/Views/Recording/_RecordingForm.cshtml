@@ -1,0 +1,12 @@
+@model Presentation.Models.Recording.RecordingFormViewModel
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<section class="card admin-form-section">
+    <div class="card-header"><h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Video İçeriği</h3></div>
+    <div class="card-body"><div class="admin-form-grid">
+        <div class="admin-form-field admin-form-field-full"><label asp-for="VideoUrl" class="form-label"></label><input asp-for="VideoUrl" class="form-control" placeholder="YouTube, Vimeo veya doğrudan MP4/WebM bağlantısı" /></div>
+        <div class="admin-form-field"><label asp-for="Eyebrow" class="form-label"></label><input asp-for="Eyebrow" class="form-control" placeholder="Örn. NG Kütahya Seramik Deneyimi" /></div>
+        <div class="admin-form-field"><label asp-for="Title" class="form-label"></label><input asp-for="Title" class="form-control" placeholder="Video alanı başlığı" /></div>
+        <div class="admin-form-field admin-form-field-full"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="5" placeholder="Video alanı açıklaması"></textarea></div>
+    </div></div>
+</section>
+<div class="admin-form-actions"><button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy"></i> Kaydet</button></div>

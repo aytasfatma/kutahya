@@ -1,0 +1,117 @@
+@using Infrastructure.Identity
+@model IReadOnlyList<Application.News.NewsCategoryDto>
+@{
+    ViewData["Title"] = "Bülten Kategori Yönetimi";
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+    var canDelete = User.IsInRole(ApplicationRoles.Admin);
+    var orderedCategories = Model.OrderBy(c => c.DisplayOrder).ThenBy(c => c.DisplayName).ToList();
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page newsletter-page">
+    <div class="admin-list-toolbar">
+        <div>
+            <div class="newsletter-eyebrow"><i class="ti ti-folders"></i> İçerik sınıflandırma</div>
+            <h1 class="admin-list-title">Bülten Kategorileri</h1>
+            <p class="admin-list-description">Bültenlerinizi konu başlıklarına ayırın, görünürlük ve sıralamalarını yönetin.</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-controller="News" asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>Bültenlere Dön</span>
+            </a>
+            @if (canEdit)
+            {
+                <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Bülten Kategorisi</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Kategori Adı</th>
+                        <th>Durum</th>
+                        <th>Sıra</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var category in orderedCategories)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@category.DisplayName</td>
+                            <td>
+                                <span class="badge admin-status-badge @(category.IsActive ? "bg-success-lt" : "bg-secondary-lt")">
+                                    @(category.IsActive ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td>@category.DisplayOrder</td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    @if (canEdit)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@category.DisplayName kategorisini düzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+                                        <form asp-action="ToggleActive" asp-route-id="@category.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-secondary" aria-label="@category.DisplayName durumunu değiştir">
+                                                @(category.IsActive ? "Pasif Yap" : "Aktif Yap")
+                                            </button>
+                                        </form>
+                                    }
+                                    @if (canDelete)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@category.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@category.DisplayName kategorisini sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-folder-plus"></i></span>
+                </div>
+                <p class="empty-title">Henüz bülten kategorisi eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Bültenleri düzenli bir arşivde toplamak için ilk kategoriyi ekleyin.</p>
+                @if (canEdit)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-plus" aria-hidden="true"></i>
+                            <span>İlk Bülten Kategorisini Ekle</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>

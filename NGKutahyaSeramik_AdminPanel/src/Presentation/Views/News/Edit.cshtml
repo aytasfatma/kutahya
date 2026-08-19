@@ -1,0 +1,21 @@
+@model Presentation.Models.News.NewsFormViewModel
+@{
+    ViewData["Title"] = "Bülten Düzenle";
+}
+
+<div class="admin-form-page newsletter-page">
+    <div class="admin-form-header">
+        <div>
+            <div class="newsletter-eyebrow"><i class="ti ti-edit"></i> Bülten #@Model.Id</div>
+            <h1 class="admin-list-title">Bülteni Düzenle</h1>
+            <p class="admin-form-description">Yayın içeriğini, görselini ve durumunu güncelleyin.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Bülten Yönetimi'ne Dön</span>
+        </a>
+    </div>
+    <form asp-controller="News" asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" class="admin-form-shell">
+        @await Html.PartialAsync("_NewsForm", Model)
+    </form>
+</div>

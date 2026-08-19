@@ -1,0 +1,192 @@
+@model Presentation.Models.News.NewsFormViewModel
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary"><i class="ti ti-adjustments"></i></span>Yayın Planı</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            <div class="admin-form-field">
+                <label asp-for="NewsCategoryId" class="form-label"></label>
+                <select asp-for="NewsCategoryId" asp-items="Model.NewsCategoryOptions" class="form-select"></select>
+                <span asp-validation-for="NewsCategoryId" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="PublishDate" class="form-label"></label>
+                <input asp-for="PublishDate" type="date" class="form-control" min="1900-01-01" max="@DateTime.Today.AddYears(5).ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="PublishDate" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" asp-items="Model.StatusOptions" class="form-select"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary"><i class="ti ti-photo"></i></span>Bülten Kapağı</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-upload">
+            @if (Model.ExistingFeaturedImagePath is not null)
+            {
+                <div class="mb-3">
+                    <div class="text-secondary small">Mevcut bülten kapağı</div>
+                    <img src="@Model.ExistingFeaturedImagePath" alt="" class="admin-form-preview" />
+                </div>
+                <label class="form-check mb-3">
+                    <input asp-for="RemoveFeaturedImage" class="form-check-input" type="checkbox" />
+                    <span class="form-check-label">Kapak görselini kaldır</span>
+                </label>
+            }
+            <label for="featuredImage" class="form-label">Bülten Kapak Görseli @(Model.ExistingFeaturedImagePath is not null ? "(Değiştir, opsiyonel)" : "(opsiyonel)")</label>
+            <input type="file" id="featuredImage" name="featuredImage" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
+            <div class="admin-form-help">İzin verilen formatlar: JPG, JPEG, PNG, WEBP. Maksimum dosya boyutu: 5 MB. Yatay bir kapak görseli kullanmanız önerilir.</div>
+        </div>
+    </div>
+</section>
+
+<section class="card admin-form-section" x-data="{ selectedLanguage: 'TR' }">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary"><i class="ti ti-language"></i></span>Bülten İçeriği ve SEO</h3>
+    </div>
+    <div class="card-body">
+        <p class="admin-form-section-intro">Kullanmak istediğiniz içerik dilini seçerek ilgili alanları doldurun.</p>
+        <div class="admin-form-language-picker">
+            <label for="news-language-select" class="form-label">İçerik Dili</label>
+            <select id="news-language-select" class="form-select" x-model="selectedLanguage" x-on:change="$nextTick(() => window.dispatchEvent(new CustomEvent('admin:autosize')))">
+                @for (var i = 0; i < Model.Translations.Count; i++)
+                {
+                    var code = Model.Translations[i].LanguageCode;
+                    var label = code switch
+                    {
+                        "TR" => "Türkçe (TR) - Zorunlu",
+                        "EN" => "English (EN)",
+                        "DE" => "Deutsch (DE)",
+                        "FR" => "Français (FR)",
+                        "ES" => "Español (ES)",
+                        "AR" => "العربية (AR)",
+                        "RU" => "Русский (RU)",
+                        _ => $"{Model.Translations[i].LanguageName} ({code})"
+                    };
+                    <option value="@code">@label</option>
+                }
+            </select>
+            <div class="admin-form-language-helper" x-text="selectedLanguage === 'TR' ? 'Türkçe içerik zorunludur.' : 'Bu dil için çeviri alanlarını doldurabilirsiniz.'"></div>
+        </div>
+
+        <div>
+            @for (var i = 0; i < Model.Translations.Count; i++)
+            {
+                var code = Model.Translations[i].LanguageCode;
+                var dir = code == "AR" ? "rtl" : "ltr";
+                <div class="admin-form-language-panel" x-show="selectedLanguage === '@code'" x-cloak x-bind:aria-hidden="selectedLanguage !== '@code'" dir="@dir">
+                    <input type="hidden" name="Translations.Index" value="@i" />
+                    <input type="hidden" asp-for="Translations[i].LanguageId" />
+                    <input type="hidden" asp-for="Translations[i].LanguageCode" />
+                    <input type="hidden" asp-for="Translations[i].LanguageName" />
+                    <div class="admin-form-grid">
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].Title" class="form-label"></label>
+                            <input asp-for="Translations[i].Title" class="form-control" />
+                            <span asp-validation-for="Translations[i].Title" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].SeoUrl" class="form-label"></label>
+                            <input asp-for="Translations[i].SeoUrl" class="form-control" />
+                            <span asp-validation-for="Translations[i].SeoUrl" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field admin-form-field-full">
+                            <label asp-for="Translations[i].Excerpt" class="form-label"></label>
+                            <textarea asp-for="Translations[i].Excerpt" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Translations[i].Excerpt" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field admin-form-field-full">
+                            <label asp-for="Translations[i].Content" class="form-label"></label>
+                            <textarea asp-for="Translations[i].Content" class="form-control" rows="6"></textarea>
+                            <span asp-validation-for="Translations[i].Content" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].MetaTitle" class="form-label"></label>
+                            <input asp-for="Translations[i].MetaTitle" class="form-control" />
+                            <span asp-validation-for="Translations[i].MetaTitle" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].MetaDescription" class="form-label"></label>
+                            <textarea asp-for="Translations[i].MetaDescription" class="form-control admin-form-autosize" rows="1" data-auto-resize></textarea>
+                            <span asp-validation-for="Translations[i].MetaDescription" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary"><i class="ti ti-link"></i></span>İlgili Bültenler</h3>
+    </div>
+    <div class="card-body">
+        <div class="document-relation-grid">
+            <div class="document-relation-panel">
+                <div class="document-relation-panel-header">
+                    <label asp-for="SelectedRelatedNewsIds" class="form-label mb-0"></label>
+                    <span class="document-relation-count">@Model.RelatedNewsOptions.Count bülten</span>
+                </div>
+                <input type="search" class="form-control document-relation-search" data-relation-search-for="SelectedRelatedNewsIds" placeholder="Bülten ara..." />
+                <div class="document-relation-list" role="group" aria-label="İlgili Bültenler">
+                    @foreach (var option in Model.RelatedNewsOptions)
+                    {
+                        var isChecked = option.Selected || (int.TryParse(option.Value, out var relatedId) && Model.SelectedRelatedNewsIds.Contains(relatedId));
+                        <label class="document-relation-option">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="SelectedRelatedNewsIds"
+                                   value="@option.Value"
+                                   checked="@isChecked"
+                                   disabled="@option.Disabled" />
+                            <span class="document-relation-option-text">@option.Text</span>
+                        </label>
+                    }
+                </div>
+                <span asp-validation-for="SelectedRelatedNewsIds" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="admin-form-footer">
+    <div class="admin-form-actions">
+        <button type="submit" class="btn btn-primary admin-form-action-btn">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            <span>Kaydet</span>
+        </button>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+        <i class="ti ti-x" aria-hidden="true"></i>
+        <span>İptal</span>
+    </a>
+</div>
+
+<script>
+    (function () {
+        document.querySelectorAll('.document-relation-search').forEach(function (input) {
+            var panel = input.closest('.document-relation-panel');
+            var list = panel && panel.querySelector('.document-relation-list');
+            if (!list) return;
+            input.addEventListener('input', function () {
+                var query = input.value.trim().toLocaleLowerCase('tr-TR');
+                list.querySelectorAll('.document-relation-option').forEach(function (option) {
+                    var text = (option.querySelector('.document-relation-option-text')?.textContent || '').toLocaleLowerCase('tr-TR');
+                    option.hidden = query.length > 0 && !text.includes(query);
+                });
+            });
+        });
+    })();
+</script>

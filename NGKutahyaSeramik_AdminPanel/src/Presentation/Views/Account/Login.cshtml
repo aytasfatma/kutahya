@@ -1,0 +1,35 @@
+@model Presentation.Models.Account.LoginViewModel
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="text-center ng-login-brand">
+    <img src="~/assets/images/brand/ng-kutahya-seramik-logo.svg"
+         alt="NG Kütahya Seramik"
+         class="ng-login-brand__logo" />
+</div>
+
+<form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="card card-md" autocomplete="off" novalidate>
+    <div class="card-body">
+        <h2 class="card-title text-center mb-4">Giriş Yap</h2>
+
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" placeholder="admin@localhost.com" autofocus />
+            <span asp-validation-for="Email"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password"></span>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+        </div>
+    </div>
+</form>

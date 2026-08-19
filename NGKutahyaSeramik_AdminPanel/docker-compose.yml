@@ -1,0 +1,73 @@
+# Minimal, çalışır Docker Compose kurulumu: SQL Server + Admin Panel.
+# Sırlar (parolalar) burada YAZILI DEĞİLDİR — .env dosyasından okunur (bkz. .env.example).
+# .env dosyası kaynak kontrolüne eklenmemelidir.
+
+name: kutahya_target
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "127.0.0.1:1434:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?MSSQL_SA_PASSWORD .env dosyasında tanımlanmalı}
+      MSSQL_PID: Express
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' -b -o /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Server=db;Database=NGKutahyaSeramikAdminPanel;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
+      # ADR-004'ün açık bıraktığı "üretim migration yöntemi" kararı: container'da etkileşimli CLI
+      # olmadığı için burada açıkça (opt-in) etkinleştirilir — yerel geliştirme akışını etkilemez.
+      DatabaseInitialization__ApplyMigrationsOnStartup: "true"
+      DatabaseInitialization__SeedOnStartup: "true"
+      # Boşsa admin/dil seed'i güvenli şekilde atlanır (WARNING loglanır, uygulama çökmez) —
+      # bkz. IdentitySeeder.SeedAdminUserAsync. Zayıf varsayılan parola ÜRETİLMEZ.
+      SeedAdmin__Email: ${SEED_ADMIN_EMAIL:-}
+      SeedAdmin__Password: ${SEED_ADMIN_PASSWORD:-}
+      Identity__AllowWeakPasswords: ${ALLOW_WEAK_ADMIN_PASSWORD:-false}
+      PublicWebsite__AllowedOrigins__0: "http://localhost:5500"
+      PublicWebsite__AllowedOrigins__1: "http://127.0.0.1:5500"
+      Smtp__Host: ${SMTP_HOST:-smtp.gmail.com}
+      Smtp__Port: ${SMTP_PORT:-587}
+      Smtp__Username: ${SMTP_USERNAME:-}
+      Smtp__Password: ${SMTP_PASSWORD:-}
+      Smtp__UseTls: ${SMTP_USE_TLS:-true}
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads-data:/app/wwwroot/uploads
+      - data-protection-keys:/app/data-protection-keys
+    restart: unless-stopped
+
+  web:
+    image: nginx:1.27-alpine
+    depends_on:
+      - app
+    ports:
+      - "5500:80"
+    volumes:
+      - ../web:/usr/share/nginx/html:ro
+      - ./nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+  uploads-data:
+  data-protection-keys:

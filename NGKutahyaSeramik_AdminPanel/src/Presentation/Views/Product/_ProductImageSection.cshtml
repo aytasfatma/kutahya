@@ -1,0 +1,130 @@
+@model Presentation.Models.Product.ProductFormViewModel
+
+@{
+    var isCreate = !Model.Id.HasValue;
+    var uploadInputId = isCreate ? "InitialImageFiles" : "product-edit-image-file";
+    var typeSelectId = isCreate ? "InitialImageType" : "product-edit-image-type";
+}
+
+<section class="card admin-form-section product-image-section" data-product-image-upload>
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">4</span>Urun Gorselleri</h3>
+    </div>
+    <div class="card-body">
+        <p class="text-secondary">İzin verilen formatlar: JPG, JPEG, PNG, WEBP. En fazla 6 görsel, dosya başına maksimum 5 MB. Bir görsel ana/favori olarak seçilmelidir.</p>
+
+        @if (isCreate)
+        {
+            <div class="product-image-create-layout">
+                <div class="admin-form-field product-image-type-field">
+                    <label asp-for="InitialImageType" class="form-label">Görsel Tipi</label>
+                    <select asp-for="InitialImageType" asp-items="Model.ImageTypeOptions" id="@typeSelectId" class="form-select"></select>
+                </div>
+                <div class="admin-form-field">
+                    <label class="product-image-dropzone" for="@uploadInputId" role="button" tabindex="0" data-product-image-dropzone>
+                        <span class="product-image-dropzone-icon" aria-hidden="true"><i class="ti ti-cloud-upload"></i></span>
+                        <span class="product-image-dropzone-title">Görselleri buraya sürükleyin veya seçmek için tıklayın</span>
+                        <span class="btn btn-outline-secondary btn-sm product-image-dropzone-button">
+                            <i class="ti ti-folder-open" aria-hidden="true"></i>
+                            <span>Dosya Seç</span>
+                        </span>
+                    </label>
+                    <input asp-for="InitialImageFiles"
+                           id="@uploadInputId"
+                           type="file"
+                           accept=".jpg,.jpeg,.png,.webp"
+                           multiple
+                           class="product-image-file-input"
+                           data-product-image-input
+                           data-max-files="6"
+                           aria-describedby="product-create-image-errors" />
+                    <div class="form-hint product-image-helper">En fazla 6 görsel seçilebilir. İlk görsel otomatik olarak ana/favori görsel olur.</div>
+                    <span asp-validation-for="InitialImageFiles" id="product-create-image-errors" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="product-image-preview-list" data-product-image-preview-list aria-live="polite">
+                <div class="product-image-empty" data-product-image-empty>
+                    <i class="ti ti-photo-off" aria-hidden="true"></i>
+                    <span>Henüz görsel seçilmedi.</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <form asp-controller="ProductImage" asp-action="Upload" method="post" enctype="multipart/form-data" class="product-image-upload-row">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <div>
+                    <label for="@typeSelectId" class="form-label">Gorsel Tipi</label>
+                    <select id="@typeSelectId" name="imageType" asp-items="Model.ImageTypeOptions" class="form-select"></select>
+                </div>
+                <div>
+                    <label for="@uploadInputId" class="form-label">Dosya</label>
+                    <input id="@uploadInputId" type="file" name="file" accept=".jpg,.jpeg,.png,.webp" class="form-control" disabled="@(Model.Images.Count >= 6 ? "disabled" : null)" />
+                </div>
+                <div class="product-image-upload-action">
+                    <button type="submit" class="btn btn-primary w-100" disabled="@(Model.Images.Count >= 6 ? "disabled" : null)"><i class="ti ti-upload me-1"></i>Yukle</button>
+                </div>
+            </form>
+
+            @if (Model.Images.Count >= 6)
+            {
+                <div class="alert alert-info mt-3">Bu ürün için 6 görsel sınırına ulaşıldı. Yeni görsel eklemek için mevcut görsellerden birini silin.</div>
+            }
+
+            @if (!Model.Images.Any())
+            {
+                <div class="empty">
+                    <div class="empty-icon"><i class="ti ti-photo-off"></i></div>
+                    <p class="empty-title">Henuz gorsel eklenmedi.</p>
+                </div>
+            }
+            else
+            {
+                <div class="product-image-grid">
+                    @foreach (var image in Model.Images.OrderBy(i => i.DisplayOrder))
+                    {
+                        <article class="product-image-card">
+                            <img src="@image.FilePath" alt="@image.ImageTypeLabel gorseli" class="product-image-card-thumb" />
+                            <div class="product-image-card-body">
+                                <div>
+                                    <div class="fw-semibold">@image.ImageTypeLabel</div>
+                                    <div class="text-secondary small">Sira @image.DisplayOrder</div>
+                                </div>
+                                @if (image.IsPrimary)
+                                {
+                                    <span class="badge bg-success-lt">Ana gorsel</span>
+                                }
+                            </div>
+                            <div class="product-image-card-actions">
+                                @if (!image.IsPrimary)
+                                {
+                                    <form asp-controller="ProductImage" asp-action="SetPrimary" method="post">
+                                        <input type="hidden" name="productId" value="@Model.Id" />
+                                        <input type="hidden" name="imageId" value="@image.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-secondary">Ana Gorsel Yap</button>
+                                    </form>
+                                }
+                                <form asp-controller="ProductImage" asp-action="MoveUp" method="post">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                    <input type="hidden" name="imageId" value="@image.Id" />
+                                    <button type="submit" class="btn btn-sm btn-ghost-secondary" title="Yukari" aria-label="Gorseli yukari tasi"><i class="ti ti-arrow-up"></i></button>
+                                </form>
+                                <form asp-controller="ProductImage" asp-action="MoveDown" method="post">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                    <input type="hidden" name="imageId" value="@image.Id" />
+                                    <button type="submit" class="btn btn-sm btn-ghost-secondary" title="Asagi" aria-label="Gorseli asagi tasi"><i class="ti ti-arrow-down"></i></button>
+                                </form>
+                                <form asp-controller="ProductImage" asp-action="Delete" method="post">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                    <input type="hidden" name="imageId" value="@image.Id" />
+                                    <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="Gorseli sil">Sil</button>
+                                </form>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        }
+    </div>
+</section>

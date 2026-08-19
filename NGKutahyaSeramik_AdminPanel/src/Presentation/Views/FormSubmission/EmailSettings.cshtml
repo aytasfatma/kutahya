@@ -1,0 +1,12 @@
+@model Application.Forms.NotificationSettingsDto
+@{ ViewData["Title"] = "E-posta Ayarları"; }
+<div class="admin-list-page">
+    <div class="admin-list-toolbar"><div class="d-flex align-items-start gap-2"><a asp-action="Index" class="btn btn-outline-secondary btn-icon"><i class="ti ti-arrow-left"></i></a><div><h1 class="admin-list-title">E-posta Ayarları</h1><p class="admin-list-description">Kariyer başvurularının gönderileceği adresi yönetin.</p></div></div></div>
+    @if (TempData["SuccessMessage"] is not null) { <div class="alert alert-success">@TempData["SuccessMessage"]</div> }
+    @if (TempData["ErrorMessage"] is not null) { <div class="alert alert-danger">@TempData["ErrorMessage"]</div> }
+    <section class="card"><div class="card-body"><form method="post" class="admin-form-grid">
+        <div><label class="form-label" for="careerRecipientEmail">Kariyer Başvurusu Alıcı Adresi</label><input id="careerRecipientEmail" name="careerRecipientEmail" type="email" class="form-control" value="@Model.CareerRecipientEmail" required /><small class="form-hint">SMTP parolası burada tutulmaz; yalnızca .env üzerinden okunur.</small></div>
+        <label class="form-check mt-3"><input class="form-check-input" type="checkbox" name="careerEmailEnabled" value="true" checked="@Model.CareerEmailEnabled"/><span class="form-check-label">Kariyer e-posta bildirimlerini gönder</span></label>
+        <div class="mt-4"><button class="btn btn-primary" type="submit"><i class="ti ti-device-floppy"></i> Kaydet</button></div>
+    </form></div></section>
+</div>

@@ -1,0 +1,73 @@
+@model IReadOnlyList<Presentation.Models.Recording.RecordingListItemViewModel>
+@{
+    ViewData["Title"] = "Kayıt Yönetimi";
+}
+
+@if (TempData["SuccessMessage"] is not null) { <div class="alert alert-success">@TempData["SuccessMessage"]</div> }
+@if (TempData["ErrorMessage"] is not null) { <div class="alert alert-danger">@TempData["ErrorMessage"]</div> }
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-icon" aria-label="Geri dön" title="Geri dön">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </a>
+            <div>
+                <h1 class="admin-list-title">Kayıt Yönetimi</h1>
+                <p class="admin-list-description">Video kayıtlarını listeleyin ve yayınlanacak tek kaydı seçin.</p>
+            </div>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Create" class="btn btn-primary admin-list-action-btn"><i class="ti ti-plus"></i><span>Yeni Kayıt</span></a>
+        </div>
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead><tr><th>Başlık</th><th>Oluşturulma Tarihi</th><th>Aktif / Pasif</th><th class="text-end">İşlemler</th></tr></thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.Title</td>
+                            <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
+                                <form asp-action="SetStatus" asp-route-id="@item.Id" method="post">
+                                    <select name="isActive" class="form-select form-select-sm" style="min-width:110px" onchange="this.form.submit()" aria-label="@item.Title yayın durumu">
+                                        @if (item.IsActive)
+                                        {
+                                            <option value="true" selected>Aktif</option>
+                                            <option value="false">Pasif</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="true">Aktif</option>
+                                            <option value="false" selected>Pasif</option>
+                                        }
+                                    </select>
+                                </form>
+                            </td>
+                            <td class="text-end"><div class="admin-row-actions">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-ghost-secondary"><i class="ti ti-pencil"></i><span>Düzenle</span></a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bu kayıt kalıcı olarak silinsin mi?');"><button type="submit" class="btn btn-sm btn-ghost-danger"><i class="ti ti-trash"></i><span>Sil</span></button></form>
+                            </div></td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon"><span class="avatar bg-primary-lt text-primary"><i class="ti ti-video"></i></span></div>
+                <p class="empty-title">Henüz kayıt eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Web sitesinde yayınlamak için ilk video kaydını ekleyin.</p>
+                <div class="empty-action"><a asp-action="Create" class="btn btn-primary"><i class="ti ti-plus"></i> İlk Kaydı Ekle</a></div>
+            </div>
+        }
+    </section>
+</div>

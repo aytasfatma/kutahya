@@ -1,0 +1,11 @@
+@model Presentation.Models.BlogCategory.BlogCategoryFormViewModel
+@{
+    ViewData["Title"] = "Yeni Blog Kategorisi";
+}
+
+<div class="admin-form-page">
+    <p class="admin-form-description">Blog kategorisi oluşturmak için sıralama ve çeviri bilgilerini giriniz.</p>
+    <form asp-controller="BlogCategory" asp-action="Create" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_BlogCategoryForm", Model)
+    </form>
+</div>

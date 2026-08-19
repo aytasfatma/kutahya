@@ -1,0 +1,180 @@
+@model Presentation.Models.FormSubmission.FormSubmissionIndexViewModel
+@{
+    ViewData["Title"] = "Form Yönetimi";
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+        <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Form Başvuruları</h1>
+                <p class="admin-list-description">İletişim ve bilgi talep başvurularını görüntüleyin ve durumlarını takip edin.</p>
+            </div>
+        </div>
+        @if (User.IsInRole(Infrastructure.Identity.ApplicationRoles.Admin))
+        {
+            <div class="admin-list-actions"><a asp-action="EmailSettings" class="btn btn-primary admin-list-action-btn"><i class="ti ti-mail-cog"></i><span>E-posta Ayarları</span></a></div>
+        }
+    </div>
+
+    <section class="card admin-list-filter-card">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="admin-list-filter-grid">
+                <div>
+                    <label for="formType" class="form-label">Form Türü</label>
+                    <select id="formType" name="formType" class="form-select">
+                        <option value="">Tümü</option>
+                        <option value="Contact" selected="@(Model.FormType?.ToString() == "Contact")">İletişim Formu</option>
+                        <option value="RequestInformation" selected="@(Model.FormType?.ToString() == "RequestInformation")">Bilgi Talep Formu</option>
+                        <option value="SampleRequest" selected="@(Model.FormType?.ToString() == "SampleRequest")">Numune Talep Formu</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="isRead" class="form-label">Okunma Durumu</label>
+                    <select id="isRead" name="isRead" class="form-select">
+                        <option value="">Tümü</option>
+                        <option value="false" selected="@(Model.IsRead == false)">Okunmadı</option>
+                        <option value="true" selected="@(Model.IsRead == true)">Okundu</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="createdFrom" class="form-label">Başlangıç Tarihi</label>
+                    <input type="date" id="createdFrom" name="createdFrom" value="@(Model.CreatedFrom?.ToString("yyyy-MM-dd"))" class="form-control" />
+                </div>
+                <div>
+                    <label for="createdTo" class="form-label">Bitiş Tarihi</label>
+                    <input type="date" id="createdTo" name="createdTo" value="@(Model.CreatedTo?.ToString("yyyy-MM-dd"))" class="form-control" />
+                </div>
+                <div>
+                    <label for="searchTerm" class="form-label">Ara</label>
+                    <input type="text" id="searchTerm" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Ad, e-posta veya telefon" />
+                </div>
+                <div class="d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-secondary admin-list-action-btn">
+                        <i class="ti ti-filter" aria-hidden="true"></i>
+                        <span>Filtrele</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <colgroup>
+                    <col style="width: 9.5rem;" />
+                    <col style="width: 10rem;" />
+                    <col />
+                    <col />
+                    <col style="width: 9rem;" />
+                    <col style="width: 7rem;" />
+                    <col style="width: 9rem;" />
+                    <col style="width: 7rem;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-nowrap">Tarih</th>
+                        <th class="text-nowrap">Form Türü</th>
+                        <th>Gönderen</th>
+                        <th>E-posta</th>
+                        <th class="text-nowrap">Telefon</th>
+                        <th class="text-nowrap text-center">Okunma</th>
+                        <th class="text-nowrap text-center">İşlem Durumu</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Page.Items.Any())
+                {
+                    <tbody>
+                    @foreach (var submission in Model.Page.Items)
+                    {
+                        <tr>
+                            <td class="text-nowrap">@submission.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td class="text-nowrap">@submission.FormTypeLabel</td>
+                            <td class="fw-semibold">@submission.FullName</td>
+                            <td>@submission.Email</td>
+                            <td class="text-nowrap">@submission.Phone</td>
+                            <td class="text-center">
+                                <span class="badge admin-status-badge @(submission.IsRead ? "bg-success-lt" : "bg-warning-lt")">
+                                    @(submission.IsRead ? "Okundu" : "Okunmadı")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge admin-status-badge @(submission.IsProcessed ? "bg-info-lt" : "bg-warning-lt")">
+                                    @(submission.IsProcessed ? "İşleme Alındı" : "Bekliyor")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    <a asp-action="Details" asp-route-id="@submission.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@submission.FullName form başvurusunu görüntüle">
+                                        <i class="ti ti-eye" aria-hidden="true"></i>
+                                        <span>Detay</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Page.Items.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-forms"></i></span>
+                </div>
+                <p class="empty-title">Henüz form başvurusu bulunmuyor.</p>
+                <p class="empty-subtitle text-secondary">Ziyaretçi talepleri geldiğinde bu listede görüntülenecektir.</p>
+            </div>
+        }
+
+        <div class="admin-list-pagination">
+            <span class="text-secondary">
+                Toplam @Model.Page.TotalCount kayıt · Sayfa @Model.Page.PageNumber / @Model.Page.TotalPages
+            </span>
+            <div class="admin-row-actions">
+                @if (Model.Page.PageNumber > 1)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@(Model.Page.PageNumber - 1)"
+                       asp-route-formType="@Model.FormType"
+                       asp-route-isRead="@Model.IsRead"
+                       asp-route-searchTerm="@Model.SearchTerm"
+                       class="btn btn-sm btn-outline-secondary">
+                        Önceki Sayfa
+                    </a>
+                }
+                @if (Model.Page.PageNumber < Model.Page.TotalPages)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@(Model.Page.PageNumber + 1)"
+                       asp-route-formType="@Model.FormType"
+                       asp-route-isRead="@Model.IsRead"
+                       asp-route-searchTerm="@Model.SearchTerm"
+                       class="btn btn-sm btn-outline-secondary">
+                        Sonraki Sayfa
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+</div>

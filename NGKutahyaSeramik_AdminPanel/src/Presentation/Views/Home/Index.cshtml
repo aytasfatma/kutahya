@@ -1,0 +1,223 @@
+@using Infrastructure.Identity
+@model Presentation.Models.Home.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var d = Model.Dashboard;
+    var isAdmin = User.IsInRole(ApplicationRoles.Admin);
+    var canEditProducts = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ProductManager);
+    var canCreateContent = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+    var canOpenSeo = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.SeoEditor);
+    var canViewForms = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+}
+
+<div class="dashboard-page">
+    <section class="dashboard-header w-100 justify-content-end" aria-label="Dashboard aksiyonları">
+        <div class="dashboard-actions ms-auto justify-content-end" aria-label="Hızlı aksiyonlar">
+            <span id="dashboard-statistics-indicator" class="dashboard-refresh-indicator htmx-indicator" role="status" aria-live="polite">
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span class="dashboard-refresh-loading">Yenileniyor</span>
+            </span>
+            <button type="button"
+                    class="btn ng-dashboard-action dashboard-action-btn dashboard-refresh-btn"
+                    hx-get="@Url.Action("Statistics", "Home")"
+                    hx-target="#dashboard-statistics"
+                    hx-swap="outerHTML"
+                    hx-indicator="#dashboard-statistics-indicator"
+                    aria-label="Dashboard verilerini yenile">
+                <i class="ti ti-refresh" aria-hidden="true"></i>
+                <span>Yenile</span>
+            </button>
+            @if (canEditProducts)
+            {
+                <a asp-controller="Product" asp-action="Create" class="btn ng-dashboard-action dashboard-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Ürün</span>
+                </a>
+            }
+            @if (canCreateContent)
+            {
+                <a asp-controller="Blog" asp-action="Create" class="btn ng-dashboard-action dashboard-action-btn">
+                    <i class="ti ti-pencil-plus" aria-hidden="true"></i>
+                    <span>Yeni İçerik</span>
+                </a>
+            }
+            @if (!isAdmin && canOpenSeo)
+            {
+                <a asp-controller="Seo" asp-action="Index" class="btn ng-dashboard-action dashboard-action-btn">
+                    <i class="ti ti-search" aria-hidden="true"></i>
+                    <span>SEO Yönetimi</span>
+                </a>
+            }
+        </div>
+    </section>
+
+    @await Html.PartialAsync("_DashboardStatistics", Model)
+
+    <div class="row row-cards dashboard-panel-row">
+        <div class="col-12 col-md-6">
+            <section class="card dashboard-panel-card h-100" aria-labelledby="recent-products-title">
+                <div class="card-header dashboard-records-header">
+                    <div class="dashboard-panel-heading">
+                        <span class="avatar avatar-sm bg-primary-lt text-primary" aria-hidden="true">
+                            <i class="ti ti-box"></i>
+                        </span>
+                        <div>
+                            <h2 id="recent-products-title" class="card-title dashboard-panel-title">Son Ürünler</h2>
+                            <p class="dashboard-panel-description">Kataloğa en son eklenen ürünleri izleyin.</p>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-sm btn-outline-secondary dashboard-panel-link">Tümünü Gör</a>
+                    </div>
+                </div>
+
+                @if (d.RecentProducts.Count == 0)
+                {
+                    <div class="card-body">
+                        <div class="empty dashboard-empty-state">
+                            <div class="empty-icon">
+                                <span class="avatar avatar-lg bg-primary-lt text-primary" aria-hidden="true">
+                                    <i class="ti ti-box-off"></i>
+                                </span>
+                            </div>
+                            <p class="empty-title">Henüz ürün bulunmuyor.</p>
+                            <p class="empty-subtitle text-secondary">
+                                İlk ürününüzü ekleyerek ürün kataloğunu oluşturmaya başlayabilirsiniz.
+                            </p>
+                            @if (canEditProducts)
+                            {
+                                <div class="empty-action">
+                                    <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+                                        <i class="ti ti-plus" aria-hidden="true"></i>
+                                        İlk ürünü ekle
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-vcenter card-table dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Kodu</th>
+                                    <th>Durum</th>
+                                    <th>Oluşturulma Tarihi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var product in d.RecentProducts)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@product.ProductCode</td>
+                                    <td><span class="badge bg-primary-lt">@product.StatusLabel</span></td>
+                                    <td class="text-secondary">@product.CreatedAt.ToString("dd.MM.yyyy")</td>
+                                    <td class="text-end">
+                                        @if (canEditProducts)
+                                        {
+                                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-ghost-secondary">Düzenle</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                <div class="card-footer dashboard-panel-footer">
+                    <span class="text-secondary">@d.RecentProducts.Count kayıt gösteriliyor</span>
+                </div>
+            </section>
+        </div>
+
+        @if (canViewForms)
+        {
+            <div class="col-12 col-md-6">
+                <section class="card dashboard-panel-card h-100" aria-labelledby="recent-forms-title">
+                    <div class="card-header dashboard-records-header">
+                        <div class="dashboard-panel-heading">
+                            <span class="avatar avatar-sm bg-purple-lt text-purple" aria-hidden="true">
+                                <i class="ti ti-forms"></i>
+                            </span>
+                            <div>
+                                <h2 id="recent-forms-title" class="card-title dashboard-panel-title">Son Form Başvuruları</h2>
+                                <p class="dashboard-panel-description">Yeni talepleri ve okunma durumunu takip edin.</p>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a asp-controller="FormSubmission" asp-action="Index" class="btn btn-sm btn-outline-secondary dashboard-panel-link">Tümünü Gör</a>
+                        </div>
+                    </div>
+
+                    @if (d.RecentForms.Count == 0)
+                    {
+                        <div class="card-body">
+                            <div class="empty dashboard-empty-state">
+                                <div class="empty-icon">
+                                    <span class="avatar avatar-lg bg-purple-lt text-purple" aria-hidden="true">
+                                        <i class="ti ti-mail-off"></i>
+                                    </span>
+                                </div>
+                                <p class="empty-title">Henüz form başvurusu bulunmuyor.</p>
+                                <p class="empty-subtitle text-secondary">
+                                    Ziyaretçi talepleri geldiğinde bu alanda hızlıca görünür.
+                                </p>
+                                <div class="empty-action">
+                                    <a asp-controller="FormSubmission" asp-action="Index" class="btn btn-outline-secondary">
+                                        Formları görüntüle
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-vcenter card-table dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Form Türü</th>
+                                        <th>Gönderen</th>
+                                        <th>Tarih</th>
+                                        <th>Durum</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var form in d.RecentForms)
+                                {
+                                    <tr>
+                                        <td>@form.FormTypeLabel</td>
+                                        <td class="fw-semibold">@form.FullName</td>
+                                        <td class="text-secondary">@form.CreatedAt.ToString("dd.MM.yyyy")</td>
+                                        <td>
+                                            @if (form.IsRead)
+                                            {
+                                                <span class="badge bg-success-lt">Okundu</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning-lt">Okunmadı</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            <a asp-controller="FormSubmission" asp-action="Details" asp-route-id="@form.Id" class="btn btn-sm btn-ghost-secondary">Detay</a>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    <div class="card-footer dashboard-panel-footer">
+                        <span class="text-secondary">@d.RecentForms.Count kayıt gösteriliyor</span>
+                    </div>
+                </section>
+            </div>
+        }
+    </div>
+</div>

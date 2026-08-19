@@ -1,0 +1,13 @@
+@model Presentation.Models.NewsCategory.NewsCategoryFormViewModel
+@{
+    ViewData["Title"] = "Yeni Bülten Kategorisi";
+}
+
+<div class="admin-form-page">
+    <div class="newsletter-eyebrow"><i class="ti ti-folder-plus"></i> Yeni sınıflandırma</div>
+    <h1 class="admin-list-title">Yeni Bülten Kategorisi</h1>
+    <p class="admin-form-description">Bültenleri gruplamak için kategori adını, sırasını ve dil karşılıklarını girin.</p>
+    <form asp-controller="NewsCategory" asp-action="Create" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_NewsCategoryForm", Model)
+    </form>
+</div>

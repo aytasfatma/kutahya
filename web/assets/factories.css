@@ -1,0 +1,35 @@
+:root{--factory-ink:#2d2926;--factory-gray:#68645f;--factory-line:#dedbd5;--factory-paper:#f3f0ea}
+*{box-sizing:border-box}
+body{margin:0;color:var(--factory-ink);font-family:"Noto Sans",sans-serif;background:#fff}
+body:has(.factories-main) #sharedIndexFilter{display:none}
+.factories-main{padding-block-start:86px;overflow:hidden}
+.factories-wrap{width:min(1240px,calc(100% - 80px));margin-inline:auto}
+.factories-breadcrumb{border-block-end:1px solid var(--factory-line)}
+.factories-breadcrumb ol{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:22px 0;list-style:none;color:var(--factory-gray);font-size:12px}
+.factories-breadcrumb li+li::before{content:"/";margin-inline-end:10px;color:#aaa49b}
+.factories-breadcrumb a{color:inherit;text-decoration:none}
+.factories-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(50px,8vw,130px);align-items:end;padding-block:90px 78px}
+.factories-eyebrow{margin:0 0 20px;color:var(--factory-gray);font-size:13px;font-weight:800;line-height:1.4;letter-spacing:.18em;text-transform:uppercase}
+.factories-hero h1{max-width:720px;margin:0;font-size:48px;font-weight:300;line-height:1.12;letter-spacing:-.02em}
+.factories-hero__intro{max-width:510px;margin:0;color:var(--factory-gray);font-size:15px;font-weight:300;line-height:1.75}
+.factories-summary{padding-block:34px;background:var(--factory-paper);border-block:1px solid var(--factory-line)}
+.factories-summary__inner{display:grid;grid-template-columns:180px 1fr;gap:45px;align-items:center}
+.factories-summary strong{font-size:54px;font-weight:300;line-height:1}
+.factories-summary p{max-width:720px;margin:0;color:var(--factory-gray);font-size:13px;font-weight:300;line-height:1.75}
+.factories-section{padding-block:72px 110px}
+.factories-section__head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-block-end:28px;padding-block-end:18px;border-block-end:1px solid var(--factory-line)}
+.factories-section h2{margin:0;font-size:28px;font-weight:300;line-height:1.2}
+.factories-section__head span{color:var(--factory-gray);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.factories-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block-start:1px solid var(--factory-line)}
+.factory-card{display:flex;min-height:285px;flex-direction:column;padding:30px;border-inline-end:1px solid var(--factory-line);border-block-end:1px solid var(--factory-line)}
+.factory-card:nth-child(3n+1){border-inline-start:1px solid var(--factory-line)}
+.factory-card__number{margin-block-end:42px;color:#aaa49b;font-size:11px;letter-spacing:.14em}
+.factory-card h3{margin:0 0 15px;font-size:19px;font-weight:400;line-height:1.35}
+.factory-card address,.factory-card p{margin:0;color:var(--factory-gray);font-size:13px;font-weight:300;font-style:normal;line-height:1.7}
+.factory-card__map{align-self:flex-start;margin-block-start:auto;padding-block-start:22px;border-block-end:1px solid var(--factory-ink);color:var(--factory-ink);font-size:11px;font-weight:500;letter-spacing:.09em;text-decoration:none;text-transform:uppercase}
+.factory-card__map:hover{transform:translateX(4px)}
+.factory-card__map:focus-visible{outline:2px solid var(--factory-ink);outline-offset:5px}
+.factories-note{max-width:800px;margin:34px 0 0;color:var(--factory-gray);font-size:12px;font-weight:300;line-height:1.7}
+@media(max-width:950px){.factories-wrap{width:min(100% - 40px,1240px)}.factories-hero{grid-template-columns:1fr;gap:30px;padding-block:64px 58px}.factories-list{grid-template-columns:repeat(2,minmax(0,1fr))}.factory-card:nth-child(3n+1){border-inline-start:0}.factory-card:nth-child(2n+1){border-inline-start:1px solid var(--factory-line)}}
+@media(max-width:650px){.factories-main{padding-block-start:74px}.factories-wrap{width:calc(100% - 32px)}.factories-hero{padding-block:48px}.factories-hero h1{font-size:39px}.factories-summary__inner{grid-template-columns:1fr;gap:14px}.factories-list{grid-template-columns:1fr}.factory-card,.factory-card:nth-child(n){border-inline:1px solid var(--factory-line)}.factories-section__head{align-items:start;flex-direction:column}.factory-card{min-height:250px}}
+@media(prefers-reduced-motion:reduce){.factory-card__map{transition:none}.factory-card__map:hover{transform:none}}

@@ -1,0 +1,65 @@
+@model Application.Forms.FormSubmissionDto
+
+<h2>Form Başvurusu Detayı</h2>
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <p>@TempData["SuccessMessage"]</p>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <p>@TempData["ErrorMessage"]</p>
+}
+
+<table>
+    <tr><th>Form Türü</th><td>@Model.FormTypeLabel</td></tr>
+    <tr><th>Tarih</th><td>@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td></tr>
+    <tr><th>Ad Soyad</th><td>@Model.FullName</td></tr>
+    <tr><th>E-posta</th><td>@Model.Email</td></tr>
+    <tr><th>Telefon</th><td>@Model.Phone</td></tr>
+    <tr><th>Firma</th><td>@Model.Company</td></tr>
+    <tr><th>Mesaj</th><td>@Model.Message</td></tr>
+    <tr><th>KVKK Onayı</th><td>@(Model.ConsentAccepted ? "Onaylandı" : "Onaylanmadı")</td></tr>
+
+    @if (Model.FormType == Domain.Enums.FormType.Contact)
+    {
+        <tr><th>Konu</th><td>@Model.Subject</td></tr>
+    }
+    @if (Model.FormType == Domain.Enums.FormType.RequestInformation)
+    {
+        <tr><th>Ürün Kodu</th><td>@Model.ProductCode</td></tr>
+        <tr><th>Ürün Adı</th><td>@Model.ProductName</td></tr>
+    }
+    @if (Model.FormType == Domain.Enums.FormType.SampleRequest)
+    {
+        <tr><th>Adres</th><td>@Model.Address</td></tr>
+        <tr><th>Talep Edilen Ürün/Koleksiyon</th><td>@Model.RequestedProduct</td></tr>
+        <tr><th>Adet</th><td>@Model.Quantity</td></tr>
+    }
+
+    <tr><th>Okunma</th><td>@(Model.IsRead ? $"Okundu ({Model.ReadAt:dd.MM.yyyy HH:mm})" : "Okunmadı")</td></tr>
+    <tr><th>İşlem Durumu</th><td>@(Model.IsProcessed ? $"İşleme Alındı ({Model.ProcessedAt:dd.MM.yyyy HH:mm})" : "Bekliyor")</td></tr>
+</table>
+
+<h3>İşlemler</h3>
+
+<form asp-action="@(Model.IsRead ? "MarkAsUnread" : "MarkAsRead")" asp-route-id="@Model.Id" method="post">
+    <button type="submit">@(Model.IsRead ? "Okunmadı Yap" : "Okundu Yap")</button>
+</form>
+
+<form asp-action="@(Model.IsProcessed ? "MarkAsUnprocessed" : "MarkAsProcessed")" asp-route-id="@Model.Id" method="post">
+    <button type="submit">@(Model.IsProcessed ? "İşleme Alınmadı Yap" : "İşleme Alındı Yap")</button>
+</form>
+
+<form asp-action="UpdateAdminNote" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <label for="adminNote">Yönetici Notu</label>
+    <textarea id="adminNote" name="AdminNote">@Model.AdminNote</textarea>
+    <button type="submit">Notu Kaydet</button>
+</form>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button type="submit">Sil</button>
+</form>
+
+<p><a asp-action="Index">Listeye Dön</a></p>

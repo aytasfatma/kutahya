@@ -1,0 +1,128 @@
+@using Infrastructure.Identity
+@model IReadOnlyList<Application.Blogs.BlogDto>
+@{
+    ViewData["Title"] = "Blog Yönetimi";
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ContentEditor);
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Blog Yazıları</h1>
+                <p class="admin-list-description">Blog içeriklerini, kategorileri ve yayın durumlarını yönetin.</p>
+            </div>
+        </div>
+        @if (canEdit)
+        {
+            <div class="admin-list-actions">
+                <a asp-controller="BlogCategory" asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                    <i class="ti ti-tags" aria-hidden="true"></i>
+                    <span>Blog Kategorileri</span>
+                </a>
+                <a asp-controller="Blog" asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Blog Yazısı</span>
+                </a>
+            </div>
+        }
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Kapak</th>
+                        <th>Başlık</th>
+                        <th>Kategori</th>
+                        <th>Yazar</th>
+                        <th>Etiketler</th>
+                        <th>Yayın Tarihi</th>
+                        <th>Yayın Durumu</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var blog in Model)
+                    {
+                        <tr>
+                            <td class="w-1">
+                                @if (blog.FeaturedImagePath is not null)
+                                {
+                                    <img src="@blog.FeaturedImagePath" alt="" class="admin-list-thumb" />
+                                }
+                                else
+                                {
+                                    <span class="avatar avatar-sm bg-secondary-lt text-secondary" aria-hidden="true"><i class="ti ti-photo-off"></i></span>
+                                }
+                            </td>
+                            <td class="fw-semibold text-truncate-cell">@blog.DisplayTitle</td>
+                            <td>@blog.BlogCategoryName</td>
+                            <td>@blog.Author</td>
+                            <td class="text-truncate-cell">@string.Join(", ", blog.Tags)</td>
+                            <td>@(blog.PublishDate?.ToString("dd.MM.yyyy"))</td>
+                            <td><span class="badge bg-primary-lt admin-status-badge">@blog.StatusLabel</span></td>
+                            <td class="text-end">
+                                @if (canEdit)
+                                {
+                                    <div class="admin-row-actions">
+                                        <a asp-action="Edit" asp-route-id="@blog.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@blog.DisplayTitle blog yazısını düzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@blog.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@blog.DisplayTitle blog yazısını sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-file-text"></i></span>
+                </div>
+                <p class="empty-title">Henüz blog yazısı eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">İlk blog içeriğini oluşturarak içerik yayınlamaya başlayın.</p>
+                @if (canEdit)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-plus" aria-hidden="true"></i>
+                            <span>İlk Blog Yazısını Ekle</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>

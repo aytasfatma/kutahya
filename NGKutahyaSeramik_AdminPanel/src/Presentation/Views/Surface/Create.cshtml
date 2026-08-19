@@ -1,0 +1,3 @@
+@model Presentation.Models.Surface.SurfaceFormViewModel
+@{ ViewData["Title"] = "Yeni Yüzey"; }
+<div class="admin-form-page"><div class="admin-form-header"><p class="admin-form-description">Yeni ürün yüzeyi için gerekli bilgileri giriniz.</p><a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn"><i class="ti ti-arrow-left"></i><span>Yüzey Yönetimi'ne Dön</span></a></div><form asp-action="Create" method="post" class="admin-form-shell">@await Html.PartialAsync("_Form", Model)</form></div>

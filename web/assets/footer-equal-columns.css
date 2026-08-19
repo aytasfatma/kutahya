@@ -1,0 +1,40 @@
+/* Desktop footer spacing is measured from one heading edge to the next. */
+@media (min-width: 1321px) {
+  .footer__menus-final {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    gap: 0 80px !important;
+  }
+
+  .footer__menus-final .footer__col {
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    max-width: none !important;
+  }
+
+  .footer__menus-final .footer__col h4 {
+    white-space: nowrap !important;
+  }
+
+  /* Sub-links start at the heading edge but do not determine column spacing. */
+  .footer__menus-final .footer__col a {
+    width: 0 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+}
+
+.footer .footer__col h4 .footer__heading-link {
+  display: inline !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
+  text-transform: inherit !important;
+  white-space: inherit !important;
+  text-decoration: none !important;
+}

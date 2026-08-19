@@ -1,0 +1,17 @@
+@model Presentation.Models.Banner.BannerFormViewModel
+@{
+    ViewData["Title"] = "Yeni Banner";
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <p class="admin-form-description">Banner görselini, bağlantısını ve yayın ayarlarını giriniz.</p>
+        <a asp-controller="Banner" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Banner Yönetimi'ne Dön</span>
+        </a>
+    </div>
+    <form asp-controller="Banner" asp-action="Create" method="post" enctype="multipart/form-data" class="admin-form-shell">
+        @await Html.PartialAsync("_BannerForm", Model)
+    </form>
+</div>

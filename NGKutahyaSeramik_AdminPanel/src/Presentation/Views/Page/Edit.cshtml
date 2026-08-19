@@ -1,0 +1,115 @@
+@using Application.Pages
+@model Presentation.Models.Page.PageFormViewModel
+
+@{
+    ViewData["Title"] = "Sayfa Düzenle";
+    ViewData["SuppressPageFormFooter"] = true;
+    var blocks = (IReadOnlyList<PageContentBlockDto>)ViewBag.Blocks;
+    var pageFormId = "page-edit-form";
+}
+
+<div class="admin-form-page">
+    <p class="admin-form-description">Sayfa çevirilerini, SEO bilgilerini ve içerik bloklarını düzenleyin.</p>
+
+    <form id="@pageFormId" asp-controller="Page" asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_PageForm", Model)
+    </form>
+
+    <section class="card admin-form-section">
+        <div class="card-header">
+            <div>
+                <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>İçerik Blokları</h3>
+            </div>
+            <div class="card-actions">
+                <a asp-controller="PageContentBlock" asp-action="Create" asp-route-pageId="@Model.Id" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Blok Ekle</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Sıra</th>
+                        <th>Tip</th>
+                        <th>Başlık (TR)</th>
+                        <th>Görsel</th>
+                        <th>Video Linki</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (blocks.Any())
+                {
+                    <tbody>
+                    @foreach (var block in blocks.OrderBy(b => b.DisplayOrder))
+                    {
+                        <tr>
+                            <td>@block.DisplayOrder</td>
+                            <td>@block.BlockTypeLabel</td>
+                            <td class="fw-semibold">@block.DisplayTitle</td>
+                            <td>
+                                @if (block.ImagePath is not null)
+                                {
+                                    <img src="@block.ImagePath" alt="" width="80" />
+                                }
+                            </td>
+                            <td>@block.VideoEmbedUrl</td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    <a asp-controller="PageContentBlock" asp-action="Edit" asp-route-pageId="@Model.Id" asp-route-blockId="@block.Id" class="btn btn-sm btn-ghost-secondary">
+                                        <i class="ti ti-pencil" aria-hidden="true"></i>
+                                        <span>Düzenle</span>
+                                    </a>
+                                    <form asp-controller="PageContentBlock" asp-action="MoveUp" method="post">
+                                        <input type="hidden" name="pageId" value="@Model.Id" />
+                                        <input type="hidden" name="blockId" value="@block.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-secondary">Yukarı</button>
+                                    </form>
+                                    <form asp-controller="PageContentBlock" asp-action="MoveDown" method="post">
+                                        <input type="hidden" name="pageId" value="@Model.Id" />
+                                        <input type="hidden" name="blockId" value="@block.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-secondary">Aşağı</button>
+                                    </form>
+                                    <form asp-controller="PageContentBlock" asp-action="Delete" method="post">
+                                        <input type="hidden" name="pageId" value="@Model.Id" />
+                                        <input type="hidden" name="blockId" value="@block.Id" />
+                                        <button type="submit" class="btn btn-sm btn-ghost-danger">
+                                            <i class="ti ti-trash" aria-hidden="true"></i>
+                                            <span>Sil</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!blocks.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-layout-list"></i></span>
+                </div>
+                <p class="empty-title">Henüz içerik bloğu eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Sayfa içeriğini oluşturmak için ilk bloğu ekleyin.</p>
+            </div>
+        }
+    </section>
+
+    <div class="admin-form-footer">
+        <div class="admin-form-actions">
+            <button type="submit" form="@pageFormId" class="btn btn-primary admin-form-action-btn">
+                <i class="ti ti-device-floppy" aria-hidden="true"></i>
+                <span>Kaydet</span>
+            </button>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-x" aria-hidden="true"></i>
+            <span>İptal</span>
+        </a>
+    </div>
+</div>

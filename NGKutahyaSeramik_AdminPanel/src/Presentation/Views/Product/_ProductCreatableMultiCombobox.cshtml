@@ -1,0 +1,54 @@
+@model Presentation.Models.Product.ProductCreatableMultiComboboxViewModel
+
+@{
+    var comboboxId = $"product-multi-combobox-{Model.FieldName}";
+    var listboxId = $"{comboboxId}-listbox";
+    var selectedValues = (Model.Value ?? string.Empty)
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+}
+
+<div class="admin-form-field">
+    <label for="@comboboxId" class="form-label">@Model.Label</label>
+    <div class="product-combobox product-combobox-multi" data-product-multi-combobox>
+        <input type="hidden" name="@Model.FieldName" value="@Model.Value" data-product-multi-combobox-value />
+        <div class="product-combobox-multi-control" data-product-multi-combobox-control>
+            <div class="product-combobox-chip-list" data-product-multi-combobox-chips>
+                @foreach (var value in selectedValues)
+                {
+                    <span class="product-combobox-chip" data-value="@value">
+                        <span>@value</span>
+                        <button type="button" aria-label="@value kaldır" data-product-multi-combobox-remove>
+                            <i class="ti ti-x" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                }
+            </div>
+            <input id="@comboboxId"
+                   class="product-combobox-input product-combobox-multi-input"
+                   type="text"
+                   autocomplete="off"
+                   role="combobox"
+                   aria-expanded="false"
+                   aria-autocomplete="list"
+                   aria-controls="@listboxId"
+                   placeholder="@Model.Placeholder"
+                   data-product-multi-combobox-input />
+            <button type="button"
+                    class="product-combobox-toggle"
+                    aria-label="@Model.Label seçeneklerini aç"
+                    tabindex="-1"
+                    data-product-multi-combobox-toggle>
+                <i class="ti ti-chevron-down" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div id="@listboxId" class="product-combobox-menu" role="listbox" data-product-multi-combobox-menu hidden>
+            @foreach (var option in Model.Options)
+            {
+                <button type="button" class="product-combobox-option" role="option" data-product-multi-combobox-option data-value="@option">@option</button>
+            }
+            <button type="button" class="product-combobox-option product-combobox-create d-none" role="option" data-product-multi-combobox-create></button>
+            <div class="product-combobox-empty d-none" data-product-multi-combobox-empty>Sonuç yok. Yazdığınız değer eklenebilir.</div>
+        </div>
+    </div>
+    <span class="text-danger field-validation-valid" data-valmsg-for="@Model.FieldName" data-valmsg-replace="true"></span>
+</div>

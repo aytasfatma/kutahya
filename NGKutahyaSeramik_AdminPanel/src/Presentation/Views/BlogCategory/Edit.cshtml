@@ -1,0 +1,9 @@
+@model Presentation.Models.BlogCategory.BlogCategoryFormViewModel
+
+<h2>Blog Kategorisi Düzenle</h2>
+
+<form asp-controller="BlogCategory" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @await Html.PartialAsync("_BlogCategoryForm", Model)
+</form>
+
+<p><a asp-action="Index">Listeye Dön</a></p>

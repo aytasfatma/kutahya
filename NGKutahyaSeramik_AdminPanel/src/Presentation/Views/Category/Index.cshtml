@@ -1,0 +1,123 @@
+@using Infrastructure.Identity
+@model IReadOnlyList<Application.Categories.CategoryDto>
+@{
+    ViewData["Title"] = "Kategori Yönetimi";
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ProductManager);
+    var canDelete = User.IsInRole(ApplicationRoles.Admin);
+    var orderedCategories = Model.OrderBy(c => c.DisplayName, StringComparer.Create(new System.Globalization.CultureInfo("tr-TR"), true)).ToList();
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Kategoriler</h1>
+                <p class="admin-list-description">Excel kategori kolonundan gelen ürün kategorilerini yönetin.</p>
+            </div>
+        </div>
+        <div class="admin-list-actions">
+            @if (canEdit)
+            {
+                <a asp-controller="Category" asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    <span>Yeni Kategori Ekle</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <section class="card admin-list-card" aria-labelledby="category-list-title">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kategori Adı</th>
+                        <th>Ürün Sayısı</th>
+                        <th>Durum</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var category in orderedCategories)
+                    {
+                        <tr>
+                            <td class="text-secondary">#@category.Id</td>
+                            <td class="fw-semibold">@category.DisplayName</td>
+                            <td>@category.ProductCount</td>
+                            <td>
+                                <span class="badge admin-status-badge @(category.IsActive ? "bg-success-lt" : "bg-secondary-lt")">
+                                    @(category.IsActive ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    @if (canEdit)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@category.DisplayName yüzey türünü düzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+                                        <form asp-action="ToggleActive" asp-route-id="@category.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-secondary" aria-label="@category.DisplayName durumunu değiştir">
+                                                @(category.IsActive ? "Pasif Yap" : "Aktif Yap")
+                                            </button>
+                                        </form>
+                                    }
+                                    @if (canDelete)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@category.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@category.DisplayName yüzey türünü sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-texture"></i></span>
+                </div>
+                <p class="empty-title">Henüz kategori eklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Ürünleri gruplamak için ilk kategoriyi ekleyin.</p>
+                @if (canEdit)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-plus" aria-hidden="true"></i>
+                            <span>İlk Kategoriyi Ekle</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>

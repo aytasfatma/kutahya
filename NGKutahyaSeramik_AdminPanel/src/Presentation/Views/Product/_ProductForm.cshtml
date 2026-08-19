@@ -1,0 +1,379 @@
+@model Presentation.Models.Product.ProductFormViewModel
+@using System.Globalization
+@using Presentation.Models.Product
+@using Domain.Enums
+@using Application.Products
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+
+@{
+    var nativeDisabled = Model.CanEditNativeFields ? null : "disabled";
+    var technicalOptions = Model.TechnicalOptions;
+    var thicknessAttemptedValue = ViewData.ModelState[nameof(Model.Thickness)]?.AttemptedValue;
+    var thicknessValue = thicknessAttemptedValue ?? (Model.Thickness is > 0 ? Model.Thickness.Value.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty);
+    var trTranslationIndex = Model.Translations.FindIndex(translation => translation.LanguageCode == "TR");
+    var productNameDisabled = Model.CanEditContentFields ? null : "disabled";
+    var seoUrlDisabled = Model.CanEditSeoFields ? null : "disabled";
+}
+@if (!Model.CanEditNativeFields)
+{
+    <div class="alert alert-info">Rolunuz yalnizca icerik/SEO ceviri alanlarini duzenleyebilir; temel bilgiler ve urun ozellikleri salt okunurdur.</div>
+}
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Temel Bilgiler</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            @if (trTranslationIndex >= 0)
+            {
+                <div class="admin-form-field">
+                    <label asp-for="Translations[trTranslationIndex].Name" class="form-label"></label>
+                    <input asp-for="Translations[trTranslationIndex].Name" class="form-control" disabled="@productNameDisabled" />
+                    <span asp-validation-for="Translations[trTranslationIndex].Name" class="text-danger"></span>
+                </div>
+            }
+            <div class="admin-form-field">
+                    <label asp-for="ProductCode" class="form-label"></label>
+                    <input asp-for="ProductCode" class="form-control" disabled="@nativeDisabled" />
+                    <span asp-validation-for="ProductCode" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="Brands" class="form-label"></label>
+                <div class="product-brand-dropdown"
+                     x-data='{ open: false, selected: @Json.Serialize(Model.Brands.Select(brand => brand.ToString()).ToArray()) }'
+                     x-on:click.outside="open = false">
+                    <button type="button"
+                            class="form-select product-brand-dropdown__toggle"
+                            x-on:click="open = !open"
+                            x-bind:aria-expanded="open"
+                            disabled="@nativeDisabled">
+                        <span x-text="selected.length ? `${selected.length} marka seçildi` : 'Marka seçin'">Marka seçin</span>
+                    </button>
+                    <div class="product-brand-dropdown__menu" x-show="open" x-cloak>
+                        @foreach (var brand in Enum.GetValues<ProductBrand>())
+                        {
+                            <label class="product-brand-dropdown__option">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="Brands"
+                                       value="@brand"
+                                       x-model="selected"
+                                       disabled="@nativeDisabled" />
+                                <span>@ProductEnumDisplay.GetBrandLabel(brand)</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+                <span asp-validation-for="Brands" class="text-danger"></span>
+            </div>
+            @if (trTranslationIndex >= 0)
+            {
+                <div class="admin-form-field">
+                    <label asp-for="Translations[trTranslationIndex].SeoUrl" class="form-label"></label>
+                    <input asp-for="Translations[trTranslationIndex].SeoUrl" class="form-control" disabled="@seoUrlDisabled" />
+                    <span asp-validation-for="Translations[trTranslationIndex].SeoUrl" class="text-danger"></span>
+                </div>
+            }
+            <div class="admin-form-field">
+                <label asp-for="CategoryId" class="form-label"></label>
+                <select asp-for="CategoryId" asp-items="Model.CategoryOptions" class="form-select" disabled="@nativeDisabled">
+                    <option value="">Kategori seçin</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="SurfaceId" class="form-label"></label>
+                <select asp-for="SurfaceId" asp-items="Model.SurfaceOptions" class="form-select" disabled="@nativeDisabled">
+                    <option value="">Yüzey seçin</option>
+                </select>
+                <span asp-validation-for="SurfaceId" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="CollectionId" class="form-label"></label>
+                <select asp-for="CollectionId" asp-items="Model.CollectionOptions" class="form-select" disabled="@nativeDisabled"><option value="">Koleksiyon seçin</option></select>
+                <span asp-validation-for="CollectionId" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" asp-items="Model.StatusOptions" class="form-select" disabled="@nativeDisabled"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="DisplayOrder" class="form-label"></label>
+                <input asp-for="DisplayOrder" type="number" min="1" step="1" class="form-control" disabled="@nativeDisabled" />
+                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="ProductGroup" />
+    </div>
+</section>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>Ek Bilgiler</h3>
+    </div>
+    <div class="card-body">
+        @if (trTranslationIndex >= 0)
+        {
+            <div class="admin-form-grid">
+                <div class="admin-form-field admin-form-field-full">
+                    <label asp-for="Translations[trTranslationIndex].ShortDescription" class="form-label"></label>
+                    <input asp-for="Translations[trTranslationIndex].ShortDescription" class="form-control"
+                           placeholder="Başlık giriniz" disabled="@productNameDisabled" />
+                    <span asp-validation-for="Translations[trTranslationIndex].ShortDescription" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field admin-form-field-full">
+                    <label asp-for="Translations[trTranslationIndex].LongDescription" class="form-label"></label>
+                    <textarea asp-for="Translations[trTranslationIndex].LongDescription" class="form-control" rows="4"
+                              placeholder="Ürün açıklamasını giriniz" disabled="@productNameDisabled"></textarea>
+                    <span asp-validation-for="Translations[trTranslationIndex].LongDescription" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">3</span>Teknik Ozellikler</h3>
+    </div>
+    <div class="card-body">
+        <fieldset disabled="@nativeDisabled">
+            <div class="admin-form-grid admin-form-grid-3">
+                @await Html.PartialAsync("_ProductCreatableCombobox", new ProductCreatableComboboxViewModel
+                {
+                    FieldName = nameof(Model.Size),
+                    Label = "Ebat",
+                    Value = Model.Size,
+                    Options = technicalOptions.Sizes,
+                    Placeholder = "Seçin veya yeni ebat yazın"
+                })
+                <div class="admin-form-field">
+                    <label asp-for="Unit" class="form-label"></label>
+                    <select asp-for="Unit" class="form-select">
+                        <option value="M2">M2</option>
+                        <option value="ADT">ADT</option>
+                    </select>
+                    <span asp-validation-for="Unit" class="text-danger"></span>
+                </div>
+                @await Html.PartialAsync("_ProductCreatableCombobox", new ProductCreatableComboboxViewModel
+                {
+                    FieldName = nameof(Model.Relief),
+                    Label = "Rölyef",
+                    Value = Model.Relief,
+                    Options = technicalOptions.Reliefs,
+                    Placeholder = "Seçin veya yeni değer yazın"
+                })
+                @await Html.PartialAsync("_ProductCreatableCombobox", new ProductCreatableComboboxViewModel
+                {
+                    FieldName = nameof(Model.SpecialSurface),
+                    Label = "Özel Yüzey",
+                    Value = Model.SpecialSurface,
+                    Options = technicalOptions.SpecialSurfaces,
+                    Placeholder = "Seçin veya yeni değer yazın"
+                })
+                <div class="admin-form-field">
+                    <label asp-for="FaceCount" class="form-label"></label>
+                    <input asp-for="FaceCount" type="number" min="1" step="1" class="form-control" />
+                    <span asp-validation-for="FaceCount" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="HasFace" class="form-label"></label>
+                    <select asp-for="HasFace" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="true">Var</option>
+                        <option value="false">Yok</option>
+                    </select>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="HasVenue" class="form-label"></label>
+                    <select asp-for="HasVenue" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="true">Var</option>
+                        <option value="false">Yok</option>
+                    </select>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="Thickness" class="form-label">Kalınlık (mm)</label>
+                    <input id="Thickness" name="Thickness" value="@thicknessValue" type="number" min="0.1" step="0.1" class="form-control" />
+                    <span asp-validation-for="Thickness" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="BodyType" class="form-label"></label>
+                    <select asp-for="BodyType" class="form-select">
+                        <option value="Sırlı Porselen">Sırlı Porselen</option>
+                        <option value="Duvar Karosu">Duvar Karosu</option>
+                        <option value="Teknik Granit Seramik">Teknik Granit Seramik</option>
+                    </select>
+                    <span asp-validation-for="BodyType" class="text-danger"></span>
+                </div>
+                @await Html.PartialAsync("_ProductCreatableCombobox", new ProductCreatableComboboxViewModel
+                {
+                    FieldName = nameof(Model.Color),
+                    Label = "Renk",
+                    Value = Model.Color,
+                    Options = technicalOptions.Colors,
+                    Placeholder = "Seçin veya yeni değer yazın"
+                })
+                @await Html.PartialAsync("_ProductCreatableCombobox", new ProductCreatableComboboxViewModel
+                {
+                    FieldName = nameof(Model.ColorMaterial),
+                    Label = "Renk Malzeme Grubu",
+                    Value = Model.ColorMaterial,
+                    Options = technicalOptions.ColorMaterials,
+                    Placeholder = "Seçin veya yeni değer yazın"
+                })
+                @await Html.PartialAsync("_ProductCreatableMultiCombobox", new ProductCreatableMultiComboboxViewModel
+                {
+                    FieldName = nameof(Model.ApplicationArea),
+                    Label = "Uygulama Alanı",
+                    Value = Model.ApplicationArea,
+                    Options = technicalOptions.ApplicationAreas,
+                    Placeholder = "Uygulama alanı seçin veya yazın"
+                })
+                @await Html.PartialAsync("_ProductCreatableMultiCombobox", new ProductCreatableMultiComboboxViewModel
+                {
+                    FieldName = nameof(Model.UsageArea),
+                    Label = "Kullanım Alanı",
+                    Value = Model.UsageArea,
+                    Options = technicalOptions.UsageAreas,
+                    Placeholder = "Kullanım alanı seçin veya yazın"
+                })
+                <div class="admin-form-field">
+                    <label asp-for="Finish" class="form-label"></label>
+                    <select asp-for="Finish" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="Rektifiyeli">Rektifiyeli</option>
+                        <option value="Rektifiyesiz">Rektifiyesiz</option>
+                    </select>
+                    <span asp-validation-for="Finish" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="PEI" class="form-label"></label>
+                    <select id="PEI" name="PEI" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="1" selected="@(Model.PEI == 1)">PEI 1</option>
+                        <option value="2" selected="@(Model.PEI == 2)">PEI 2</option>
+                        <option value="3" selected="@(Model.PEI == 3)">PEI 3</option>
+                        <option value="4" selected="@(Model.PEI == 4)">PEI 4</option>
+                        <option value="5" selected="@(Model.PEI == 5)">PEI 5</option>
+                    </select>
+                    <div class="form-hint">Sırlı yüzeylerin aşınma dayanımı: PEI 1 düşük, PEI 5 yoğun kullanım.</div>
+                    <span asp-validation-for="PEI" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="VValue" class="form-label"></label>
+                    <select asp-for="VValue" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="V1">V1</option>
+                        <option value="V2">V2</option>
+                        <option value="V3">V3</option>
+                        <option value="V4">V4</option>
+                    </select>
+                    <div class="form-hint">Desen ve ton farklılığı: V1 homojen, V4 yüksek doğal varyasyon.</div>
+                    <span asp-validation-for="VValue" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="RValue" class="form-label"></label>
+                    <select asp-for="RValue" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="R9">R9</option>
+                        <option value="R10">R10</option>
+                        <option value="R11">R11</option>
+                        <option value="R12">R12</option>
+                        <option value="R13">R13</option>
+                        <option value="R11-R12">R11-R12</option>
+                    </select>
+                    <div class="form-hint">Kaymazlık sınıfı: R9 düşük, R13 yüksek kaymazlık.</div>
+                    <span asp-validation-for="RValue" class="text-danger"></span>
+                </div>
+                @await Html.PartialAsync("_ProductCreatableCombobox", new ProductCreatableComboboxViewModel
+                {
+                    FieldName = nameof(Model.DeepAbrasion),
+                    Label = "Derin Aşınma",
+                    Value = Model.DeepAbrasion,
+                    Options = technicalOptions.DeepAbrasions,
+                    Placeholder = "Seçin veya yeni derin aşınma değeri yazın",
+                    EmptyOptionLabel = "Belirtilmedi"
+                })
+                <div class="admin-form-field">
+                    <label asp-for="HeatResistance" class="form-label"></label>
+                    <select asp-for="HeatResistance" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="true">Evet</option>
+                        <option value="false">Hayır</option>
+                    </select>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="AntiSlip" class="form-label"></label>
+                    <select asp-for="AntiSlip" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="true">Evet</option>
+                        <option value="false">Hayır</option>
+                    </select>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="GlazedGranite" class="form-label"></label>
+                    <select asp-for="GlazedGranite" class="form-select">
+                        <option value="">Belirtilmedi</option>
+                        <option value="true">Evet</option>
+                        <option value="false">Hayır</option>
+                    </select>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="BoxM2" class="form-label"></label>
+                    <input asp-for="BoxM2" type="number" min="0.01" step="0.01" class="form-control" list="product-box-m2-options" />
+                    <datalist id="product-box-m2-options">
+                        @foreach (var option in technicalOptions.BoxM2Values)
+                        {
+                            <option value="@option.ToString("0.##", CultureInfo.InvariantCulture)"></option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="BoxM2" class="text-danger"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="PalletM2" class="form-label"></label>
+                    <input asp-for="PalletM2" type="number" min="0.01" step="0.01" class="form-control" list="product-pallet-m2-options" />
+                    <datalist id="product-pallet-m2-options">
+                        @foreach (var option in technicalOptions.PalletM2Values)
+                        {
+                            <option value="@option.ToString("0.##", CultureInfo.InvariantCulture)"></option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="PalletM2" class="text-danger"></span>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</section>
+
+<div hidden>
+            @for (var i = 0; i < Model.Translations.Count; i++)
+            {
+                var code = Model.Translations[i].LanguageCode;
+                <div>
+                    <input type="hidden" name="Translations.Index" value="@i" />
+                    <input type="hidden" asp-for="Translations[i].LanguageId" />
+                    <input type="hidden" asp-for="Translations[i].LanguageCode" />
+                    <input type="hidden" asp-for="Translations[i].LanguageName" />
+                    @if (i != trTranslationIndex)
+                    {
+                        <input type="hidden" asp-for="Translations[i].Name" />
+                        <input type="hidden" asp-for="Translations[i].SeoUrl" />
+                    }
+                    @if (i != trTranslationIndex)
+                    {
+                        <input type="hidden" asp-for="Translations[i].ShortDescription" />
+                    }
+                    @if (i != trTranslationIndex)
+                    {
+                        <input type="hidden" asp-for="Translations[i].LongDescription" />
+                    }
+                    <input type="hidden" asp-for="Translations[i].MetaTitle" />
+                    <input type="hidden" asp-for="Translations[i].MetaDescription" />
+                </div>
+            }
+</div>
+

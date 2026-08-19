@@ -1,0 +1,12 @@
+@model Presentation.Models.Page.PageContentBlockFormViewModel
+@{
+    ViewData["Title"] = "Yeni İçerik Bloğu";
+}
+
+<div class="admin-form-page">
+    <p class="admin-form-description">Sayfa için yeni içerik bloğu oluşturun.</p>
+    <form asp-controller="PageContentBlock" asp-action="Create" method="post" enctype="multipart/form-data" class="admin-form-shell">
+        <input type="hidden" asp-for="PageId" />
+        @await Html.PartialAsync("_PageContentBlockForm", Model)
+    </form>
+</div>

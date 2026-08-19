@@ -1,0 +1,132 @@
+@model Presentation.Models.Banner.BannerFormViewModel
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Yayin Ayarlari</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            <div class="admin-form-field">
+                <label asp-for="PublishStartDate" class="form-label"></label>
+                <input asp-for="PublishStartDate" type="date" class="form-control" />
+                <span asp-validation-for="PublishStartDate" class="text-danger"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="PublishEndDate" class="form-label"></label>
+                <input asp-for="PublishEndDate" type="date" class="form-control" />
+                <span asp-validation-for="PublishEndDate" class="text-danger"></span>
+            </div>
+        </div>
+        <input asp-for="DisplayOrder" type="hidden" />
+    </div>
+</section>
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>Gorsel ve Baglanti</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-upload">
+            @if (Model.ExistingImagePath is not null)
+            {
+                <div class="mb-3">
+                    <div class="text-secondary small">Mevcut gorsel</div>
+                    <img src="@Model.ExistingImagePath" alt="" class="admin-form-preview" />
+                </div>
+                <label class="form-check mb-3">
+                    <input asp-for="RemoveImage" class="form-check-input" type="checkbox" />
+                    <span class="form-check-label">Gorseli kaldir</span>
+                </label>
+            }
+            <label for="image" class="form-label">Gorsel @(Model.ExistingImagePath is not null ? "(Degistir, opsiyonel)" : "(opsiyonel)")</label>
+            <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
+            <div class="admin-form-help">Izin verilen formatlar: JPG, JPEG, PNG, WEBP. Maksimum dosya boyutu: 5 MB.</div>
+        </div>
+    </div>
+</section>
+
+<section class="card admin-form-section" x-data="{ selectedLanguage: 'TR' }">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">3</span>Ceviriler</h3>
+    </div>
+    <div class="card-body">
+        <p class="admin-form-section-intro">Kullanmak istediğiniz içerik dilini seçerek ilgili alanları doldurun.</p>
+        <div class="admin-form-language-picker">
+            <label for="banner-language-select" class="form-label">İçerik Dili</label>
+            <select id="banner-language-select" class="form-select" x-model="selectedLanguage" x-on:change="$nextTick(() => window.dispatchEvent(new CustomEvent('admin:autosize')))">
+                @for (var i = 0; i < Model.Translations.Count; i++)
+                {
+                    var code = Model.Translations[i].LanguageCode;
+                    var label = code switch
+                    {
+                        "TR" => "Türkçe (TR) - Zorunlu",
+                        "EN" => "English (EN)",
+                        "DE" => "Deutsch (DE)",
+                        "FR" => "Français (FR)",
+                        "ES" => "Español (ES)",
+                        "AR" => "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© (AR)",
+                        "RU" => "Ğ ÑƒÑÑĞºĞ¸Ğ¹ (RU)",
+                        _ => $"{Model.Translations[i].LanguageName} ({code})"
+                    };
+                    <option value="@code">@label</option>
+                }
+            </select>
+            <div class="admin-form-language-helper" x-text="selectedLanguage === 'TR' ? 'Türkçe içerik zorunludur.' : 'Bu dil için çeviri alanlarını doldurabilirsiniz.'"></div>
+        </div>
+
+        <div>
+            @for (var i = 0; i < Model.Translations.Count; i++)
+            {
+                var code = Model.Translations[i].LanguageCode;
+                var dir = code == "AR" ? "rtl" : "ltr";
+                <div class="admin-form-language-panel" x-show="selectedLanguage === '@code'" x-cloak x-bind:aria-hidden="selectedLanguage !== '@code'" dir="@dir">
+                    <input type="hidden" name="Translations.Index" value="@i" />
+                    <input type="hidden" asp-for="Translations[i].LanguageId" />
+                    <input type="hidden" asp-for="Translations[i].LanguageCode" />
+                    <input type="hidden" asp-for="Translations[i].LanguageName" />
+                    <div class="admin-form-grid">
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].Title" class="form-label"></label>
+                            <input asp-for="Translations[i].Title" class="form-control" />
+                            <span asp-validation-for="Translations[i].Title" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].Subtitle" class="form-label"></label>
+                            <input asp-for="Translations[i].Subtitle" class="form-control" />
+                            <span asp-validation-for="Translations[i].Subtitle" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].ButtonText" class="form-label"></label>
+                            <input asp-for="Translations[i].ButtonText" class="form-control" />
+                            <span asp-validation-for="Translations[i].ButtonText" class="text-danger"></span>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Translations[i].ButtonUrl" class="form-label"></label>
+                            <input asp-for="Translations[i].ButtonUrl"
+                                   class="form-control"
+                                   placeholder="Örn. index-koleksiyonlar.html veya https://example.com" />
+                            <div class="admin-form-help">Site içi sayfa adı ya da tam bir https:// adresi girin.</div>
+                            <span asp-validation-for="Translations[i].ButtonUrl" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<div class="admin-form-footer">
+    <div class="admin-form-actions">
+        <button type="submit" class="btn btn-primary admin-form-action-btn">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            <span>Kaydet</span>
+        </button>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+        <i class="ti ti-x" aria-hidden="true"></i>
+        <span>Iptal</span>
+    </a>
+</div>
+

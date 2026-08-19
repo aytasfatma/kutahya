@@ -1,0 +1,110 @@
+@model Presentation.Models.Dealer.DealerFormViewModel
+@using Domain.Enums
+@using Application.Products
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<input asp-for="Category" type="hidden" />
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Temel Bilgiler</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            <div class="admin-form-field">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="İsim giriniz" />
+            </div>
+            @if (Model.Category == DealerCategory.Factory)
+            {
+                <div class="admin-form-field">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                </div>
+            }
+            <div class="admin-form-field">
+                <label asp-for="Brands" class="form-label"></label>
+                <div class="product-brand-dropdown"
+                     x-data='{ open: false, selected: @Json.Serialize(Model.Brands.Select(brand => brand.ToString()).ToArray()) }'
+                     x-on:click.outside="open = false">
+                    <button type="button"
+                            class="form-select product-brand-dropdown__toggle"
+                            x-on:click="open = !open"
+                            x-bind:aria-expanded="open">
+                        <span x-text="selected.length ? `${selected.length} marka seçildi` : 'Marka seçin'">Marka seçin</span>
+                    </button>
+                    <div class="product-brand-dropdown__menu" x-show="open" x-cloak>
+                        @foreach (var brand in Enum.GetValues<ProductBrand>())
+                        {
+                            <label class="product-brand-dropdown__option">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="Brands"
+                                       value="@brand"
+                                       x-model="selected" />
+                                <span>@ProductEnumDisplay.GetBrandLabel(brand)</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+                <span asp-validation-for="Brands" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.Category != DealerCategory.Factory)
+{
+    <section class="card admin-form-section">
+        <div class="card-header">
+            <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">2</span>İletişim Bilgileri</h3>
+        </div>
+        <div class="card-body">
+            <div class="admin-form-grid">
+                <div class="admin-form-field">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<section class="card admin-form-section">
+    <div class="card-header">
+        <h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">@(Model.Category == DealerCategory.Factory ? "2" : "3")</span>Lokasyon</h3>
+    </div>
+    <div class="card-body">
+        <div class="admin-form-grid">
+            <div class="admin-form-field">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" placeholder="Ülke giriniz" />
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="District" class="form-label"></label>
+                <input asp-for="District" class="form-control" placeholder="Şehir giriniz" />
+            </div>
+            <div class="admin-form-field admin-form-field-full">
+                <label asp-for="Address" class="form-label"></label>
+                <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="admin-form-footer">
+    <div class="admin-form-actions">
+        <button type="submit" class="btn btn-primary admin-form-action-btn">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            <span>Kaydet</span>
+        </button>
+    </div>
+    <a asp-action="Index" asp-route-category="@Model.Category" class="btn btn-outline-secondary admin-form-action-btn">
+        <i class="ti ti-x" aria-hidden="true"></i>
+        <span>İptal</span>
+    </a>
+</div>

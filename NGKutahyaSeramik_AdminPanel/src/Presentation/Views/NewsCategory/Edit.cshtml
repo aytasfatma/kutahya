@@ -1,0 +1,18 @@
+@model Presentation.Models.NewsCategory.NewsCategoryFormViewModel
+
+@{ ViewData["Title"] = "Bülten Kategorisi Düzenle"; }
+<div class="admin-form-page newsletter-page">
+    <div class="admin-form-header">
+        <div>
+            <div class="newsletter-eyebrow"><i class="ti ti-folder-cog"></i> Kategori #@Model.Id</div>
+            <h1 class="admin-list-title">Bülten Kategorisini Düzenle</h1>
+            <p class="admin-form-description">Kategori görünürlüğünü, sırasını ve dil karşılıklarını güncelleyin.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn"><i class="ti ti-arrow-left"></i><span>Kategorilere Dön</span></a>
+    </div>
+    <form asp-controller="NewsCategory" asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form-shell">
+        @await Html.PartialAsync("_NewsCategoryForm", Model)
+    </form>
+</div>
+
+<p><a asp-action="Index">Listeye Dön</a></p>

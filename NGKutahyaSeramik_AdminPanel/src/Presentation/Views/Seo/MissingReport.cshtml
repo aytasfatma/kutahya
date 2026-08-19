@@ -1,0 +1,81 @@
+@using Application.Seo
+@model IReadOnlyList<SeoMissingFieldDto>
+@{
+    ViewData["Title"] = "Eksik SEO Raporu";
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div>
+            <h1 class="admin-list-title">Eksik SEO Raporu</h1>
+            <p class="admin-list-description">SEO URL, meta başlık ve meta açıklama eksiklerini içerik türü ve dile göre görüntüleyin.</p>
+        </div>
+        <div class="admin-list-actions">
+            <a asp-action="Index" class="btn btn-outline-secondary admin-list-action-btn">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+                <span>SEO Yönetimi'ne Dön</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="card admin-detail-section">
+        <div class="card-header">
+            <h2 class="admin-detail-section-title">
+                <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-alert-triangle"></i></span>
+                <span>Eksik SEO Alanları</span>
+            </h2>
+            <span class="badge bg-secondary-lt">@Model.Count</span>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-success-lt text-success" aria-hidden="true"><i class="ti ti-check"></i></span>
+                </div>
+                <p class="empty-title">Eksik SEO alanı bulunmuyor.</p>
+                <p class="empty-subtitle text-secondary">Tüm desteklenen içerik türleri ve diller için SEO alanları tamamlanmış durumda.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table admin-list-table">
+                    <thead>
+                        <tr>
+                            <th>İçerik Türü</th>
+                            <th>Kayıt</th>
+                            <th>Dil</th>
+                            <th>Eksik Alanlar</th>
+                            <th class="text-end">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var row in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@row.EntityType</td>
+                            <td>@row.DisplayName</td>
+                            <td><span class="badge bg-secondary-lt">@row.LanguageCode</span></td>
+                            <td>
+                                @foreach (var field in row.MissingFields)
+                                {
+                                    <span class="badge bg-danger-lt me-1">@field</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    <a asp-action="Edit" asp-route-id="@row.EntityId" asp-route-type="@row.EntityType" class="btn btn-sm btn-ghost-secondary">
+                                        <i class="ti ti-edit" aria-hidden="true"></i>
+                                        <span>Düzenle</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</div>

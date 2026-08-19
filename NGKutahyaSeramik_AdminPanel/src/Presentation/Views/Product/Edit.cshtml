@@ -1,0 +1,42 @@
+@model Presentation.Models.Product.ProductFormViewModel
+@{
+    ViewData["Title"] = "Urun Duzenle";
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-form-page">
+    <div class="admin-form-header">
+        <p class="admin-form-description">Urun bilgilerini, teknik ozellikleri, gorselleri ve icerik alanlarini guncelleyiniz.</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Urun Yonetimi'ne Don</span>
+        </a>
+    </div>
+
+    <form id="product-edit-form" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form-shell" data-submit-lock>
+        @await Html.PartialAsync("_ProductForm", Model)
+    </form>
+
+    @await Html.PartialAsync("_ProductImageSection", Model)
+
+    <div class="admin-form-footer">
+        <div class="admin-form-actions">
+            <button type="submit" form="product-edit-form" class="btn btn-primary admin-form-action-btn" data-submit-lock-button>
+                <i class="ti ti-device-floppy" aria-hidden="true"></i>
+                <span data-submit-lock-label>Kaydet</span>
+            </button>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn">
+            <i class="ti ti-x" aria-hidden="true"></i>
+            <span>Iptal</span>
+        </a>
+    </div>
+</div>

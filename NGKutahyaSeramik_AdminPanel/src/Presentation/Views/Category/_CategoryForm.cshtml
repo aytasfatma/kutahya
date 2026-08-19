@@ -1,0 +1,15 @@
+@model Presentation.Models.Category.CategoryFormViewModel
+@{ var trIndex = Model.Translations.FindIndex(x => x.LanguageCode == "TR"); }
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<section class="card admin-form-section">
+ <div class="card-header"><h3 class="admin-form-section-title"><span class="avatar bg-primary-lt text-primary">1</span>Temel Bilgiler</h3></div>
+ <div class="card-body"><div class="admin-form-grid">
+  <input asp-for="ParentCategoryId" type="hidden" value="" /><input asp-for="ImagePath" type="hidden" /><input asp-for="DisplayOrder" type="hidden" />
+  @if (trIndex >= 0) {
+   <input type="hidden" name="Translations.Index" value="@trIndex" /><input type="hidden" asp-for="Translations[trIndex].LanguageId" /><input type="hidden" asp-for="Translations[trIndex].LanguageCode" /><input type="hidden" asp-for="Translations[trIndex].LanguageName" />
+   <div class="admin-form-field"><label asp-for="Translations[trIndex].Name" class="form-label">Kategori Adı</label><input asp-for="Translations[trIndex].Name" class="form-control" placeholder="Kategori adı" /><span asp-validation-for="Translations[trIndex].Name" class="text-danger"></span></div>
+   <div class="admin-form-field"><label asp-for="Translations[trIndex].SeoUrl" class="form-label">SEO URL</label><input asp-for="Translations[trIndex].SeoUrl" class="form-control" placeholder="kategori-seo-url" /><span asp-validation-for="Translations[trIndex].SeoUrl" class="text-danger"></span></div>
+  }
+ </div></div>
+</section>
+<div class="admin-form-footer"><div class="admin-form-actions"><button type="submit" class="btn btn-primary admin-form-action-btn"><i class="ti ti-device-floppy"></i><span>Kaydet</span></button></div><a asp-action="Index" class="btn btn-outline-secondary admin-form-action-btn"><i class="ti ti-x"></i><span>İptal</span></a></div>

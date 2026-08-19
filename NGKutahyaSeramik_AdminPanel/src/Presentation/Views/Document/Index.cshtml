@@ -1,0 +1,209 @@
+@using System.Text.Json
+@using Infrastructure.Identity
+@model IReadOnlyList<Application.Documents.DocumentDto>
+@{
+    ViewData["Title"] = "Doküman Yönetimi";
+    var canEdit = User.IsInRole(ApplicationRoles.Admin) || User.IsInRole(ApplicationRoles.ProductManager);
+    var canCreate = canEdit || User.IsInRole(ApplicationRoles.ContentEditor);
+    var canDelete = canEdit;
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="admin-list-page">
+    <div class="admin-list-toolbar">
+        <div class="d-flex align-items-start gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-icon"
+                    aria-label="Geri dön"
+                    title="Geri dön"
+                    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '@Url.Action("Index", "Home")'; }">
+                <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+                <h1 class="admin-list-title">Doküman Listesi</h1>
+                <p class="admin-list-description">Teknik föy ve sertifika dokümanlarını yönetin.</p>
+            </div>
+        </div>
+        @if (canCreate)
+        {
+            <div class="admin-list-actions">
+                <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                    <i class="ti ti-upload" aria-hidden="true"></i>
+                    <span>Yeni Doküman Yükle</span>
+                </a>
+            </div>
+        }
+    </div>
+
+    <section class="card admin-list-card">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table admin-list-table">
+                <thead>
+                    <tr>
+                        <th>Doküman Adı</th>
+                        <th>Doküman Türü</th>
+                        <th>Dil</th>
+                        <th>İlişkili Ürün</th>
+                        <th>İlişkili Koleksiyon</th>
+                        <th>Dosya</th>
+                        <th>Boyut</th>
+                        <th>Durum</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                @if (Model.Any())
+                {
+                    <tbody>
+                    @foreach (var document in Model.OrderBy(d => d.DisplayOrder).ThenBy(d => d.Title))
+                    {
+                        var productItems = document.RelatedProducts
+                            .Select(product => new
+                            {
+                                id = product.Id,
+                                label = product.Label,
+                                href = Url.Action("Edit", "Product", new { id = product.Id })
+                            })
+                            .ToList();
+                        var collectionItems = document.RelatedCollections
+                            .Select(collection => new
+                            {
+                                id = collection.Id,
+                                label = collection.Label,
+                                href = Url.Action("Edit", "Collection", new { id = collection.Id })
+                            })
+                            .ToList();
+
+                        <tr>
+                            <td class="fw-semibold">@document.Title</td>
+                            <td>@document.DocumentTypeLabel</td>
+                            <td><span class="badge bg-secondary-lt">@document.LanguageCode</span></td>
+                            <td>
+                                @if (productItems.Count == 0)
+                                {
+                                    <span class="text-secondary">-</span>
+                                }
+                                else
+                                {
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-secondary document-relation-summary-btn"
+                                            data-document-relation-title="@document.Title"
+                                            data-document-relation-kind="İlişkili Ürünler"
+                                            data-document-relation-items='@JsonSerializer.Serialize(productItems)'
+                                            aria-label="@document.Title dokümanının ilişkili ürünlerini göster">
+                                        <i class="ti ti-box" aria-hidden="true"></i>
+                                        <span>@productItems.Count ilişkili ürün</span>
+                                    </button>
+                                }
+                            </td>
+                            <td>
+                                @if (collectionItems.Count == 0)
+                                {
+                                    <span class="text-secondary">-</span>
+                                }
+                                else if (collectionItems.Count <= 2)
+                                {
+                                    <div class="document-relation-inline-list">
+                                        @foreach (var collection in collectionItems)
+                                        {
+                                            <a href="@collection.href" class="document-relation-inline-link">@collection.label</a>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-secondary document-relation-summary-btn"
+                                            data-document-relation-title="@document.Title"
+                                            data-document-relation-kind="İlişkili Koleksiyonlar"
+                                            data-document-relation-items='@JsonSerializer.Serialize(collectionItems)'
+                                            aria-label="@document.Title dokümanının ilişkili koleksiyonlarını göster">
+                                        <i class="ti ti-folders" aria-hidden="true"></i>
+                                        <span>@collectionItems.Count ilişkili koleksiyon</span>
+                                    </button>
+                                }
+                            </td>
+                            <td><a href="@document.FilePath" target="_blank" rel="noopener">@document.OriginalFileName</a></td>
+                            <td>@document.FileSizeLabel</td>
+                            <td>
+                                <span class="badge admin-status-badge @(document.IsActive ? "bg-success-lt" : "bg-secondary-lt")">
+                                    @(document.IsActive ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="admin-row-actions">
+                                    @if (canEdit)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@document.Id" class="btn btn-sm btn-ghost-secondary" aria-label="@document.Title dokümanını düzenle">
+                                            <i class="ti ti-pencil" aria-hidden="true"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+                                        <form asp-action="ToggleActive" asp-route-id="@document.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-secondary" aria-label="@document.Title durumunu değiştir">
+                                                @(document.IsActive ? "Pasif Yap" : "Aktif Yap")
+                                            </button>
+                                        </form>
+                                    }
+                                    @if (canDelete)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@document.Id" method="post">
+                                            <button type="submit" class="btn btn-sm btn-ghost-danger" aria-label="@document.Title dokümanını sil">
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty admin-list-empty-state">
+                <div class="empty-icon">
+                    <span class="avatar bg-primary-lt text-primary" aria-hidden="true"><i class="ti ti-file-upload"></i></span>
+                </div>
+                <p class="empty-title">Henüz doküman yüklenmedi.</p>
+                <p class="empty-subtitle text-secondary">Katalog ve teknik dokümanları ekleyerek içerik kütüphanesini oluşturun.</p>
+                @if (canCreate)
+                {
+                    <div class="empty-action">
+                        <a asp-action="Create" class="btn btn-primary admin-list-action-btn">
+                            <i class="ti ti-upload" aria-hidden="true"></i>
+                            <span>İlk Dokümanı Yükle</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <div class="modal fade document-relation-modal" id="documentRelationModal" tabindex="-1" aria-labelledby="documentRelationModalTitle" aria-hidden="true" data-document-relation-modal>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-grid">
+                        <h2 class="modal-title mb-0" id="documentRelationModalTitle" data-document-relation-modal-title>İlişkiler</h2>
+                        <span class="text-secondary small" data-document-relation-modal-subtitle></span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="document-relation-modal-list" data-document-relation-modal-list></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

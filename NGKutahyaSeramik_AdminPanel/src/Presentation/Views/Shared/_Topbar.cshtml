@@ -1,0 +1,60 @@
+@using Infrastructure.Identity
+@{
+    var pageTitle = ViewData["Title"] as string ?? "Yönetim Paneli";
+    var showTopbarTitle = ViewData["HasPageHeader"] is not true;
+    var roleLabel = ApplicationRoles.All.FirstOrDefault(User.IsInRole);
+    var userName = User.Identity?.Name ?? string.Empty;
+    var initial = userName.Length > 0 ? userName[..1].ToUpperInvariant() : "?";
+}
+<header class="ng-topbar d-print-none">
+    <div class="ng-page-container ng-topbar__container">
+        <div class="ng-topbar__main">
+            <div class="ng-topbar__left">
+                <button type="button"
+                        class="btn btn-outline-secondary ng-topbar__menu-toggle"
+                        aria-label="Menüyü aç veya kapat"
+                        aria-controls="sidebar-menu"
+                        x-on:click="toggleSidebar()"
+                        x-bind:aria-expanded="(window.matchMedia('(min-width: 992px)').matches ? sidebarOpen : mobileSidebarOpen).toString()">
+                    <i class="ti ti-menu-2" aria-hidden="true"></i>
+                </button>
+                @if (showTopbarTitle)
+                {
+                    <div class="ng-topbar__title">
+                        <h1>@pageTitle</h1>
+                    </div>
+                }
+            </div>
+            <div class="ng-topbar__actions">
+                <div class="ng-topbar__search">
+                    <div class="input-icon">
+                        <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+                        <input id="navbar-search-input" type="text" class="form-control navbar-search"
+                               placeholder="Ara (Ctrl + K)" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="ng-topbar__profile dropdown">
+                    <a href="#" class="ng-topbar__profile-link text-reset" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="avatar rounded-circle ng-topbar__avatar" style="background-color: var(--ng-accent); color: #fff;">@initial</span>
+                        <span class="ng-topbar__profile-meta">
+                            <span class="ng-topbar__profile-name">@userName</span>
+                            @if (roleLabel is not null)
+                            {
+                                <span class="ng-topbar__profile-role">@roleLabel</span>
+                            }
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <span class="dropdown-item-text text-secondary small">@userName</span>
+                        <div class="dropdown-divider"></div>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="dropdown-item">
+                                <i class="ti ti-logout me-2"></i>Çıkış Yap
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

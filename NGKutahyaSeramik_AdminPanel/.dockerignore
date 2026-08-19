@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/tests/
+**/*.user
+.git/
+.gitignore
+.env
+*.md
+
+# Yerel çalışma zamanı dosyaları (yüklenen ürün görselleri, Excel import geçici dosyaları/raporları)
+# — image'a taşınmamalı, Dockerfile zaten boş bir uploads/ klasörü oluşturuyor (chown ile appuser
+# yazabilir), gerçek veri her zaman docker-compose.yml'deki uploads-data volume'ünden gelir.
+src/Presentation/wwwroot/uploads/*
