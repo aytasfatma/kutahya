@@ -47,4 +47,5 @@ public sealed class AboutStatisticItem
     public string? Label { get; set; }
     public string? IconPath { get; set; }
     public bool RemoveIcon { get; set; }
+    public bool Hidden { get; set; }
 }

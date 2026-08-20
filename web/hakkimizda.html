@@ -1491,7 +1491,7 @@ main{
 }
 
 /* Sayılarla */
-.stat-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(6,1fr)}
+.stat-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(var(--stat-count,6),1fr)}
 .stat-strip__item{padding:36px 20px;text-align:center;border-right:1px solid var(--border)}
 .stat-strip__item:last-child{border-right:none}
 .stat-strip__num{font-size:28px;font-weight:300;color:#9C9186;margin-bottom:6px}

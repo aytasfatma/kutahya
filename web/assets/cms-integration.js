@@ -1181,14 +1181,18 @@
     const visionCards = visionPanel?.querySelectorAll(".about-vision-card");
     if (visionCards?.[0]) { visionCards[0].querySelector("h3").textContent = managed.visionTitle || "Vizyonumuz"; visionCards[0].querySelector("h4").textContent = managed.visionSubtitle || "Geleceğe Yön Veren Değerlerimiz"; visionCards[0].querySelector("p").textContent = managed.visionText || ""; }
     if (visionCards?.[1]) { visionCards[1].querySelector("h3").textContent = managed.missionTitle || "Misyonumuz"; visionCards[1].querySelector("h4").textContent = managed.missionSubtitle || "Sürdürülebilir Değer Üretme Yaklaşımımız"; visionCards[1].querySelector("p").textContent = managed.missionText || ""; }
-    const statisticItems = Array.isArray(managed.statisticItems) ? managed.statisticItems : [];
-    if (statisticItems.length) document.querySelector(".stat-strip").innerHTML = statisticItems.map((item) => {
-      const label = item.Label || "";
-      const figure = item.IconPath
-        ? `<img class="stat-strip__icon" src="${esc(asset(item.IconPath))}" alt="${esc(label)}" loading="lazy">`
-        : "";
-      return `<div class="stat-strip__item"><div class="stat-strip__num">${esc(item.Value)}</div>${figure}</div>`;
-    }).join("");
+    const statisticItems = (Array.isArray(managed.statisticItems) ? managed.statisticItems : []).filter((item) => !item.Hidden && String(item.Value || "").trim() !== "");
+    if (statisticItems.length) {
+      const strip = document.querySelector(".stat-strip");
+      strip.style.setProperty("--stat-count", String(statisticItems.length));
+      strip.innerHTML = statisticItems.map((item) => {
+        const label = item.Label || "";
+        const figure = item.IconPath
+          ? `<img class="stat-strip__icon" src="${esc(asset(item.IconPath))}" alt="${esc(label)}" loading="lazy">`
+          : "";
+        return `<div class="stat-strip__item"><div class="stat-strip__num">${esc(item.Value)}</div>${figure}</div>`;
+      }).join("");
+    }
     text("#panel-tarihce h2", managed.historyTitle); text("#panel-tarihce .corp-panel__head>p:last-child", managed.historyDescription);
     const history = lines(managed.historyItems, 3); if (history.length) document.querySelector("#panel-tarihce .timeline").innerHTML = history.map(([era,title,description]) => `<div class="timeline-item"><div class="timeline-item__era">${esc(era)}</div><div class="timeline-item__text"><h3>${esc(title)}</h3><p>${esc(description)}</p></div></div>`).join("");
     text("#panel-degerlerimiz h2", managed.valuesTitle); text("#panel-degerlerimiz .corp-panel__head>p:last-child", managed.valuesDescription);
