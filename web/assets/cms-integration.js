@@ -730,7 +730,7 @@
     setText("[data-product-description]", descriptionText);
     if (descriptionHead) descriptionHead.hidden = !(descriptionTitle && descriptionText);
     setText("[data-product-contact-title]", x.collectionName ? `${x.collectionName} hakkında bilgi alın` : "");
-    if (eyebrow) eyebrow.textContent = x.collectionName || x.categoryName || x.brandLabel || "ÃœRÃœN";
+    if (eyebrow) eyebrow.textContent = x.categoryName || x.brandLabel || "ÃœRÃœN";
     const breadcrumbProduct = document.getElementById("pdBreadcrumbProduct");
     if (breadcrumbProduct) breadcrumbProduct.textContent = x.name || x.productCode;
     setText("#pdProductCode", x.productCode || "-");
