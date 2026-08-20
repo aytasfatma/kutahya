@@ -1406,8 +1406,15 @@
     }
   }
 
+  function pruneFooterLinks() {
+    document.querySelectorAll(".footer__col a").forEach((a) => {
+      const text = a.textContent.trim();
+      if (text === "İş Birlikleri" || text === "Çevresel Sorumluluk") a.remove();
+    });
+  }
+
   const jobs = { "index.html": home, "index-koleksiyonlar.html": collections, "urun-detay.html": productDetail, "ng-kutahya-seramik.html": () => Promise.all([brandHomeSurfaces(), kutahyaManagedVideo()]), "ng-slim.html": () => Promise.all([brandHomeSurfaces(), ngSlimManagedHero()]), "ng-stone.html": brandHomeSurfaces, "ng-performa.html": brandHomeSurfaces, "projeler.html": projects, "proje-detay.html": projectDetail, "blog.html": blogs, "blog-detay.html": blogDetail, "haberler.html": news, "haber-detay.html": newsDetail, "teknik-dokumanlar.html": documents, "hakkimizda.html": () => Promise.all([aboutManagedContent(), aboutCertificates()]), "satis-noktalari.html": dealers, "bayi-detay.html": dealerDetail, "genel-merkez.html": headquarters, "fabrikalar.html": factoriesCopy };
-  document.addEventListener("DOMContentLoaded", () => { bindForms(); bindCareerForm(); applyTypesOnlyLayout(); syncLanguages().catch(() => {}); Promise.resolve(jobs[page] ? jobs[page]() : (/-koleksiyonlar\.html$/.test(page) ? brandProducts() : (/-yuzeyler\.html$/.test(page) ? categories() : genericPage()))).then(applyTypesOnlyLayout).catch((error) => {
+  document.addEventListener("DOMContentLoaded", () => { pruneFooterLinks(); bindForms(); bindCareerForm(); applyTypesOnlyLayout(); syncLanguages().catch(() => {}); Promise.resolve(jobs[page] ? jobs[page]() : (/-koleksiyonlar\.html$/.test(page) ? brandProducts() : (/-yuzeyler\.html$/.test(page) ? categories() : genericPage()))).then(applyTypesOnlyLayout).catch((error) => {
     const loading = document.getElementById("allCollectionsLoading");
     const empty = document.getElementById("allCollectionsEmpty");
     if (loading) loading.hidden = true;
