@@ -715,11 +715,11 @@
       initialMainImage.fetchPriority = "high";
     }
     if (!currentSlug) {
-      if (eyebrow) eyebrow.textContent = "ÃœRÃœN DETAYI";
+      if (eyebrow) eyebrow.hidden = true;
       if (title) title.textContent = "ÃœrÃ¼n seÃ§ilmedi";
       return;
     }
-    if (eyebrow) eyebrow.textContent = "ÃœRÃœN YÃœKLENÄ°YOR";
+    if (eyebrow) eyebrow.hidden = true;
     if (title) title.textContent = "";
     const x = await get(`products/${encodeURIComponent(currentSlug)}`); setMeta(x);
     if (title) title.textContent = x.collectionName || x.name || x.productCode;
@@ -730,7 +730,7 @@
     setText("[data-product-description]", descriptionText);
     if (descriptionHead) descriptionHead.hidden = !(descriptionTitle && descriptionText);
     setText("[data-product-contact-title]", x.collectionName ? `${x.collectionName} hakkında bilgi alın` : "");
-    if (eyebrow) eyebrow.textContent = x.categoryName || x.brandLabel || "ÃœRÃœN";
+    if (eyebrow) eyebrow.hidden = true;
     const breadcrumbProduct = document.getElementById("pdBreadcrumbProduct");
     if (breadcrumbProduct) breadcrumbProduct.textContent = x.name || x.productCode;
     setText("#pdProductCode", x.productCode || "-");
