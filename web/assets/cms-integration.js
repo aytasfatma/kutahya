@@ -1186,7 +1186,7 @@
       const label = item.Label || "";
       const figure = item.IconPath
         ? `<img class="stat-strip__icon" src="${esc(asset(item.IconPath))}" alt="${esc(label)}" loading="lazy">`
-        : `<div class="stat-strip__label">${esc(label)}</div>`;
+        : "";
       return `<div class="stat-strip__item"><div class="stat-strip__num">${esc(item.Value)}</div>${figure}</div>`;
     }).join("");
     text("#panel-tarihce h2", managed.historyTitle); text("#panel-tarihce .corp-panel__head>p:last-child", managed.historyDescription);

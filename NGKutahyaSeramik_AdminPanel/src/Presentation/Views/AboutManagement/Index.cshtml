@@ -25,7 +25,7 @@
 <section class="card admin-form-section"><div class="card-header"><h3 class="admin-form-section-title">@activeSection.Item2</h3></div><div class="card-body">
 @if (selectedSection == "statistics")
 {
-    <p class="admin-form-section-intro">Her rakamın altına küçük bir logo yükleyin. Logo yüklenmezse, logo eklenene kadar geçici olarak etiket metni gösterilir.</p>
+    <p class="admin-form-section-intro">Her rakamın altına küçük bir logo yükleyin. Logo yüklenmediği sürece o kutuda sitede hiçbir etiket görünmez (etiket alanı yalnızca admin panelde referans amaçlıdır).</p>
     <div class="admin-form-grid">
     @for (var i = 0; i < Model.StatisticItems.Count; i++)
     {
@@ -34,7 +34,7 @@
             <input type="hidden" name="StatisticItems.Index" value="@i" />
             <label class="form-label" for="StatisticItems_@(i)__Value">Değer</label>
             <input class="form-control" id="StatisticItems_@(i)__Value" name="StatisticItems[@i].Value" value="@item.Value" />
-            <label class="form-label" for="StatisticItems_@(i)__Label" style="margin-top:.75rem">Etiket (logo yoksa gösterilir)</label>
+            <label class="form-label" for="StatisticItems_@(i)__Label" style="margin-top:.75rem">Etiket (yalnızca admin panelde referans, sitede gösterilmez)</label>
             <input class="form-control" id="StatisticItems_@(i)__Label" name="StatisticItems[@i].Label" value="@item.Label" />
             @if (!string.IsNullOrWhiteSpace(item.IconPath))
             {
