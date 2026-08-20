@@ -1409,7 +1409,7 @@
   function pruneFooterLinks() {
     document.querySelectorAll(".footer__col a").forEach((a) => {
       const text = a.textContent.trim();
-      if (text === "İş Birlikleri" || text === "Çevresel Sorumluluk") a.remove();
+      if (text === "İş Birlikleri" || text === "Çevresel Sorumluluk" || text === "Başarılar / Ödüller") a.remove();
     });
   }
 
