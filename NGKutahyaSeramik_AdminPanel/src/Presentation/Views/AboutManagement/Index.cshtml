@@ -25,18 +25,13 @@
 <section class="card admin-form-section"><div class="card-header"><h3 class="admin-form-section-title">@activeSection.Item2</h3></div><div class="card-body">
 @if (selectedSection == "statistics")
 {
-    <p class="admin-form-section-intro">Her rakamın altına küçük bir logo yükleyin. Logo yüklenmediği sürece o kutuda sitede hiçbir etiket görünmez (etiket alanı yalnızca admin panelde referans amaçlıdır). Bir kutuyu tamamen siteden kaldırmak için "Bu kutuyu sitede gösterme" kutucuğunu işaretleyip kaydedin — kalan kutular satırı otomatik olarak eşit şekilde doldurur.</p>
+    <p class="admin-form-section-intro">Her rakamın altına küçük bir logo yükleyin. Logo yüklenmediği sürece o kutuda sitede hiçbir etiket görünmez.</p>
     <div class="admin-form-grid">
     @for (var i = 0; i < Model.StatisticItems.Count; i++)
     {
         var item = Model.StatisticItems[i];
         <div class="admin-form-field">
             <input type="hidden" name="StatisticItems.Index" value="@i" />
-            <label class="form-check mb-2">
-                <input type="checkbox" class="form-check-input" name="StatisticItems[@i].Hidden" value="true" checked="@(item.Hidden ? "checked" : null)" />
-                <input type="hidden" name="StatisticItems[@i].Hidden" value="false" />
-                <span class="form-check-label">Bu kutuyu sitede gösterme (kaldır)</span>
-            </label>
             <label class="form-label" for="StatisticItems_@(i)__Value">Değer</label>
             <input class="form-control" id="StatisticItems_@(i)__Value" name="StatisticItems[@i].Value" value="@item.Value" />
             <label class="form-label" for="StatisticItems_@(i)__Label" style="margin-top:.75rem">Etiket (yalnızca admin panelde referans, sitede gösterilmez)</label>
@@ -55,6 +50,11 @@
             }
             <label class="form-label" for="statisticIcon_@i" style="margin-top:.75rem">Logo @(string.IsNullOrWhiteSpace(item.IconPath) ? "(opsiyonel)" : "(değiştir, opsiyonel)")</label>
             <input type="file" id="statisticIcon_@i" name="statisticIcons[@i]" accept=".jpg,.jpeg,.png,.webp,.svg" class="form-control" />
+            <label class="form-check mt-3">
+                <input type="checkbox" class="form-check-input" name="StatisticItems[@i].Hidden" value="true" checked="@(item.Hidden ? "checked" : null)" />
+                <input type="hidden" name="StatisticItems[@i].Hidden" value="false" />
+                <span class="form-check-label">Kaldır</span>
+            </label>
         </div>
     }
     </div>
